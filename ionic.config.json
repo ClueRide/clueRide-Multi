@@ -1,0 +1,39 @@
+{
+  "projects": {
+    "player": {
+      "name": "player",
+      "integrations": {
+        "cordova": {}
+      },
+      "type": "angular",
+      "root": "projects/player"
+    },
+    "course": {
+      "name": "course",
+      "integrations": {
+        "cordova": {}
+      },
+      "type": "angular",
+      "root": "projects/course"
+    },
+    "invite": {
+      "name": "invite",
+      "integrations": {
+        "cordova": {}
+      },
+      "type": "angular",
+      "root": "projects/invite"
+    },
+    "locEdit": {
+      "name": "locEdit",
+      "integrations": {
+        "cordova": {}
+      },
+      "type": "angular",
+      "root": "projects/locEdit"
+    }
+  },
+  "integrations": {
+    "cordova": {}
+  }
+}
