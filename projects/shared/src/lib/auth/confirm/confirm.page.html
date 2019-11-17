@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Confirm Email</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div id="confirm">
+    You're almost ready.
+  </div>
+  <div>
+    This is the email Clue Ride will use to issue any badges you may earn:
+    <span>{{profile.member.emailAddress || profile.member.email}}</span>
+  </div>
+
+  <div>
+    If you're happy to use this email address, click "Use this Email".
+    <div>
+      <button ion-button (click) = "useThisEmail()">Use this Email</button>
+    </div>
+  </div>
+
+  <div>
+    If you'd like to setup a different email, click "Choose different Email"
+    and restart the registration.
+    <div>
+      <button ion-button (click) = "chooseDifferentEmail()">Choose different Email</button>
+    </div>
+  </div>
+</ion-content>

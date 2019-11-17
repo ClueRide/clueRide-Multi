@@ -1,6 +1,14 @@
 {
   "name": "shared",
   "version": "0.0.1",
+  "dependencies": {
+    "@auth0/cordova": "latest",
+    "@ionic-native-mocks/secure-storage": "^2.0.12",
+    "@ionic-native/geolocation": "^5.16.0",
+    "@ionic-native/secure-storage": "^5.16.0",
+    "@ionic/angular": "^4.7.1",
+    "ng-event-source": "latest"
+  },
   "peerDependencies": {
     "@angular/common": "^8.2.13",
     "@angular/core": "^8.2.13"
