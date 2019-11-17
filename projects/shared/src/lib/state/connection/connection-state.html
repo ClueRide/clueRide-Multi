@@ -1,0 +1,10 @@
+<span
+  class="network-status"
+  [class.open]='isOpen()'
+  [class.connecting]='isConnecting()'
+  [class.closed]='isClosed()'
+>
+  <ion-icon name="checkmark-circle" *ngIf="isOpen()"></ion-icon>
+  <ion-icon name="refresh-circle" *ngIf="isConnecting()"></ion-icon>
+  <ion-icon name="close-circle" *ngIf="isClosed()"></ion-icon>
+</span>

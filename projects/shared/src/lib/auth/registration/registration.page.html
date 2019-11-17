@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar>
+    <!-- No Menu on this page -->
+    <ion-title>Registration</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div id="welcome">
+    Welcome to Clue Ride.
+  </div>
+
+  <div>
+    This device is not yet registered on the Clue Ride network.
+  </div>
+
+  <div>
+    Registering your device involves confirming the email address
+    under which earned badges will be awarded. Your choice of
+    registration method should be based on which email you want to
+    present any badges you may earn.
+  </div>
+
+  <div id="register-social">
+    Use Register via Social Media to specify an existing Google or Facebook
+    account's email to use for receiving and presenting badges.
+    <div>
+      <button ion-button (click) = "registerSocial()">Register via Google or Facebook</button>
+    </div>
+  </div>
+
+  <div id="register-email">
+    Use Register via Email to specify
+    an exact email to receive and present badges.
+    <div>
+      <button ion-button (click) = "registerEmail()">Register via Email</button>
+    </div>
+  </div>
+
+  <!-- This is good if we want to force the user to confirm a BDD registration. -->
+  <div id="bdd-mock-register" [hidden]="shouldHideBDD()">
+    <a (click)="auth.bddLogin()">BDD Mock Register</a>
+  </div>
+
+</ion-content>

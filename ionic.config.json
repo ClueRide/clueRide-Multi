@@ -31,6 +31,12 @@
       },
       "type": "angular",
       "root": "projects/locEdit"
+    },
+    "dummyShared": {
+      "name": "dummyShared",
+      "integrations": {},
+      "type": "angular",
+      "root": "projects/dummyShared"
     }
   },
   "integrations": {

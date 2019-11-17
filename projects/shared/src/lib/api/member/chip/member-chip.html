@@ -1,0 +1,11 @@
+<ion-chip *ngIf="member">
+
+  <ion-avatar class="member-avatar">
+    <img [src]="member.imageUrl">
+  </ion-avatar>
+
+  <ion-label class="member-display-name">
+    {{member.displayName}}
+  </ion-label>
+
+</ion-chip>
