@@ -1,11 +1,15 @@
-<ion-chip *ngIf="member">
+<ng-container *ngIf="member">
 
-  <ion-avatar class="member-avatar">
-    <img [src]="member.imageUrl">
-  </ion-avatar>
+  <ion-chip>
 
-  <ion-label class="member-display-name">
-    {{member.displayName}}
-  </ion-label>
+    <ion-avatar class="member-avatar">
+      <img [src]="member.imageUrl">
+    </ion-avatar>
 
-</ion-chip>
+    <ion-label class="member-display-name">
+      {{member.displayName}}
+    </ion-label>
+
+  </ion-chip>
+
+</ng-container>

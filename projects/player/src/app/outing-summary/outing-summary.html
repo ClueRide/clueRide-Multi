@@ -1,0 +1,26 @@
+<!-- Generated template for the OutingSummaryComponent component -->
+<div class="outing-summary">
+
+  <div class="section-heading">
+    <span *ngIf="outingTense === 'past'">Recent Outing</span>
+    <span *ngIf="outingTense === 'present'">Current Outing</span>
+    <span *ngIf="outingTense === 'future'">Upcoming Outing</span>
+  </div>
+
+  <div class="course-name">
+    <a href="{{outing.courseUrl}}">{{outing.courseName}}</a>
+  </div>
+
+  <div class="date">
+    Date: {{outing.scheduledTime | date}}
+  </div>
+
+  <div class="time">
+    Time: {{outing.scheduledTime | date: 'shortTime'}}
+  </div>
+
+  <div>
+    <a (click)="viewDetails()">View Outing Details</a>
+  </div>
+
+</div>

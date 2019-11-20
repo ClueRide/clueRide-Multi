@@ -1,14 +1,14 @@
-import {EventSourcePolyfill} from "ng-event-source";
+import {EventSourcePolyfill} from 'ng-event-source';
 import {HttpClient} from '@angular/common/http';
-import {HttpService, SSE_EVENT_BASE_URL} from "../http/http.service";
+import {HttpService, SSE_EVENT_BASE_URL} from '../api/http/http.service';
 import {Injectable} from '@angular/core';
-import {TokenService} from "../token/token.service";
+import {TokenService} from '../auth/token/token.service';
 
 /**
  * Handles subscriptions to the SSE Server.
  *
  * Further details on the Wiki: http://bikehighways.wikidot.com/server-sent-events.
-*/
+ */
 @Injectable()
 export class SseEventService {
 
@@ -35,9 +35,9 @@ export class SseEventService {
    * the events that come in on that channel.
    */
   initializeEventSource(): EventSourcePolyfill {
-    let bearerToken = this.tokenService.getBearerToken();
+    const bearerToken = this.tokenService.getBearerToken();
     return new EventSourcePolyfill(
-      SSE_EVENT_BASE_URL + "sse-channel",
+      SSE_EVENT_BASE_URL + 'sse-channel',
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`
