@@ -10,6 +10,14 @@
     "module": "esnext",
     "moduleResolution": "node",
     "importHelpers": true,
+    "paths": {
+      "shared": [
+        "./projects/shared"
+      ],
+      "shared/*": [
+        "./projects/shared/*"
+      ]
+    },
     "target": "es2015",
     "typeRoots": [
       "node_modules/@types"
@@ -17,15 +25,7 @@
     "lib": [
       "es2018",
       "dom"
-    ],
-    "paths": {
-      "shared": [
-        "dist/shared"
-      ],
-      "shared/*": [
-        "dist/shared/*"
-      ]
-    }
+    ]
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

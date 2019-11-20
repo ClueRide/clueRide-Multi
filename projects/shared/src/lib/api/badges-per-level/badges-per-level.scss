@@ -1,0 +1,24 @@
+@import '../../shared-style.scss';
+
+badges-per-level  {
+  .link-without-underline {
+    text-decoration: none;
+  }
+
+  .badge-md-aware, .badge-ios-aware {
+    background-color: $aware;
+  }
+
+  .badge-md-adept, .badge-ios-adept {
+    background-color: $adept;
+  }
+
+  .badge-md-advocate, .badge-ios-advocate {
+    background-color: $advocate;
+  }
+
+  .badge-md-angel, .badge-ios-angel {
+    background-color: $angel;
+  }
+
+}

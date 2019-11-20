@@ -1,0 +1,15 @@
+<a [href]="chip.badgeFeatures.criteriaUrl">
+  <span>
+    <ion-chip>
+      <ion-avatar class="progress-chip-avatar">
+        <img [src]="chip.badgeFeatures.imageUrl">
+      </ion-avatar>
+
+      <ion-label>
+        {{chip.badgeFeatures.displayName}}:
+        {{chip.progress.totalAchievements}} of {{chip.progress.totalSteps}}
+      </ion-label>
+
+    </ion-chip>
+  </span>
+</a>

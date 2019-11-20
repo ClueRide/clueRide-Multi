@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {Member} from '../../../../shared/src/lib/api/member/member';
 
 @Component({
   selector: 'app-home',
@@ -6,6 +7,8 @@ import { Component } from '@angular/core';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
+
+  member: Member;
 
   constructor() {}
 

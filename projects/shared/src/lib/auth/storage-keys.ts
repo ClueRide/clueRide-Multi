@@ -9,7 +9,6 @@ interface StorageKeySet {
 
 /**
  * Keys into the Storage; placed here to avoid repeating across services.
- * @type {StorageKeySet} object defining the keys shared across services.
  */
 
 export const STORAGE_KEYS: StorageKeySet = {

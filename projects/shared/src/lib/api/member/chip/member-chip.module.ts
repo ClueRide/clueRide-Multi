@@ -1,5 +1,6 @@
+import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-// import {IonicPageModule} from 'ionic-angular';
+import {IonicModule} from '@ionic/angular';
 import {MemberChipComponent} from './member-chip';
 
 @NgModule({
@@ -7,7 +8,8 @@ import {MemberChipComponent} from './member-chip';
     MemberChipComponent,
   ],
   imports: [
-    // IonicPageModule.forChild(MemberChipComponent),
+    IonicModule,
+    CommonModule
   ],
   exports: [
     MemberChipComponent
