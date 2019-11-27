@@ -1,7 +1,7 @@
 import {AfterViewInit, Component} from '@angular/core';
 import {NavController} from '@ionic/angular';
 // import {OutingPage} from '../outing/outing';
-import {OutingService, OutingView} from 'shared';
+import {OutingService, Outing} from 'cr-lib';
 import {Subscription} from 'rxjs';
 
 /**
@@ -18,7 +18,7 @@ import {Subscription} from 'rxjs';
 export class OutingSummaryComponent
 implements AfterViewInit {
 
-  outing: OutingView;
+  outing: Outing;
   outingTense: 'past' | 'present' | 'future';
   private outingSubscription: Subscription;
 

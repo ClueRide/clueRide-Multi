@@ -1,0 +1,39 @@
+<div>
+  <a (click)="viewDetails()">
+    <div class="section-heading">Badges</div>
+  </a>
+
+  <!-- <cr-badges-per-level></cr-badges-per-level> -->
+
+  <span id="progress" *ngFor="let chip of chips">
+    <cr-progress-chip [chip]="chip"></cr-progress-chip>
+  </span>
+
+<!-- TODO: Turn this into a component supported by Guide Event Service. Maybe PLAY-50?
+
+  <div id="guide-capability">
+    <ng-template [ngIf]="isGuide()" [ngIfElse]="notGuide">
+      <div>
+        You have ability to serve as Guide for this outing.
+      </div>
+    </ng-template>
+    <ng-template #notGuide>
+      <div>
+        You are a Seeker for this outing.
+      </div>
+    </ng-template>
+  </div>
+-->
+
+  <div class="badge-summary">
+    <li *ngFor="let badge of badges">
+      <a [href]='badge.badgeCriteriaUrl'>
+        <img [src]='badge.badgeImageUrl' class="badge-image-summary">
+      </a>
+    </li>
+  </div>
+
+  <!-- This is required to keep the next block items from glomming onto the end of this guy -->
+  <div style="clear:both"></div>
+
+</div>

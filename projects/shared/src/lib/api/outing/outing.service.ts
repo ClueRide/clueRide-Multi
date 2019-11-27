@@ -1,6 +1,6 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {BASE_URL, HttpService} from '../http/http.service';
+import {BASE_URL, AuthHeaderService} from '../../../../../cr-lib/src/lib/auth/header/auth-header.service';
 import {Observable, of} from 'rxjs';
 import {OutingView} from './outing-view';
 import {map, share} from 'rxjs/operators';
@@ -18,7 +18,7 @@ export class OutingService {
 
   constructor(
     public http: HttpClient,
-    private httpService: HttpService,
+    private httpService: AuthHeaderService,
   ) {
   }
 

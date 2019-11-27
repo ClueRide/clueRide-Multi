@@ -2,10 +2,10 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {IonicModule} from '@ionic/angular';
 
-import {BadgeSummaryComponent} from './api/badge/summary/badge-summary';
-import {BadgesPerLevelComponent} from './api/badges-per-level/badges-per-level';
-import {MemberChipComponent} from './api/member/chip/member-chip';
-import {ProgressChipComponent} from './api/progress-chip/progress-chip';
+import {BadgeSummaryComponent} from '../../../cr-lib/src/lib/api/badge/summary/badge-summary';
+import {BadgesPerLevelComponent} from '../../../cr-lib/src/lib/api/badges-per-level/badges-per-level';
+import {MemberChipComponent} from '../../../cr-lib/src/lib/api/member/chip/member-chip';
+import {ProgressChipComponent} from '../../../cr-lib/src/lib/api/progress-chip/progress-chip';
 
 // import {BeginGameComponent} from './begin-game/begin-game';
 // import {InviteListComponent} from './invite-list/invite-list';
