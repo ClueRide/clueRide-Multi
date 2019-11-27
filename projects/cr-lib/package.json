@@ -1,0 +1,14 @@
+{
+  "name": "cr-lib",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^8.2.13",
+    "@angular/core": "^8.2.13",
+    "@auth0/cordova": "^0.3.0",
+    "@ionic-native/geolocation": "^4.15.0",
+    "@ionic-native/secure-storage": "^4.5.3"
+  },
+  "devDependencies": {
+    "@ionic-native-mocks/secure-storage": "^2.0.12"
+  }
+}

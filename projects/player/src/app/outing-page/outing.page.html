@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Outing
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <div>
+    Course Name: <a [href]='outing.courseUrl'>{{outing.courseName}}</a>
+  </div>
+  <div>
+    <span>
+      Date: {{outing.scheduledTime | date}}
+    </span>
+    <span float-right>
+      Time: {{outing.scheduledTime | date:'shortTime'}}
+    </span>
+  </div>
+  <div class="section-button-right"
+       *ngIf="false">
+    <button ion-button (click)="addToCalendar()">Add to Calendar</button>
+  </div>
+
+  <div class="section-heading">
+    Team
+  </div>
+  <div>
+    <a (click)="showTeam()">{{outing.teamName}}</a>
+  </div>
+
+  <!-- TODO: Put this back in
+  <pinned-map class="map-content"
+              [startingLocationObservable]="startingAttractionSubject"
+              [pin]='outing.startPin'>
+  </pinned-map>
+
+  <begin-game></begin-game>
+  -->
+</ion-content>

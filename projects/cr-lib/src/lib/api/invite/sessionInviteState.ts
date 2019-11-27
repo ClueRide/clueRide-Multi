@@ -1,0 +1,7 @@
+export enum SessionInviteState {
+  ACCEPTED_INVITE,
+  DECLINED_INVITES,
+  OPEN_INVITE,
+  NO_INVITES,
+  MULTIPLE_INVITES,
+}

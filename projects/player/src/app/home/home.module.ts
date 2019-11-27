@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
-import {SharedComponentsModule} from '../../../../shared/src/projects';
+import {MemberChipComponentModule} from 'cr-lib';
 import {SummaryComponentsModule} from '../components.module';
 
 import { HomePage } from './home.page';
@@ -13,7 +13,7 @@ import { HomePage } from './home.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    // SharedComponentsModule,
+    MemberChipComponentModule,
     RouterModule.forChild([
       {
         path: '',

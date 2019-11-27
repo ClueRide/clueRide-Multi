@@ -1,8 +1,8 @@
 {
   "name": "player",
   "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "https://ionicframework.com/",
+  "author": "Clue Ride",
+  "homepage": "https://clueride.com/",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -26,6 +26,7 @@
     "@ionic/pro": "2.0.4",
     "cordova-android": "8.1.0",
     "core-js": "^2.5.4",
+    "ng-event-source": "^1.0.14",
     "rxjs": "~6.5.1",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1"

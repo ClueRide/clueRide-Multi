@@ -1,15 +1,30 @@
-import { Component } from '@angular/core';
-import {Member} from '../../../../shared/src/lib/api/member/member';
+import {Component, OnInit} from '@angular/core';
+import {
+  Member,
+  ProfileService
+} from 'cr-lib';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements OnInit {
 
-  member: Member;
+  member: Member | any = {};
 
-  constructor() {}
+  constructor(
+    private profileService: ProfileService
+  ) {}
+
+  ngOnInit(): void {
+    this.profileService.loadMemberProfile()
+      .subscribe(
+        (member) => {
+          this.member = member;
+        }
+      );
+    // this.loadStateService.loadOutingData();
+  }
 
 }
