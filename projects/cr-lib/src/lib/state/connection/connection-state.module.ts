@@ -1,5 +1,6 @@
+import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-// import {IonicPageModule} from 'ionic-angular';
+import {IonicModule} from '@ionic/angular';
 import {ConnectionStateComponent} from './connection-state';
 
 @NgModule({
@@ -7,7 +8,8 @@ import {ConnectionStateComponent} from './connection-state';
     ConnectionStateComponent,
   ],
   imports: [
-    // IonicPageModule.forChild(ConnectionStateComponent),
+    IonicModule,
+    CommonModule
   ],
   exports: [
     ConnectionStateComponent

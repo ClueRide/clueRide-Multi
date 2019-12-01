@@ -8,3 +8,5 @@ export * from './lib/api/outing/outing';
 export * from './lib/api/outing/outing.service';
 export * from './lib/api/profile/profile.service';
 export * from './lib/domain/lat-lon/lat-lon';
+export * from './lib/loader/loader.module';
+export * from './lib/state/connection/connection-state.module';
