@@ -1,8 +1,9 @@
 {
   "name": "invite",
   "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "https://ionicframework.com/",
+  "author": "Clue Ride",
+  "homepage": "https://clueride.com/",
+  "description": "Clue Ride Invite App - Ionic 4"
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -54,5 +55,4 @@
     "tslint": "~5.15.0",
     "typescript": "~3.4.3"
   },
-  "description": "An Ionic project"
 }

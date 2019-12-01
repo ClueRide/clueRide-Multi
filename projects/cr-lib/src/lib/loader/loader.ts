@@ -2,8 +2,6 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {LoadingController} from '@ionic/angular';
 
 @Component({
-  // TODO: CI-11 Replace / Update references to this component's selector.
-  // selector: 'loader',
   selector: 'cr-loader',
   templateUrl: 'loader.html'
 })
@@ -23,9 +21,9 @@ export class LoaderComponent implements OnInit, OnDestroy {
         spinner: 'crescent',
         message: 'Buckling my helmet'
       }
-    );
-
-    this.loading.present();
+    ).then(dialog => {
+      dialog.present();
+    });
   }
 
   ngOnDestroy(): void {

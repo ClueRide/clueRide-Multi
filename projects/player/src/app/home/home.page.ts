@@ -1,4 +1,5 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterContentInit, Component, OnInit} from '@angular/core';
+import {Title} from '@angular/platform-browser';
 import {
   Member,
   ProfileService
@@ -9,12 +10,13 @@ import {
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, AfterContentInit {
 
   member: Member | any = {};
 
   constructor(
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
@@ -25,6 +27,10 @@ export class HomePage implements OnInit {
         }
       );
     // this.loadStateService.loadOutingData();
+  }
+
+  ngAfterContentInit(): void {
+    this.titleService.setTitle('Home');
   }
 
 }
