@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import {PlatformStateService} from 'cr-lib';
 
 @Component({
   selector: 'app-root',
@@ -25,6 +26,7 @@ export class AppComponent {
 
   constructor(
     private platform: Platform,
+    private platformStateService: PlatformStateService,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar
   ) {
@@ -33,8 +35,11 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
+      if (this.platformStateService.isNativeMode()) {
+        /* Since this is a cordova native statusbar, only set style if not within a browser (local). */
+        this.statusBar.styleDefault();
+        this.splashScreen.hide();
+      }
     });
   }
 }

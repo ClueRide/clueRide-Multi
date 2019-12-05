@@ -1,10 +1,10 @@
 import {Observable, Subject} from 'rxjs';
-import {RegState} from '../../state/reg/reg-state';
+import {RegState} from '../state/reg-state';
 import {Injectable} from '@angular/core';
 import {TokenService} from '../token/token.service';
 import {Auth0ConfigService} from '../auth0Config/Auth0Config.service';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {RegStateKey} from '../../state/reg/reg-state-key';
+import {RegStateKey} from '../state/reg-state-key';
 
 @Injectable({
   providedIn: 'root'

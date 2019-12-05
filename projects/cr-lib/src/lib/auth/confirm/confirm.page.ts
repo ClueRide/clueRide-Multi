@@ -1,6 +1,7 @@
 /* tslint:disable:component-class-suffix */
 import { Component, OnInit } from '@angular/core';
-import {RegStateService} from '../../state/reg/reg-state.service';
+import {Member} from '../../api/member/member';
+import {RegStateService} from '../state/reg-state.service';
 import {Title} from '@angular/platform-browser';
 
 @Component({
@@ -11,6 +12,8 @@ import {Title} from '@angular/platform-browser';
   styleUrls: ['./confirm.page.scss'],
 })
 export class ConfirmPage implements OnInit {
+
+  readonly member: Member;
 
   constructor(
     private regStateService: RegStateService,

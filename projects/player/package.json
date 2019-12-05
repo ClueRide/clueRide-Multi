@@ -26,6 +26,8 @@
     "@ionic/angular": "^4.7.1",
     "@ionic/pro": "2.0.4",
     "cordova-android": "8.1.0",
+    "cordova-browser": "6.0.0",
+    "cordova-ios": "5.1.0",
     "core-js": "^2.5.4",
     "ng-event-source": "^1.0.14",
     "rxjs": "~6.5.1",
@@ -76,7 +78,9 @@
       "cordova-plugin-ionic-keyboard": {}
     },
     "platforms": [
-      "android"
+      "android",
+      "ios",
+      "browser"
     ]
   }
 }
