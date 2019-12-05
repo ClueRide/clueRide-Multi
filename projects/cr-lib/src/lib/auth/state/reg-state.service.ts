@@ -1,15 +1,15 @@
-import Auth0Cordova from '@auth0/cordova';
-import {Auth0ConfigService} from '../../auth/auth0Config/Auth0Config.service';
-import {BASE_URL, AuthHeaderService} from '../../auth/header/auth-header.service';
+// import Auth0Cordova from '@auth0/cordova';
+import {Auth0ConfigService} from '../auth0Config/Auth0Config.service';
+import {BASE_URL, AuthHeaderService} from '../header/auth-header.service';
 import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
+import {Injectable, Optional} from '@angular/core';
 import {RegState} from './reg-state';
 import {Observable} from 'rxjs';
 import {BehaviorSubject, Subject} from 'rxjs';
-import {PlatformStateService} from '../platform/platform-state.service';
-import {REGISTRATION_TYPE} from '../../auth/registration-type';
-import {RenewalService} from '../../auth/renewal/renewal.service';
-import {TokenService} from '../../auth/token/token.service';
+import {PlatformStateService} from '../../state/platform/platform-state.service';
+import {REGISTRATION_TYPE} from '../registration-type';
+import {RenewalService} from '../renewal/renewal.service';
+import {TokenService} from '../token/token.service';
 import {RegStateKey} from './reg-state-key';
 import {ProfileService} from '../../api/profile/profile.service';
 
@@ -24,6 +24,9 @@ export class RegStateService {
 
   /* We own the Registration State. */
   public regStateSubject: Subject<RegState>;
+
+  /* Workaround to avoid loading Auth0/Cordova within the browser. */
+  private Auth0Cordova;
 
   constructor(
     public http: HttpClient,
@@ -41,6 +44,10 @@ export class RegStateService {
       new RegState(RegStateKey.INITIAL, 'Initial State - waiting to be triggered')
     );
 
+    /* Auth0/Cordova is only brought in against native APIs. */
+    if (platformState.isNativeMode()) {
+      this.Auth0Cordova = require('@auth0/cordova');
+    }
   }
 
   /**
@@ -61,7 +68,7 @@ export class RegStateService {
     /* Handles the return to the app after logging in at external site. */
     (window as any).handleOpenURL = (url) => {
       console.log('Callback received -- redirecting via custom scheme: ' + url);
-      Auth0Cordova.onRedirectUri(url);
+      this.Auth0Cordova.onRedirectUri(url);
     };
 
     /* Record which client needs registration. */
@@ -122,8 +129,9 @@ export class RegStateService {
    * @param registrationType as selected by the user.
    */
   private register(registrationType: string) {
-    const client = new Auth0Cordova(
-      this.auth0ConfigService.getConfig(registrationType));
+    const client = new this.Auth0Cordova(
+      this.auth0ConfigService.getConfig(registrationType)
+    );
     const options = {
       scope: 'openid profile email offline_access',
       audience: 'https://' + this.auth0ConfigService.getDomain(registrationType) + '/userinfo'

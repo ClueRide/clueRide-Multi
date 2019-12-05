@@ -7,6 +7,7 @@ import {StatusBar} from '@ionic-native/status-bar/ngx';
 
 import {IonicModule, IonicRouteStrategy} from '@ionic/angular';
 import {AppRoutingModule} from './app-routing.module';
+import {AuthModule} from 'cr-lib';
 
 import {AppComponent} from './app.component';
 import {SummaryComponentsModule} from './components.module';
@@ -19,6 +20,7 @@ import {OutingPageModule} from './outing-page/outing.module';
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
+    AuthModule,
     HttpClientModule,
     OutingPageModule,
     SummaryComponentsModule.forRoot()

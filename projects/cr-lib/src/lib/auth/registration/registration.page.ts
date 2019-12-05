@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {RegStateService} from '../../state/reg/reg-state.service';
+import {RegStateService} from '../state/reg-state.service';
 import {PlatformStateService} from '../../state/platform/platform-state.service';
 import {Title} from '@angular/platform-browser';
 

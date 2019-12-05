@@ -1,3 +1,4 @@
+import {Injectable} from '@angular/core';
 import {AUTH_CONFIG} from './auth0-variables';
 import {REGISTRATION_TYPE} from '../registration-type';
 
@@ -24,6 +25,9 @@ auth0Config[REGISTRATION_TYPE.PASSWORDLESS] = {
 };
 
 /* TODO: I'm not injecting this anywhere? */
+@Injectable({
+  providedIn: 'root'
+})
 export class Auth0ConfigService {
 
   /**

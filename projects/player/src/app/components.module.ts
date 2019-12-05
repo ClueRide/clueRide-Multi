@@ -1,6 +1,6 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {AuthHeaderService} from '../../../shared/src/projects';
+import {AuthHeaderService} from 'cr-lib';
 // import {BadgeSummaryComponent} from './badge-summary/badge-summary';
 // import {BadgesPerLevelModule} from 'front-end-common';
 // import {BeginGameComponent} from './begin-game/begin-game';
