@@ -1,13 +1,15 @@
-import {Course} from '../course/course';
 import {HttpClient} from '@angular/common/http';
-import {BASE_URL, AuthHeaderService} from '../../auth/header/auth-header.service';
 import {Injectable} from '@angular/core';
 import {from, Observable} from 'rxjs';
-import {Path} from './path';
 import {map, share} from 'rxjs/operators';
+import {AuthHeaderService, BASE_URL} from '../../auth/header/auth-header.service';
+import {Course} from '../course/course';
+import {Path} from './path';
 
 /** Provides and caches Path Geometry and details. */
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class PathService {
 
   cachedCourse: Course;

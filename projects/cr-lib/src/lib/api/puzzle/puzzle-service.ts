@@ -1,10 +1,10 @@
-import {AttractionService} from '../attraction/attraction-service';
 import {HttpClient} from '@angular/common/http';
-import {BASE_URL, AuthHeaderService} from '../../auth/header/auth-header.service';
 import {Injectable} from '@angular/core';
+import {from, Observable, Subject} from 'rxjs';
+import {AuthHeaderService, BASE_URL} from '../../auth/header/auth-header.service';
+import {AttractionService} from '../attraction/attraction-service';
 import {Location} from '../location/location';
 import {Puzzle} from './puzzle';
-import {from, Observable, Subject} from 'rxjs';
 
 /* Define structure for storing array of Puzzles per Attraction ID. */
 interface PuzzlesPerAttractionId {
@@ -26,7 +26,9 @@ interface PuzzlesById {
  * each Attraction that is part of the Session's Course.
  * This cache of data is static for the duration of the session.
  */
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class PuzzleService {
   private puzzles: PuzzlesById = {};
 
