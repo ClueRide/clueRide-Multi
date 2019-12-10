@@ -7,7 +7,6 @@ import {Observable} from 'rxjs';
 /**
  * Provides access to BadgeProgress instances for this session.
  */
-@Injectable()
 @Injectable({
   providedIn: 'root'
 })

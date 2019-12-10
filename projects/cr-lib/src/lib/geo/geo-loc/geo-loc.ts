@@ -1,9 +1,11 @@
-import {DeviceGeoLocService} from '../device-geo-loc/device-geo-loc.service';
-import {Geoposition} from '@ionic-native/geolocation';
 import {Injectable} from '@angular/core';
+import {Geoposition} from '@ionic-native/geolocation';
 import {Observable, Subject} from 'rxjs';
+import {DeviceGeoLocService} from '../device-geo-loc/device-geo-loc.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class GeoLocService {
 
   static DEFAULT_GEOPOSITION: Geoposition = {

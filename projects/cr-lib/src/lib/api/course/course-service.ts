@@ -1,15 +1,17 @@
-import { HttpClient } from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Course} from './course';
-import {BASE_URL, AuthHeaderService} from '../../auth/header/auth-header.service';
 import {Observable, of} from 'rxjs';
 import {map, share} from 'rxjs/operators';
+import {AuthHeaderService, BASE_URL} from '../../auth/header/auth-header.service';
+import {Course} from './course';
 
 /**
  * Caching service for the Course associated with the current session.
  * This data is static for the duration of the session.
  */
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class CourseService {
 
   /* Defined once we have received valid data and we haven't been asked to refresh. */

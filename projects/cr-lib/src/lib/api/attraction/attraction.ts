@@ -1,13 +1,10 @@
-import {Image} from '../image/image';
-import {Injectable} from '@angular/core';
 import {LatLon} from '../../domain/lat-lon/lat-lon';
+import {Image} from '../image/image';
 
 /**
  * Attractions are specific instances of Location; they have a
  * puzzle defined for them.
  */
-// TODO: Does this need to be injectable?
-@Injectable()
 export class Attraction {
 
   id: number;

@@ -5,7 +5,6 @@ import {BASE_URL, AuthHeaderService} from '../../auth/header/auth-header.service
 import {Observable} from 'rxjs';
 import {SessionInviteState} from './sessionInviteState';
 
-
 @Injectable({
   providedIn: 'root'
 })
