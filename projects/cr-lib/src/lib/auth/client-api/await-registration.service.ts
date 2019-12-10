@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {NavController} from '@ionic/angular';
 import {Observable, Subject} from 'rxjs';
 import {filter, find} from 'rxjs/operators';
@@ -17,7 +17,8 @@ export class AwaitRegistrationService {
 
   constructor(
     private regStateService: RegStateService,
-    private nav: NavController
+    private nav: NavController,
+    private zone: NgZone,
   ) {
     this.registrationActiveSubject = new Subject();
   }
@@ -55,9 +56,11 @@ export class AwaitRegistrationService {
       filter(regState => regState.state === RegStateKey.CONFIRMATION_REQUIRED)
     ).subscribe(() => {
         console.log('We need to show the Confirmation Page');
-        this.nav.navigateRoot('reg-confirm')
-          .then()
-          .catch(error => console.error('Did not get Registration Page', error));
+        this.zone.run(
+          () => this.nav.navigateRoot('reg-confirm')
+            .then()
+            .catch(error => console.error('Did not get Registration Page', error))
+        );
       }
     );
 

@@ -21,13 +21,18 @@ export class RenewalService {
     private auth0ConfigService: Auth0ConfigService,
   ) {
     this.registrationType = this.tokenService.getRegistrationType();
-    // tslint:disable-next-line:no-console
-    console.debug('Renewing for Registration Type: ', this.registrationType);
-    this.postBody = {
-      grant_type: 'refresh_token',
-      client_id: this.auth0ConfigService.getClientID(this.registrationType),
-      refresh_token: this.tokenService.getRefreshToken(),
-    };
+    if (this.registrationType) {
+      // tslint:disable-next-line:no-console
+      console.debug('Renewing for Registration Type: ', this.registrationType);
+      this.postBody = {
+        grant_type: 'refresh_token',
+        client_id: auth0ConfigService.getClientID(this.registrationType),
+        refresh_token: this.tokenService.getRefreshToken(),
+      };
+    } else {
+      // tslint:disable-next-line:no-console
+      console.debug('No Registration Type found by Renewal Service');
+    }
   }
 
   /**

@@ -1,17 +1,17 @@
-// import Auth0Cordova from '@auth0/cordova';
-import {Auth0ConfigService} from '../auth0Config/Auth0Config.service';
-import {BASE_URL, AuthHeaderService} from '../header/auth-header.service';
 import {HttpClient} from '@angular/common/http';
-import {Injectable, Optional} from '@angular/core';
-import {RegState} from './reg-state';
-import {Observable} from 'rxjs';
-import {BehaviorSubject, Subject} from 'rxjs';
+import {Injectable, NgZone} from '@angular/core';
+import Auth0Cordova from '@auth0/cordova';
+import * as auth0 from 'auth0-js';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {ProfileService} from '../../api/profile/profile.service';
 import {PlatformStateService} from '../../state/platform/platform-state.service';
+import {Auth0ConfigService} from '../auth0Config/Auth0Config.service';
+import {AuthHeaderService, BASE_URL} from '../header/auth-header.service';
 import {REGISTRATION_TYPE} from '../registration-type';
 import {RenewalService} from '../renewal/renewal.service';
 import {TokenService} from '../token/token.service';
+import {RegState} from './reg-state';
 import {RegStateKey} from './reg-state-key';
-import {ProfileService} from '../../api/profile/profile.service';
 
 /**
  * Implements much of the State Diagram shown on the
@@ -25,8 +25,8 @@ export class RegStateService {
   /* We own the Registration State. */
   public regStateSubject: Subject<RegState>;
 
-  /* Workaround to avoid loading Auth0/Cordova within the browser. */
-  private Auth0Cordova;
+  /* True if we're in the middle of registering. */
+  loading = true;
 
   constructor(
     public http: HttpClient,
@@ -36,18 +36,16 @@ export class RegStateService {
     private tokenService: TokenService,
     private renewalService: RenewalService,
     private profileService: ProfileService,
+    public zone: NgZone,
   ) {
     console.log('Hello RegStateProvider Provider');
+    this.loading = false;
 
     /* We use a BehaviorSubject because there are instances where we commit an event prior to returning. */
     this.regStateSubject = new BehaviorSubject<RegState>(
       new RegState(RegStateKey.INITIAL, 'Initial State - waiting to be triggered')
     );
 
-    /* Auth0/Cordova is only brought in against native APIs. */
-    if (platformState.isNativeMode()) {
-      this.Auth0Cordova = require('@auth0/cordova');
-    }
   }
 
   /**
@@ -68,7 +66,7 @@ export class RegStateService {
     /* Handles the return to the app after logging in at external site. */
     (window as any).handleOpenURL = (url) => {
       console.log('Callback received -- redirecting via custom scheme: ' + url);
-      this.Auth0Cordova.onRedirectUri(url);
+      Auth0Cordova.onRedirectUri(url);
     };
 
     /* Record which client needs registration. */
@@ -129,8 +127,10 @@ export class RegStateService {
    * @param registrationType as selected by the user.
    */
   private register(registrationType: string) {
-    const client = new this.Auth0Cordova(
-      this.auth0ConfigService.getConfig(registrationType)
+    this.loading = true;
+    const auth0Config = this.auth0ConfigService.getConfig(registrationType);
+    const client = new Auth0Cordova(
+      auth0Config
     );
     const options = {
       scope: 'openid profile email offline_access',
@@ -148,6 +148,7 @@ export class RegStateService {
       options,
       (error, authResult) => {
         if (error) {
+          this.zone.run(() => this.loading = false);
           console.error('During attempt to Authorize:', error);
           throw error;
         }
@@ -161,6 +162,8 @@ export class RegStateService {
         this.tokenService.setRegistrationType(registrationType);
         this.tokenService.setRefreshToken(authResult.refreshToken);
         this.tokenService.setExpiresAtFromPeriod(86400);
+
+        this.loading = false;
 
         /* Signal we've got a profile that is not yet confirmed. */
         this.regStateSubject.next(new RegState(RegStateKey.CONFIRMATION_REQUIRED, 'Successful 3rd-party Registration'));
