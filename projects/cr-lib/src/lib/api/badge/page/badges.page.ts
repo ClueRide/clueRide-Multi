@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { NavController, NavParams } from '@ionic/angular';
+import {Component} from '@angular/core';
 import {Title} from '@angular/platform-browser';
+import {NavController, NavParams} from '@ionic/angular';
 
 /**
  * Displays the Badges awarded to the current session.
@@ -8,7 +8,7 @@ import {Title} from '@angular/platform-browser';
 
 @Component({
   selector: 'cr-page-badges',
-  templateUrl: 'badges.html',
+  templateUrl: 'badges.page.html',
 })
 // tslint:disable-next-line:component-class-suffix
 export class BadgesPage {

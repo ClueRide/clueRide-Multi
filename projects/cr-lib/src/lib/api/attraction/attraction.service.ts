@@ -1,10 +1,9 @@
-import {Attraction} from './attraction';
 import {HttpClient} from '@angular/common/http';
-import {BASE_URL, AuthHeaderService} from '../../../../../cr-lib/src/lib/auth/header/auth-header.service';
 import {Injectable} from '@angular/core';
+import {from, Observable, Subject} from 'rxjs';
+import {AuthHeaderService, BASE_URL} from '../../auth/header/auth-header.service';
 import {OutingService} from '../outing/outing.service';
-import {Observable, Subject} from 'rxjs';
-import {from} from 'rxjs';
+import {Attraction} from './attraction';
 
 interface AttractionMap {
   [index: number]: Attraction;

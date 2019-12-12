@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {BASE_URL, AuthHeaderService} from '../../../../../cr-lib/src/lib/auth/header/auth-header.service';
 import {HttpClient} from '@angular/common/http';
-import {LocLink} from './loc-link';
+import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
+import {AuthHeaderService, BASE_URL} from '../../auth/header/auth-header.service';
+import {LocLink} from './loc-link';
 
 /**
  * Provides access to Location Link instances.

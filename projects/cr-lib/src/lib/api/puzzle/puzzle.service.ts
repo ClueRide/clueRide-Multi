@@ -2,7 +2,7 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {from, Observable, Subject} from 'rxjs';
 import {AuthHeaderService, BASE_URL} from '../../auth/header/auth-header.service';
-import {AttractionService} from '../attraction/attraction-service';
+import {AttractionService} from '../attraction/attraction.service';
 import {Location} from '../location/location';
 import {Puzzle} from './puzzle';
 

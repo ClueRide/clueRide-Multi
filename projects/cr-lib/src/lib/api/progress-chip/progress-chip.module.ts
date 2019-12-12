@@ -1,18 +1,18 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {IonicModule} from '@ionic/angular';
-import {BadgesPage} from './badges.page';
+import {ProgressChipComponent} from './progress-chip';
 
 @NgModule({
   declarations: [
-    BadgesPage,
+    ProgressChipComponent,
   ],
   imports: [
     IonicModule,
     CommonModule
   ],
   exports: [
-    BadgesPage
-  ]
+    ProgressChipComponent,
+  ],
 })
-export class BadgesPageModule {}
+export class ProgressChipModule {}
