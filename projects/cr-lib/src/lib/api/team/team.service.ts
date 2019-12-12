@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import {BASE_URL, AuthHeaderService} from '../../auth/header/auth-header.service';
-import {Team} from './team';
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
+import {AuthHeaderService, BASE_URL} from '../../auth/header/auth-header.service';
+import {Team} from './team';
 
 /**
  * Handles calls to Team endpoints.

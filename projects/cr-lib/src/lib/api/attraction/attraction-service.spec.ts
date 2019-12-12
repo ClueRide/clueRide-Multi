@@ -1,9 +1,9 @@
-import {TestBed} from '@angular/core/testing';
-import {AttractionService} from './attraction-service';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {TestBed} from '@angular/core/testing';
 import {AuthHeaderService} from '../../auth/header/auth-header.service';
 import {TokenService} from '../../auth/token/token.service';
 import {OutingService} from '../outing/outing.service';
+import {AttractionService} from './attraction.service';
 
 let toTest: AttractionService;
 

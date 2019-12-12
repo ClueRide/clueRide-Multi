@@ -1,18 +1,18 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {IonicModule} from '@ionic/angular';
-import {BadgesPage} from './badges.page';
+import {BadgesPerLevelComponent} from './badges-per-level';
 
 @NgModule({
   declarations: [
-    BadgesPage,
+    BadgesPerLevelComponent
   ],
   imports: [
     IonicModule,
     CommonModule
   ],
   exports: [
-    BadgesPage
+    BadgesPerLevelComponent
   ]
 })
-export class BadgesPageModule {}
+export class BadgesPerLevelModule {}

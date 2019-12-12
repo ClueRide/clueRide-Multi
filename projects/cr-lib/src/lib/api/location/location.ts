@@ -1,14 +1,10 @@
-import {Injectable} from '@angular/core';
+import {Image} from '../../domain/image/image';
 import {LatLon} from '../../domain/lat-lon/lat-lon';
-import {Image} from '../image/image';
 import {LocLink} from '../loc-link/loc-link';
 
 /**
- * Created by jett on 7/10/17.
+ * Deprecated in favor of {@link Attraction}.
  */
-@Injectable({
-  providedIn: 'root'
-})
 export class Location {
 
   id: number;

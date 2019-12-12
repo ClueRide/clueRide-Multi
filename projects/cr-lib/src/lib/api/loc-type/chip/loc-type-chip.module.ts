@@ -1,13 +1,15 @@
+import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
+import {IonicModule} from '@ionic/angular';
 import {LocTypeChipComponent} from './loc-type-chip.component';
-// import {IonicPageModule} from '';
 
 @NgModule({
   declarations: [
     LocTypeChipComponent,
   ] ,
   imports: [
-    // IonicPageModule.forChild(LocTypeChipComponent),
+    IonicModule,
+    CommonModule
   ],
   exports: [
     LocTypeChipComponent

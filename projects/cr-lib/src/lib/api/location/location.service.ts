@@ -1,9 +1,9 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Location} from './location';
-import {BASE_URL, AuthHeaderService} from '../../auth/header/auth-header.service';
 import {Observable} from 'rxjs';
+import {AuthHeaderService, BASE_URL} from '../../auth/header/auth-header.service';
 import {LatLon} from '../../domain/lat-lon/lat-lon';
+import {Location} from './location';
 
 /**
  * Support for creating and editing locations within the Location Editor.
