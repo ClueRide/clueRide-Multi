@@ -12,11 +12,11 @@ interface AuthConfig {
 export const AUTH_CONFIG: AuthConfig = {
   /* This is publicly shareable. */
   clientID: {
-    social: 'ZztcBTDcglTr10lyuLoq8Zy57EW4HXTZ',
-    passwordless: 't6RcrSkjxxFfI0JCMsEifO8QJ72YBcDY'
+    social: 'LbrBEjWpXwzZ3x4EiMHV22dnenwVsXn4',
+    passwordless: '5Bvzw8AYEA4Hl3VARQ55t3wwINapre5Z'
   },
   domain: {
-    social: 'clueride-social.auth0.com',
-    passwordless: 'clueride.auth0.com'
+    social: 'clueride-shared.auth0.com',
+    passwordless: 'clueride-shared.auth0.com'
   },
 };
