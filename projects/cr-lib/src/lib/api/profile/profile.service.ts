@@ -82,6 +82,14 @@ export class ProfileService {
   }
 
   /**
+   * Retrieves a Member representation of the currently recorded jwtToken.
+   */
+  public getMemberFromToken(): Member {
+    return this.fromJwt(
+      TokenService.getJwtToken()
+    );
+  }
+  /**
    * Turns a JWT-based token from 3rd-party auth service into our Member representation.
    *
    * @param jwtToken that comes from our 3rd-party auth service.

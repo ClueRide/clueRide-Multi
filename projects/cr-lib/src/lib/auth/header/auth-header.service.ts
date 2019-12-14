@@ -14,7 +14,6 @@ export const SSE_EVENT_BASE_URL = 'http://sse.clueride.com/';
 export class AuthHeaderService {
 
   constructor(
-    private tokenService: TokenService,
   ) {
     console.log('Hello AuthHeaderService Provider');
   }
@@ -23,7 +22,7 @@ export class AuthHeaderService {
     return new HttpHeaders()
       .append(
         'Authorization',
-        'Bearer ' + this.tokenService.getBearerToken()
+        'Bearer ' + TokenService.getBearerToken()
       );
   }
 

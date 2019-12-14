@@ -20,7 +20,6 @@ export class SseEventService {
   constructor(
     public http: HttpClient,
     public httpService: AuthHeaderService,
-    private tokenService: TokenService,
   ) {
     console.log('Hello SseEventService Provider');
   }
@@ -37,7 +36,7 @@ export class SseEventService {
    * the events that come in on that channel.
    */
   initializeEventSource(): EventSourcePolyfill {
-    const bearerToken = this.tokenService.getBearerToken();
+    const bearerToken = TokenService.getBearerToken();
     return new EventSourcePolyfill(
       SSE_EVENT_BASE_URL + 'sse-channel',
       {
