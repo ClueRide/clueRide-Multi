@@ -83,7 +83,7 @@
       "cordova-plugin-customurlscheme": {
         "URL_SCHEME": "com.clueride.player",
         "ANDROID_SCHEME": "com.clueride.player",
-        "ANDROID_HOST": "clueride-social.auth0.com",
+        "ANDROID_HOST": "clueride-shared.auth0.com",
         "ANDROID_PATHPREFIX": "/cordova/com.clueride.player/callback"
       }
     },
