@@ -25,11 +25,18 @@ export class TokenService {
     );
   }
 
+  /** Taps local storage to retrieve previously saved JWT token. */
+  static getJwtToken(): string {
+    return window.localStorage.getItem(
+      STORAGE_KEYS.jwtToken
+    );
+  }
+
   /**
    * Retrieves the token to be presented whenever restricted resources are requested.
    * @returns string representing the token we present to all back-end calls.
    */
-  public getBearerToken(): string {
+  static getBearerToken(): string {
     return JSON.parse(window.localStorage.getItem(STORAGE_KEYS.accessToken));
   }
 
