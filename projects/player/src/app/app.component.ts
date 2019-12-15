@@ -1,10 +1,9 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {SplashScreen} from '@ionic-native/splash-screen/ngx';
+import {StatusBar} from '@ionic-native/status-bar/ngx';
 
-import { Platform } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
-import {PlatformStateService} from 'cr-lib';
-import {AwaitRegistrationService} from 'cr-lib';
+import {Platform} from '@ionic/angular';
+import {AwaitRegistrationService, PlatformStateService} from 'cr-lib';
 
 @Component({
   selector: 'app-root',
@@ -49,7 +48,7 @@ export class AppComponent {
         .subscribe(ready => {
           if (ready) {
             console.log('Registered');
-            // TODO: Kick off the application loading.
+            // TODO: CI-25 Kick off the application loading.
           }
         });
     });
