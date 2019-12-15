@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 
-import {Platform} from '@ionic/angular';
+import {NavController, Platform} from '@ionic/angular';
 import {AwaitRegistrationService, PlatformStateService} from 'cr-lib';
 
 @Component({
@@ -25,6 +25,7 @@ export class AppComponent {
   ];
 
   constructor(
+    private nav: NavController,
     private platform: Platform,
     private platformStateService: PlatformStateService,
     private authClient: AwaitRegistrationService,
@@ -40,14 +41,19 @@ export class AppComponent {
       if (this.platformStateService.isNativeMode()) {
         /* Since this is a cordova native statusbar, only set style if not within a browser (local). */
         this.statusBar.styleDefault();
-        this.splashScreen.hide();
       }
 
       this.authClient.getRegistrationActiveObservable('com.clueride.ranger')
         .subscribe(ready => {
           if (ready) {
             console.log('Registered');
-            // TODO: CI-25 Kick off the application loading.
+            this.nav.navigateRoot('home')
+              .then(
+                () => this.splashScreen.hide()
+              )
+              .catch(
+                error => console.error('Did not get Home Page', error)
+              );
           }
         });
     });
