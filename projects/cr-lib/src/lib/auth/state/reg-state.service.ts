@@ -1,7 +1,6 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable, NgZone} from '@angular/core';
 import Auth0Cordova from '@auth0/cordova';
-import * as auth0 from 'auth0-js';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {ProfileService} from '../../api/profile/profile.service';
 import {PlatformStateService} from '../../state/platform/platform-state.service';

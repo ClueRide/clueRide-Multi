@@ -23,6 +23,7 @@ export * from './lib/api/edge/edge.service';
 export * from './lib/api/invite/invite';
 export * from './lib/api/invite/inviteState';
 export * from './lib/api/invite/invite.service';
+export * from './lib/api/invite/sessionInviteState';
 export * from './lib/api/loc-link/loc-link';
 export * from './lib/api/loc-link/loc-link.service';
 export * from './lib/api/loc-type/chip/loc-type-chip.module';

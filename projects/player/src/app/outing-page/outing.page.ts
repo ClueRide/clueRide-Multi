@@ -1,19 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {NavController} from '@ionic/angular';
-import {
-  // Attraction,
-  // AttractionService,
-  OutingService,
-  Outing
-} from 'cr-lib';
 // import {TeamPage} from '../team/team-page';
 import {Title} from '@angular/platform-browser';
+import {Attraction, AttractionService, Outing, OutingService} from 'cr-lib';
 import {ReplaySubject, Subject} from 'rxjs';
 
 /**
  * Orients players having accepted an invite by presenting an overview of the Outing.
  */
-
 @Component({
   selector: 'page-outing',
   templateUrl: 'outing.page.html',
@@ -21,15 +14,15 @@ import {ReplaySubject, Subject} from 'rxjs';
 export class OutingPage implements OnInit, OnDestroy {
 
   outing: Outing = new Outing();
-  // startingAttractionSubject: Subject<Attraction>;
+  startingAttractionSubject: Subject<Attraction>;
 
   constructor(
     // private navCtrl: NavController,
     private titleService: Title,
     private outingService: OutingService,
-    // private attractionService: AttractionService,
+    private attractionService: AttractionService,
   ) {
-    // this.startingAttractionSubject = new ReplaySubject<Attraction>(1);
+    this.startingAttractionSubject = new ReplaySubject<Attraction>(1);
   }
 
   ngOnInit(): void {

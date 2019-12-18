@@ -4,6 +4,7 @@ import {StatusBar} from '@ionic-native/status-bar/ngx';
 
 import {Platform} from '@ionic/angular';
 import {AwaitRegistrationService, PlatformStateService} from 'cr-lib';
+import {AppStateService} from './app-state/app-state.service';
 
 @Component({
   selector: 'app-root',
@@ -25,6 +26,7 @@ export class AppComponent {
   ];
 
   constructor(
+    private appStateService: AppStateService,
     private platform: Platform,
     private platformStateService: PlatformStateService,
     private authClient: AwaitRegistrationService,
@@ -48,7 +50,10 @@ export class AppComponent {
         .subscribe(ready => {
           if (ready) {
             console.log('Registered');
-            // TODO: CI-25 Kick off the application loading.
+            /* Proceed with the application. */
+            this.appStateService.checkInviteIsAccepted()
+              .then()
+              .catch();
           }
         });
     });
