@@ -1,10 +1,10 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
-  "defaultProject": "locEdit",
+  "defaultProject": "ranger",
   "newProjectRoot": "projects",
   "projects": {
-    "locEdit": {
+    "ranger": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -78,14 +78,14 @@
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "locEdit:build",
+            "browserTarget": "ranger:build",
             "customWebpackConfig": {
               "path": "../../webpack.config.js"
             }
           },
           "configurations": {
             "production": {
-              "browserTarget": "locEdit:build:production"
+              "browserTarget": "ranger:build:production"
             },
             "ci": {
               "progress": false
@@ -95,7 +95,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "locEdit:build"
+            "browserTarget": "ranger:build"
           }
         },
         "test": {
@@ -142,38 +142,38 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "locEdit:serve"
+            "devServerTarget": "ranger:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "locEdit:serve:production"
+              "devServerTarget": "ranger:serve:production"
             },
             "ci": {
-              "devServerTarget": "locEdit:serve:ci"
+              "devServerTarget": "ranger:serve:ci"
             }
           }
         },
         "ionic-cordova-build": {
           "builder": "@ionic/angular-toolkit:cordova-build",
           "options": {
-            "browserTarget": "locEdit:build"
+            "browserTarget": "ranger:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "locEdit:build:production"
+              "browserTarget": "ranger:build:production"
             }
           }
         },
         "ionic-cordova-serve": {
           "builder": "@ionic/angular-toolkit:cordova-serve",
           "options": {
-            "cordovaBuildTarget": "locEdit:ionic-cordova-build",
-            "devServerTarget": "locEdit:serve"
+            "cordovaBuildTarget": "ranger:ionic-cordova-build",
+            "devServerTarget": "ranger:serve"
           },
           "configurations": {
             "production": {
-              "cordovaBuildTarget": "locEdit:ionic-cordova-build:production",
-              "devServerTarget": "locEdit:serve:production"
+              "cordovaBuildTarget": "ranger:ionic-cordova-build:production",
+              "devServerTarget": "ranger:serve:production"
             }
           }
         }

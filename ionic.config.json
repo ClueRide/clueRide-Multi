@@ -24,13 +24,13 @@
       "type": "angular",
       "root": "projects/invite"
     },
-    "locEdit": {
-      "name": "locEdit",
+    "ranger": {
+      "name": "ranger",
       "integrations": {
         "cordova": {}
       },
       "type": "angular",
-      "root": "projects/locEdit"
+      "root": "projects/ranger"
     }
   },
   "integrations": {
