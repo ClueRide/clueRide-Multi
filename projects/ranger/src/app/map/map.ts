@@ -2,22 +2,29 @@ import {isDefined} from '@angular/compiler/src/util';
 import {Component} from '@angular/core';
 import {Geoposition} from '@ionic-native/geolocation';
 import {NavController} from '@ionic/angular';
-import {GeoLocService, HeadingComponent, LatLon, Location} from 'cr-lib';
+import {
+  Attraction,
+  ClickableMarker,
+  GeoLocService,
+  HeadingComponent,
+  LatLon,
+  PoolMarkerService
+} from 'cr-lib';
 import * as L from 'leaflet';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  Subject
+} from 'rxjs';
 // TODO: CI-34: put this in the library
 // import {LatLonComponent} from '../lat-lon/lat-lon';
-// TODO: CI-35 Marker functionality
-// import {CRMarker} from '../markers/crMarker';
-// TODO: CI-35 Marker functionality
-// import {MarkersComponent} from '../markers/markers';
 // TODO: CI-32 + navigation changes
 // import {LocEditPage} from '../../pages/loc-edit/loc-edit';
 import {MapDataService} from './data/map-data.service';
 import {MapDragService} from './drag/map-drag.service';
 
 interface LocationMap {
-  [index: number]: Location;
+  [index: number]: Attraction;
 }
 
 /**
@@ -34,21 +41,20 @@ export class MapComponent {
     public navController: NavController,
     public geoLoc: GeoLocService,
     private heading: HeadingComponent,
-    // TODO: CI-35 Marker functionality
-    // private markers: MarkersComponent,
+    private poolMarkerService: PoolMarkerService,
     private mapDragService: MapDragService,
     private mapDataService: MapDataService,
   ) {
     this.zoomLevel = 14;
 
-    console.log('Registering for New Locations');
-    this.mapDataService.sendMeNewLocations(this.addLocation);
+    console.log('Registering for New Attractions');
+    this.mapDataService.sendMeNewLocations(this.addAttraction);
   }
 
 
   /* TODO: Move to a service. */
   public static map: any;
-  static locationMap: LocationMap = {};
+  static attractionMap: LocationMap = {};
   private static tethered = false;
   // static latLon: LatLonComponent = {} as any;
   private static reportedPosition: BehaviorSubject<Geoposition> = new BehaviorSubject({
@@ -75,7 +81,7 @@ export class MapComponent {
    * @param loc Location instance carrying a readinessLevel.
    * @returns number representing an offset from Draft.
    */
-  private static getTabIdForLocation(loc: Location) {
+  private static getTabIdForLocation(loc: Attraction) {
     switch (loc.readinessLevel) {
       case 'FEATURED':
         return 2;
@@ -113,7 +119,7 @@ export class MapComponent {
     /* If map is already initialized, no need to re-initialize. */
     if (!MapComponent.map) {
       console.log('MapComponent Initializing');
-      MapComponent.locationMap = {};
+      MapComponent.attractionMap = {};
       MapComponent.map = L.map('map');
       MapComponent.map.setView(leafletPosition, this.zoomLevel);
 
@@ -145,7 +151,7 @@ export class MapComponent {
   }
 
   public setWatch(): Observable<Geoposition> {
-    // TODO: Move this watch into the Data Service; we just turn on/off the watch
+    // TODO CI-38: Move this watch into the Data Service; we just turn on/off the watch
     const positionObservable = this.geoLoc.getPositionWatch();
     positionObservable.subscribe(
       (position) => {
@@ -185,6 +191,7 @@ export class MapComponent {
       );
     }
   }
+
   public closeMap() {
     console.log('Close Map -- turn off watches');
     if (isDefined(MapComponent.map) && MapComponent.map !== null) {
@@ -194,20 +201,24 @@ export class MapComponent {
   }
 
   /**
-   * Given a Location, place it on the map.
-   * @param location to be added.
+   * Given an Attraction, place it on the map using a Clickable Pool Marker.
+   * Also sets up the mouse-click event to open the editing page for that attraction.
+   * @param attraction to be added.
    */
-  private addLocation = (
-    location: Location
+  private addAttraction = (
+    attraction: Attraction
   ): void => {
-    const iconName = location.locationTypeIconName;
-    MapComponent.locationMap[location.id] = location;
-    // TODO: CI-35 Marker functionality
-    // const locationMarker = this.markers.getLocationMarker(location, iconName)
-    //   .on('click', (mouseEvent) => {
-    //     this.openLocEditPageForMarkerClick(mouseEvent);
-    //   });
-    // locationMarker.addTo(MapComponent.map);
+    const iconName = attraction.locationTypeIconName;
+    MapComponent.attractionMap[attraction.id] = attraction;
+    /* `any` -> unable to tell that ClickableMarker extends Marker? */
+    const poolMarker: any = this.poolMarkerService.getAttractionMarker(
+      attraction,
+      iconName
+    );
+    poolMarker.on('click', (mouseEvent) => {
+        this.openLocEditPageForMarkerClick(mouseEvent);
+      });
+    poolMarker.addTo(MapComponent.map);
   }
 
   /**
@@ -218,20 +229,16 @@ export class MapComponent {
   private openLocEditPageForMarkerClick = (
     mouseEvent
   ): void => {
-    console.log('Marker Click for Loc ID: ' + mouseEvent.target.locationId);
-    // TODO: CI-35 Marker functionality
-    // const crMarker: CRMarker = mouseEvent.target;
-    /* TODO: Routing with parameters (CI-32). */
-    // const nav = this.appCtrl.getRootNavById('n4') as NavController;
-    // TODO: CI-35 Marker functionality
-    // const loc = MapComponent.locationMap[crMarker.locationId];
+    const crMarker: ClickableMarker = mouseEvent.target;
+    console.log('Marker Click for attraction ID: ' + crMarker.attractionId);
+    const attraction = MapComponent.attractionMap[crMarker.attractionId];
 
     /* TODO: Routing with parameters (CI-32). */
     // this.navController.push(
     //   LocEditPage,
     //   {
-    //     location: loc,
-    //     tabId: MapComponent.getTabIdForLocation(loc)
+    //     location: attraction,
+    //     tabId: MapComponent.getTabIdForLocation(attraction)
     //   }
     // );
   }
