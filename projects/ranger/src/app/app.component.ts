@@ -4,6 +4,7 @@ import {StatusBar} from '@ionic-native/status-bar/ngx';
 
 import {NavController, Platform} from '@ionic/angular';
 import {AwaitRegistrationService, PlatformStateService} from 'cr-lib';
+import {AppStateService} from './app-state/app-state.service';
 
 @Component({
   selector: 'app-root',
@@ -25,6 +26,7 @@ export class AppComponent {
   ];
 
   constructor(
+    private appStateService: AppStateService,
     private nav: NavController,
     private platform: Platform,
     private platformStateService: PlatformStateService,
@@ -47,15 +49,11 @@ export class AppComponent {
         .subscribe(ready => {
           if (ready) {
             console.log('Registered');
-            this.nav.navigateRoot('home')
-              .then(
-                () => this.splashScreen.hide()
-              )
-              .catch(
-                error => console.error('Did not get Home Page', error)
-              );
+            /* TODO: CI-15 This may be the time to hide the SplashScreen. */
+            this.appStateService.registrationIsNowActive();
           }
         });
     });
   }
+
 }

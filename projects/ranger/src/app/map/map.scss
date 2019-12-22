@@ -1,0 +1,40 @@
+map {
+
+}
+
+.labeledFab {
+  overflow: visible;
+  position: relative;
+
+  ion-label {
+    position: absolute;
+    right: 40px;
+
+    color: white;
+    background-color: rgba(0,0,0,0.7);
+    line-height: 24px;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+}
+
+.map-content { height: 100%; }
+
+.crosshairs:before, .crosshairs:after {
+  content: '';
+  position: absolute;
+  top: 40%;
+  bottom: 40%;
+  left: 40%;
+  right: 40%;
+  z-index: 999;
+  pointer-events: none;
+}
+.crosshairs:before {
+  bottom: 50%;
+  border-bottom: 1px #0007 solid;
+}
+.crosshairs:after {
+  right: 50%;
+  border-right: 1px #0007 solid;
+}

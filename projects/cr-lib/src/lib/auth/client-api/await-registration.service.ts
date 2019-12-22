@@ -1,6 +1,6 @@
 import {Injectable, NgZone} from '@angular/core';
 import {NavController} from '@ionic/angular';
-import {Observable, Subject} from 'rxjs';
+import {Observable, ReplaySubject, Subject} from 'rxjs';
 import {filter, find} from 'rxjs/operators';
 import {RegStateKey} from '../state/reg-state-key';
 import {RegStateService} from '../state/reg-state.service';
@@ -20,7 +20,7 @@ export class AwaitRegistrationService {
     private nav: NavController,
     private zone: NgZone,
   ) {
-    this.registrationActiveSubject = new Subject();
+    this.registrationActiveSubject = new ReplaySubject();
   }
 
   /**
