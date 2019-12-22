@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 
 import * as L from 'leaflet';
+import 'leaflet.awesome-markers/dist/leaflet.awesome-markers';
 
 /**
  * Service for building the Icon for a given Pool Marker.

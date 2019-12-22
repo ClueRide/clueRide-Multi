@@ -151,7 +151,7 @@ export class MapComponent {
   }
 
   public setWatch(): Observable<Geoposition> {
-    // TODO: Move this watch into the Data Service; we just turn on/off the watch
+    // TODO CI-38: Move this watch into the Data Service; we just turn on/off the watch
     const positionObservable = this.geoLoc.getPositionWatch();
     positionObservable.subscribe(
       (position) => {
@@ -229,10 +229,8 @@ export class MapComponent {
   private openLocEditPageForMarkerClick = (
     mouseEvent
   ): void => {
-    console.log('Marker Click for Loc ID: ' + mouseEvent.target.locationId);
     const crMarker: ClickableMarker = mouseEvent.target;
-    /* TODO: Routing with parameters (CI-32). */
-    // const nav = this.appCtrl.getRootNavById('n4') as NavController;
+    console.log('Marker Click for attraction ID: ' + crMarker.attractionId);
     const attraction = MapComponent.attractionMap[crMarker.attractionId];
 
     /* TODO: Routing with parameters (CI-32). */

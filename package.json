@@ -31,6 +31,7 @@
     "@ionic/angular": "^4.7.1",
     "ionic": "^4.12.0",
     "leaflet": "^1.2.0",
+    "leaflet.awesome-markers": "^2.0.5",
     "native-run": "^0.3.0",
     "ng-event-source": "1.0.14",
     "rxjs": "~6.5.1",

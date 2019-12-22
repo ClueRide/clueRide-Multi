@@ -41,6 +41,9 @@
               },
               {
                 "input": "src/global.scss"
+              },
+              {
+                "input": "../../node_modules/leaflet.awesome-markers/dist/leaflet.awesome-markers.css"
               }
             ],
             "scripts": []
