@@ -4,6 +4,7 @@ import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {IonicModule} from '@ionic/angular';
 import {ConnectionStateComponentModule} from 'cr-lib';
+import {MapModule} from '../map/map.module';
 
 import {HomePage} from './home.page';
 
@@ -13,6 +14,7 @@ import {HomePage} from './home.page';
     FormsModule,
     IonicModule,
     ConnectionStateComponentModule,
+    MapModule,
     RouterModule.forChild([
       {
         path: '',

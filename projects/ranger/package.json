@@ -1,9 +1,9 @@
 {
-  "name": "loc-edit",
+  "name": "ranger",
   "version": "0.0.1",
   "author": "Clue Ride",
   "homepage": "https://clueride.com/",
-  "description": "Clue Ride Location App - Ionic 4",
+  "description": "Clue Ride Ranger App - Ionic 4",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
