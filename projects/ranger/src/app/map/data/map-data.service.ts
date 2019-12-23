@@ -1,7 +1,19 @@
 import {Injectable} from '@angular/core';
 import {Geoposition} from '@ionic-native/geolocation';
-import {Location, LocationService, LocTypeService} from 'cr-lib';
-import {from, Observable, ReplaySubject, Subject} from 'rxjs';
+import {
+  Attraction,
+  GeoLocService,
+  Location,
+  LocationService,
+  LocTypeService
+} from 'cr-lib';
+import {
+  BehaviorSubject,
+  from,
+  Observable,
+  ReplaySubject,
+  Subject
+} from 'rxjs';
 import {filter} from 'rxjs/operators';
 
 /**
@@ -13,16 +25,39 @@ import {filter} from 'rxjs/operators';
 })
 export class MapDataService {
 
-  locationMap = [];
-  locationToAdd$: Subject<Location> = new Subject<Location>();
+  private attractionByIdCache = [];
+  private locationToAdd$: Subject<Location> = new Subject<Location>();
   private currentPosition: Geoposition;
   private currentPositionSubject: Subject<Geoposition> = new ReplaySubject<Geoposition>();
+
+  /* Our current Center of the map. */
+  readonly reportedPosition: BehaviorSubject<Geoposition>;
 
   constructor(
     public locationService: LocationService,
     public locationTypeService: LocTypeService,
-) {
+    public geoLoc: GeoLocService,
+  ) {
     console.log('Hello MapDataService Provider');
+
+    /* Set an Atlanta position if we don't have any other value yet. */
+    this.reportedPosition = new BehaviorSubject({
+      coords: {
+        latitude: 33.75,
+        longitude: -84.75,
+        accuracy: 0.0,
+        altitude: null,
+        altitudeAccuracy: null,
+        heading: null,
+        speed: null
+      },
+      timestamp: null
+    });
+  }
+
+  /** Subject published when center of map is moved. */
+  public getReportedPosition(): Subject<Geoposition> {
+    return this.reportedPosition;
   }
 
   public postInitialPosition(position: Geoposition): void {
@@ -60,11 +95,11 @@ export class MapDataService {
       lon: position.coords.longitude,
       lng: position.coords.longitude,
     }).subscribe(
-      (locations) => {
-        this.locationMap = [];
-        locations.forEach(
-          (location) => {
-            this.assembleAndAddLocation(location);
+      (attractions) => {
+        this.attractionByIdCache = [];
+        attractions.forEach(
+          (attraction) => {
+            this.assembleAndAddAttraction(attraction);
           }
         );
       }
@@ -72,24 +107,36 @@ export class MapDataService {
   }
 
   /**
-   * There are multiple pieces of data that build up a Location; this puts
+   * There are multiple pieces of data that build up a Attraction; this puts
    * them all together.
-   * @param location partially built instance.
+   * @param attraction partially assembled instance from LocationService.
    */
-  assembleAndAddLocation = (location: Location) => {
-    const locationType = this.locationTypeService.getById(location.locationTypeId);
-    // console.log(location.id + ': ' + location.name);
-    location.locationTypeIconName = locationType.icon;
-    this.locationMap[location.id] = location;
-    /* Push to location stream. */
-    this.locationToAdd$.next(location);
+  assembleAndAddAttraction = (attraction: Attraction) => {
+    const locationType = this.locationTypeService.getById(attraction.locationTypeId);
+    // console.log(attraction.id + ': ' + attraction.name);
+    attraction.locationTypeIconName = locationType.icon;
+
+    this.attractionByIdCache[attraction.id] = attraction;
+
+    /* Push to attraction stream. */
+    this.locationToAdd$.next(attraction);
+  }
+
+  /** Given the Attraction ID, retrieve the cached copy of
+   * the Attraction loaded from backend.
+   *
+   * @param attractionId unique identifier for the Attraction.
+   */
+  getAttractionById(attractionId: number): Attraction {
+    return this.attractionByIdCache[attractionId];
   }
 
   /**
    * Request that all currently cached locations be sent to the subscribers.
    */
   resendAllLocations() {
-    from(this.locationMap).pipe(
+    /* Requires an instance that implement iterable. */
+    from(this.attractionByIdCache).pipe(
       filter((item) => !!item)
     ).subscribe(
       (loc) => {this.locationToAdd$.next(loc); }
@@ -97,11 +144,25 @@ export class MapDataService {
   }
 
   /**
-   * Propagate this newly updated Location to listeners.
-   * @param location with updated properties.
+   * Pays attention to the GeoLoc service to provide new positions and passes them along to
+   * the function which handles that new position.
+   *
+   * @param setNewCenterForMap function which is expected to respond to a new position.
    */
-  updateLocation(location: Location) {
-    this.assembleAndAddLocation(location);
+  public setWatch(
+    setNewCenterForMap: (position: Geoposition) => void
+  ): Observable<Geoposition> {
+    const positionObservable = this.geoLoc.getPositionWatch();
+    positionObservable.subscribe(
+      (position) => {
+        setNewCenterForMap(position);
+      }
+    );
+    return positionObservable;
+  }
+
+  public releaseWatch(): void {
+    this.geoLoc.clearWatch();
   }
 
 }
