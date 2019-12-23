@@ -1,8 +1,11 @@
-import {Component, Input} from '@angular/core';
+import {Component} from '@angular/core';
 import {Geoposition} from '@ionic-native/geolocation';
 import {NavController} from '@ionic/angular';
-import {LatLon, LocationService} from 'cr-lib';
-import {BehaviorSubject} from 'rxjs';
+import {
+  LatLon,
+  LocationService
+} from 'cr-lib';
+import {MapDataService} from '../data/map-data.service';
 // TODO: CI-32 Edit Page for adding a new location
 // import {LocEditPage} from '../../pages/loc-edit/loc-edit';
 
@@ -17,24 +20,25 @@ import {BehaviorSubject} from 'rxjs';
 })
 export class AddLocButtonComponent {
 
-  @Input() mapCenter: BehaviorSubject<Geoposition>;
-
   constructor(
-    public locationService: LocationService,
+    private locationService: LocationService,
+    private mapDataService: MapDataService,
     private navCtrl: NavController,
   ) {
     console.log('Hello AddLocButtonComponent Component');
   }
 
-  addLocationAction(event) {
-    event.srcEvent.stopPropagation();
-    const newGeoposition: Geoposition = this.mapCenter.getValue();
+  addLocationAction(event: Event) {
+    const newGeoposition: Geoposition = this.mapDataService.getReportedPosition();
     alert(JSON.stringify(newGeoposition.coords));
+
+    // TODO CI-37: LatLon <==> Geoposition translation
     const newLatLon = new LatLon();
     newLatLon.lat = newGeoposition.coords.latitude;
     newLatLon.lon = newGeoposition.coords.longitude;
     newLatLon.lng = newGeoposition.coords.longitude;
 
+    // TODO: Turn this into AttractionService
     this.locationService.proposeLocation(newLatLon)
       .subscribe(location => {
         // TODO: CI-32

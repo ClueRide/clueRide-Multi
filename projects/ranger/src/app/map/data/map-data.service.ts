@@ -56,8 +56,13 @@ export class MapDataService {
   }
 
   /** Subject published when center of map is moved. */
-  public getReportedPosition(): Subject<Geoposition> {
+  public getReportedPositionSubject(): BehaviorSubject<Geoposition> {
     return this.reportedPosition;
+  }
+
+  /** Geoposition published when center of map is moved. */
+  public getReportedPosition(): Geoposition {
+    return this.reportedPosition.getValue();
   }
 
   public postInitialPosition(position: Geoposition): void {
@@ -80,8 +85,14 @@ export class MapDataService {
     /* Other caches here? */
   }
 
-  public sendMeNewLocations(addLocationFunction) {
-    this.locationToAdd$.subscribe(addLocationFunction);
+  /**
+   * Allows a Map Data client to be told whenever there is a new Attraction
+   * to be added to the map.
+   *
+   * @param addAttractionFunction accepts an Attraction.
+   */
+  public sendMeNewAttractions(addAttractionFunction) {
+    this.locationToAdd$.subscribe(addAttractionFunction);
   }
 
   /**
@@ -133,13 +144,15 @@ export class MapDataService {
 
   /**
    * Request that all currently cached locations be sent to the subscribers.
+   *
+   * NOTE: This does not refresh the cache from the back-end.
    */
   resendAllLocations() {
-    /* Requires an instance that implement iterable. */
+    /* `from()` requires an instance that implements iterable. */
     from(this.attractionByIdCache).pipe(
       filter((item) => !!item)
     ).subscribe(
-      (loc) => {this.locationToAdd$.next(loc); }
+      (attraction) => {this.locationToAdd$.next(attraction); }
     );
   }
 

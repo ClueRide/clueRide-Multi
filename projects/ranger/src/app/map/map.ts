@@ -35,10 +35,6 @@ export class MapComponent {
   /** Holds the current zoom for the map. */
   private zoomLevel: number;
 
-  private showLatLon = true;
-  private showCrosshairs = false;
-  private tethered = false;
-
   constructor(
     private navController: NavController,
     private heading: HeadingComponent,
@@ -49,7 +45,7 @@ export class MapComponent {
     this.zoomLevel = 14;
 
     console.log('Map Component constructing');
-    this.mapDataService.sendMeNewLocations(this.addAttraction);
+    this.mapDataService.sendMeNewAttractions(this.addAttraction);
   }
 
   /**
@@ -184,6 +180,7 @@ export class MapComponent {
       attraction,
       iconName
     );
+    console.log('Adding ' + attraction.name + ' to the map');
     poolMarker.on('click', (mouseEvent) => {
         this.openLocEditPageForMarkerClick(mouseEvent);
       });
@@ -210,44 +207,6 @@ export class MapComponent {
     //     tabId: MapComponent.getTabIdForLocation(attraction)
     //   }
     // );
-  }
-
-  settingsFabAction(event) {
-    event.srcEvent.stopPropagation();
-    console.log('Settings Toggle');
-  }
-
-  settingsToggleCrosshairs(event) {
-    event.srcEvent.stopPropagation();
-    this.showCrosshairs = !this.showCrosshairs;
-    console.log('Crosshairs: ' + this.showCrosshairs);
-  }
-
-  settingsToggleLatLon(event) {
-    event.srcEvent.stopPropagation();
-    this.showLatLon = !this.showLatLon;
-    // TODO: CI-34 bring latLon replacement into here
-    // MapComponent.latLon.enableDisplay(this.showLatLon);
-    console.log('Lat/Lon: ' + this.showLatLon);
-  }
-
-  settingsToggleAutoCenter(event) {
-    event.srcEvent.stopPropagation();
-    this.mapDragService.setAutoCenter(!this.mapDragService.isAutoCenter());
-  }
-
-  /* Respond to request to repaint the locations. */
-  refreshMap(event) {
-    event.srcEvent.stopPropagation();
-    this.openMapAtPosition(this.mapDataService.getCurrentPosition());
-    /* Clear existing list of locations. */
-    /* Trigger sending us another set of locations. */
-    this.mapDataService.resendAllLocations();
-  }
-
-  /* Won't be appropriate for Loc Edit. */
-  settingsToggleTether() {
-    this.tethered = !this.tethered;
   }
 
 }
