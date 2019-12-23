@@ -1,36 +1,7 @@
-<div class="map-content crosshairs" id="map">
+<div id="map" class="map-content crosshairs">
 
-  <!-- TODO: CI-36 take care of ion-fabs (and tap) -->
-  <ion-fab right top>
-    <button ion-fab mini (tap)="settingsFabAction($event)">
-      <ion-icon name="settings"></ion-icon>
-    </button>
-    <ion-fab-list>
+  <app-map-action></app-map-action>
 
-      <div class="labeledFab">
-        <ion-label>Toggle Lat/Lon</ion-label>
-        <button ion-fab (tap)="settingsToggleLatLon($event)">
-          <ion-icon name="checkmark"></ion-icon>
-        </button>
-      </div>
-
-      <div class="labeledFab">
-        <ion-label>Toggle Auto-center</ion-label>
-        <button ion-fab (tap)="settingsToggleAutoCenter($event)">
-          <ion-icon name="locate"></ion-icon>
-        </button>
-      </div>
-
-      <div class="labeledFab">
-        <ion-label>Refresh Map</ion-label>
-        <button ion-fab (tap)="refreshMap($event)">
-          <ion-icon name="refresh"></ion-icon>
-        </button>
-      </div>
-
-    </ion-fab-list>
-  </ion-fab>
-
-  <add-loc-button [mapCenter]="publiclyReportedPosition"></add-loc-button>
+  <add-loc-button></add-loc-button>
 
 </div>

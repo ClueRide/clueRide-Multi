@@ -38,8 +38,7 @@ export class MapDragService {
   constructor(
     private mapDataService: MapDataService
   ) {
-    // TODO: Not clear that I need this
-    this.centerSubject = mapDataService.getReportedPosition();
+    this.centerSubject = mapDataService.getReportedPositionSubject();
   }
 
   public isAutoCenter(): boolean {

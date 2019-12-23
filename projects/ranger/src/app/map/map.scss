@@ -2,22 +2,6 @@ map {
 
 }
 
-.labeledFab {
-  overflow: visible;
-  position: relative;
-
-  ion-label {
-    position: absolute;
-    right: 40px;
-
-    color: white;
-    background-color: rgba(0,0,0,0.7);
-    line-height: 24px;
-    padding: 4px 8px;
-    border-radius: 4px;
-  }
-}
-
 .map-content { height: 100%; }
 
 .crosshairs:before, .crosshairs:after {

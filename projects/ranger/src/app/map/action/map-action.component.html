@@ -1,0 +1,31 @@
+<ion-fab horizontal="end" vertical="top">
+  <ion-fab-button size="small" (click)="settingsFabAction($event)">
+    <ion-icon name="settings"></ion-icon>
+  </ion-fab-button>
+  <ion-fab-list>
+
+    <div class="labeledFab">
+      <ion-label>Toggle Lat/Lon</ion-label>
+      <ion-fab-button size="small" (click)="settingsToggleLatLon($event)">
+        <ion-icon name="checkmark"></ion-icon>
+      </ion-fab-button>
+    </div>
+
+    <div class="labeledFab">
+      <ion-label>Toggle Auto-center</ion-label>
+      <ion-fab-button size="small" (click)="settingsToggleAutoCenter($event)">
+        <ion-icon name="locate"></ion-icon>
+      </ion-fab-button>
+    </div>
+
+    <div class="labeledFab">
+      <ion-label>Refresh Map</ion-label>
+      <ion-fab-button size="small" (click)="refreshMap($event)">
+        <ion-icon name="refresh"></ion-icon>
+      </ion-fab-button>
+    </div>
+
+  </ion-fab-list>
+</ion-fab>
+
+

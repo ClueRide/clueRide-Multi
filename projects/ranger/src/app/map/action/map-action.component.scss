@@ -1,0 +1,16 @@
+
+.labeledFab {
+  overflow: visible;
+  position: relative;
+
+  ion-label {
+    position: absolute;
+    right: 50px;
+
+    color: white;
+    background-color: rgba(0,0,0,0.7);
+    line-height: 20px;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+}
