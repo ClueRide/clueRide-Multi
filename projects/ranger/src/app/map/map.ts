@@ -5,27 +5,18 @@ import {NavController} from '@ionic/angular';
 import {
   Attraction,
   ClickableMarker,
-  GeoLocService,
   HeadingComponent,
   LatLon,
   PoolMarkerService
 } from 'cr-lib';
 import * as L from 'leaflet';
-import {
-  BehaviorSubject,
-  Observable,
-  Subject
-} from 'rxjs';
-// TODO: CI-34: put this in the library
+import {Subject} from 'rxjs';
+// TODO: CI-34: put this ViewLatLon component in the library
 // import {LatLonComponent} from '../lat-lon/lat-lon';
 // TODO: CI-32 + navigation changes
 // import {LocEditPage} from '../../pages/loc-edit/loc-edit';
 import {MapDataService} from './data/map-data.service';
 import {MapDragService} from './drag/map-drag.service';
-
-interface LocationMap {
-  [index: number]: Attraction;
-}
 
 /**
  * Defines the Main Map upon which all Attractions are shown.
@@ -37,9 +28,19 @@ interface LocationMap {
 })
 export class MapComponent {
 
+  // static latLon: LatLonComponent = {} as any;
+
+  public map: any;
+
+  /** Holds the current zoom for the map. */
+  private zoomLevel: number;
+
+  private showLatLon = true;
+  private showCrosshairs = false;
+  private tethered = false;
+
   constructor(
-    public navController: NavController,
-    public geoLoc: GeoLocService,
+    private navController: NavController,
     private heading: HeadingComponent,
     private poolMarkerService: PoolMarkerService,
     private mapDragService: MapDragService,
@@ -47,34 +48,9 @@ export class MapComponent {
   ) {
     this.zoomLevel = 14;
 
-    console.log('Registering for New Attractions');
+    console.log('Map Component constructing');
     this.mapDataService.sendMeNewLocations(this.addAttraction);
   }
-
-
-  /* TODO: Move to a service. */
-  public static map: any;
-  static attractionMap: LocationMap = {};
-  private static tethered = false;
-  // static latLon: LatLonComponent = {} as any;
-  private static reportedPosition: BehaviorSubject<Geoposition> = new BehaviorSubject({
-    coords: {
-      latitude: 33.75,
-      longitude: -84.75,
-      accuracy: 0.0,
-      altitude: null,
-      altitudeAccuracy: null,
-      heading: null,
-      speed: null
-    },
-    timestamp: null
-  });
-
-  /** Holds the current zoom for the map. */
-  zoomLevel: number;
-  showLatLon = true;
-  showCrosshairs = false;
-  public publiclyReportedPosition: BehaviorSubject<Geoposition> = MapComponent.reportedPosition;
 
   /**
    * Reads the Location's readiness level to determine which tab to show.
@@ -110,18 +86,18 @@ export class MapComponent {
   }
 
   public openMapAtPosition(position: Geoposition) {
-    /* Assemble Leaflet position object. (LE-70) */
+    // TODO: LE-70
+    /* Assemble Leaflet position object. */
     const leafletPosition = [
       position.coords.latitude,
       position.coords.longitude
     ];
 
     /* If map is already initialized, no need to re-initialize. */
-    if (!MapComponent.map) {
+    if (!this.map) {
       console.log('MapComponent Initializing');
-      MapComponent.attractionMap = {};
-      MapComponent.map = L.map('map');
-      MapComponent.map.setView(leafletPosition, this.zoomLevel);
+      this.map = L.map('map');
+      this.map.setView(leafletPosition, this.zoomLevel);
 
       /* TODO: CI-34 Rename this presentation component. */
       // MapComponent.latLon = new LatLonComponent();
@@ -129,62 +105,54 @@ export class MapComponent {
       // MapComponent.latLon.setPositionSubject(MapComponent.reportedPosition);
 
       /* Attach the reported position subject to the Move Start service. */
-      this.mapDragService.useMap(MapComponent.map, MapComponent.reportedPosition);
+      this.mapDragService.useMap(this.map);
     }
 
     /* Specify the tile layer for the map and add the attribution. */
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
         '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-    }).addTo(MapComponent.map);
+    }).addTo(this.map);
 
     /* Add a "here I am" marker. */
-    this.heading.getHeadingMarker().addTo(MapComponent.map);
+    this.heading.getHeadingMarker().addTo(this.map);
 
     /* Turn off auto-center if user drags the map. */
-    MapComponent.map.on('movestart', () => {
+    this.map.on('movestart', () => {
       this.mapDragService.setAutoCenter(false);
     });
 
     /* Begin paying attention to position changes. */
-    this.setWatch();
+    this.mapDataService.setWatch(this.setNewCenterForMap);
   }
 
-  public setWatch(): Observable<Geoposition> {
-    // TODO CI-38: Move this watch into the Data Service; we just turn on/off the watch
-    const positionObservable = this.geoLoc.getPositionWatch();
-    positionObservable.subscribe(
-      (position) => {
-        if (!this.mapDragService.isDragInProgress()) {
-          this.setNewCenterForMap(position);
-        }
-      }
-    );
-    return positionObservable;
-  }
+  setNewCenterForMap = (geoposition: Geoposition) => {
+    /* Ignore new position updates until the drag completes. */
+    if (this.mapDragService.isDragInProgress()) {
+      return;
+    }
 
-  setNewCenterForMap(position: Geoposition) {
-    this.heading.updateLocation(position.coords);
+    // TODO: Have this guy subscribe to the MapDataService
+    this.heading.updateLocation(geoposition.coords);
 
     /* Move map so current location is centered. */
-    if (this.mapDragService.isAutoCenter() && MapComponent.map) {
+    if (this.mapDragService.isAutoCenter() && this.map) {
 
       /* Suspend move event generation. */
-      MapComponent.map.off('movestart');
+      this.map.off('movestart');
 
       // TODO: LE-70 Prepare a better pattern for converting between these two representations.
       const latLon: LatLon = {
         id: 0,
-        lat: position.coords.latitude,
-        lon: position.coords.longitude,
-        lng: position.coords.longitude
+        lat: geoposition.coords.latitude,
+        lon: geoposition.coords.longitude,
+        lng: geoposition.coords.longitude
       };
-      MapComponent.map.panTo(latLon);
+      this.map.panTo(latLon);
       console.log('Map.updatePosition: next Reported Position');
-      MapComponent.reportedPosition.next(position);
 
       /* Restore move event generation. */
-      MapComponent.map.on('movestart',
+      this.map.on('movestart',
         () => {
           this.mapDragService.setAutoCenter(false);
         }
@@ -194,8 +162,8 @@ export class MapComponent {
 
   public closeMap() {
     console.log('Close Map -- turn off watches');
-    if (isDefined(MapComponent.map) && MapComponent.map !== null) {
-      this.geoLoc.clearWatch();
+    if (isDefined(this.map) && this.map !== null) {
+      this.mapDataService.releaseWatch();
     }
     this.heading.releaseHeadingMarker();
   }
@@ -203,13 +171,14 @@ export class MapComponent {
   /**
    * Given an Attraction, place it on the map using a Clickable Pool Marker.
    * Also sets up the mouse-click event to open the editing page for that attraction.
+   *
+   * Anonymous function so it maintains `this` when called from separate scope.
    * @param attraction to be added.
    */
-  private addAttraction = (
+  addAttraction = (
     attraction: Attraction
   ): void => {
     const iconName = attraction.locationTypeIconName;
-    MapComponent.attractionMap[attraction.id] = attraction;
     /* `any` -> unable to tell that ClickableMarker extends Marker? */
     const poolMarker: any = this.poolMarkerService.getAttractionMarker(
       attraction,
@@ -218,7 +187,7 @@ export class MapComponent {
     poolMarker.on('click', (mouseEvent) => {
         this.openLocEditPageForMarkerClick(mouseEvent);
       });
-    poolMarker.addTo(MapComponent.map);
+    poolMarker.addTo(this.map);
   }
 
   /**
@@ -226,12 +195,12 @@ export class MapComponent {
    * open the Location Edit page with that Location.
    * @param mouseEvent carrying location of the click.
    */
-  private openLocEditPageForMarkerClick = (
+  private openLocEditPageForMarkerClick(
     mouseEvent
-  ): void => {
+  ): void {
     const crMarker: ClickableMarker = mouseEvent.target;
     console.log('Marker Click for attraction ID: ' + crMarker.attractionId);
-    const attraction = MapComponent.attractionMap[crMarker.attractionId];
+    const attraction = this.mapDataService.getAttractionById(crMarker.attractionId);
 
     /* TODO: Routing with parameters (CI-32). */
     // this.navController.push(
@@ -278,7 +247,7 @@ export class MapComponent {
 
   /* Won't be appropriate for Loc Edit. */
   settingsToggleTether() {
-    MapComponent.tethered = !MapComponent.tethered;
+    this.tethered = !this.tethered;
   }
 
 }

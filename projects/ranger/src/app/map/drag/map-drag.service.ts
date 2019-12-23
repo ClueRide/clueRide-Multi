@@ -1,8 +1,10 @@
 import {Injectable} from '@angular/core';
 import {Geoposition} from '@ionic-native/geolocation';
 import {LatLon} from 'cr-lib';
-import {BehaviorSubject} from 'rxjs';
+import {Subject} from 'rxjs';
+import {MapDataService} from '../data/map-data.service';
 
+// TODO: CI-37 - part of the transformation of Geoposition and LatLon.
 function buildGeoPositionFromLatLon(latLon: LatLon): Geoposition {
   return {
     coords: {
@@ -18,6 +20,10 @@ function buildGeoPositionFromLatLon(latLon: LatLon): Geoposition {
   };
 }
 
+/**
+ * This responds to map drag events and is a source of new position info which is pushed
+ * to the MapDataService.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -26,12 +32,14 @@ export class MapDragService {
   /** Set to true if the center of the map should follow either Device or Tether instead of Drag. */
   private autoCenterFlag = true;
   private mapInstance: any;
-  private centerSubject: BehaviorSubject<Geoposition>;
+  private centerSubject: Subject<Geoposition>;
   private dragInProgress = false;
 
   constructor(
-    /* Currently no dependencies. */
+    private mapDataService: MapDataService
   ) {
+    // TODO: Not clear that I need this
+    this.centerSubject = mapDataService.getReportedPosition();
   }
 
   public isAutoCenter(): boolean {
@@ -44,11 +52,9 @@ export class MapDragService {
   }
 
   useMap(
-    map: any,
-    centerSubject: BehaviorSubject<Geoposition>
+    map: any
   ) {
     this.mapInstance = map;
-    this.centerSubject = centerSubject;
 
     map.on('movestart', () => {
       this.dragInProgress = true;
@@ -68,6 +74,7 @@ export class MapDragService {
 
   sendDragEndLocation(latLon: LatLon) {
     console.log('Setting new map center from Map Drag');
+    // TODO: Not clear that I need to propagate this
     this.centerSubject.next(
       buildGeoPositionFromLatLon(
         latLon
