@@ -2,8 +2,14 @@ import {Component} from '@angular/core';
 import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 
-import {NavController, Platform} from '@ionic/angular';
-import {AwaitRegistrationService, PlatformStateService} from 'cr-lib';
+import {
+  NavController,
+  Platform
+} from '@ionic/angular';
+import {
+  AwaitRegistrationService,
+  PlatformStateService
+} from 'cr-lib';
 import {AppStateService} from './app-state/app-state.service';
 
 @Component({
@@ -22,6 +28,11 @@ export class AppComponent {
       title: 'List',
       url: '/list',
       icon: 'list'
+    },
+    {
+      title: 'Edit',
+      url: '/home/edit-attraction',
+      icon: 'pencil'
     }
   ];
 

@@ -120,6 +120,7 @@ export class MapDataService {
   /**
    * There are multiple pieces of data that build up a Attraction; this puts
    * them all together.
+   *
    * @param attraction partially assembled instance from LocationService.
    */
   assembleAndAddAttraction = (attraction: Attraction) => {
@@ -127,6 +128,7 @@ export class MapDataService {
     // console.log(attraction.id + ': ' + attraction.name);
     attraction.locationTypeIconName = locationType.icon;
 
+    /* Both adds new and replaces existing attractions in the cache. */
     this.attractionByIdCache[attraction.id] = attraction;
 
     /* Push to attraction stream. */
@@ -140,6 +142,10 @@ export class MapDataService {
    */
   getAttractionById(attractionId: number): Attraction {
     return this.attractionByIdCache[attractionId];
+  }
+
+  updateAttraction(updatedAttraction: Attraction) {
+    this.assembleAndAddAttraction(updatedAttraction);
   }
 
   /**
@@ -177,5 +183,4 @@ export class MapDataService {
   public releaseWatch(): void {
     this.geoLoc.clearWatch();
   }
-
 }
