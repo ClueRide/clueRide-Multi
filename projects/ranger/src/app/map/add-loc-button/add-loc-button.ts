@@ -1,13 +1,11 @@
 import {Component} from '@angular/core';
+import {Router} from '@angular/router';
 import {Geoposition} from '@ionic-native/geolocation';
-import {NavController} from '@ionic/angular';
 import {
   LatLon,
   LocationService
 } from 'cr-lib';
 import {MapDataService} from '../data/map-data.service';
-// TODO: CI-32 Edit Page for adding a new location
-// import {LocEditPage} from '../../pages/loc-edit/loc-edit';
 
 /**
  * Provides a button that upon clicking will query the map's current
@@ -23,7 +21,7 @@ export class AddLocButtonComponent {
   constructor(
     private locationService: LocationService,
     private mapDataService: MapDataService,
-    private navCtrl: NavController,
+    private router: Router,
   ) {
     console.log('Hello AddLocButtonComponent Component');
   }
@@ -38,14 +36,24 @@ export class AddLocButtonComponent {
     newLatLon.lon = newGeoposition.coords.longitude;
     newLatLon.lng = newGeoposition.coords.longitude;
 
-    // TODO: Turn this into AttractionService
+    // TODO: CA-256 Turn this into AttractionService
     this.locationService.proposeLocation(newLatLon)
-      .subscribe(location => {
-        // TODO: CI-32
-        // this.navCtrl.push(LocEditPage, {
-        //   location,
-        //   tabId: 0    // New Locations won't have any data; start on Tab 0
-        // });
+      .subscribe(newAttraction => {
+
+        /* TODO: SVR-79: take care of this server-side. */
+        newAttraction.readinessLevel = 'DRAFT';
+
+        /* Add to the client-side service. */
+        this.mapDataService.assembleAndAddAttraction(newAttraction);
+
+        /* Navigate to the Attraction Edit pages. */
+        this.router.navigate(
+          ['edit', newAttraction.id, 'draft']
+        ).then(() => {
+          console.log('Successful launch of edit page');
+        }).catch( (error) => {
+          console.log('Failed to launch edit page: ', error);
+        });
       });
   }
 

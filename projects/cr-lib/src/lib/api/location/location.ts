@@ -1,5 +1,5 @@
-import {Image} from '../../domain/image/image';
 import {LatLon} from '../../domain/lat-lon/lat-lon';
+import {Image} from '../image/image';
 import {LocLink} from '../loc-link/loc-link';
 
 /**

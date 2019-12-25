@@ -1,5 +1,6 @@
-import {Image} from '../../domain/image/image';
 import {LatLon} from '../../domain/lat-lon/lat-lon';
+import {Image} from '../image/image';
+import {LocLink} from '../loc-link/loc-link';
 
 /**
  * Attractions are specific instances of Location; they have a
@@ -22,4 +23,6 @@ export class Attraction {
   readinessLevel: string;
   isLast?: boolean;
   isCurrent?: boolean;
+  mainLink?: LocLink;
+  otherLinks?: LocLink[];
 }

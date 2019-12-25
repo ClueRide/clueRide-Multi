@@ -1,7 +1,7 @@
 import {isDefined} from '@angular/compiler/src/util';
 import {Component} from '@angular/core';
+import {Router} from '@angular/router';
 import {Geoposition} from '@ionic-native/geolocation';
-import {NavController} from '@ionic/angular';
 import {
   Attraction,
   ClickableMarker,
@@ -13,8 +13,6 @@ import * as L from 'leaflet';
 import {Subject} from 'rxjs';
 // TODO: CI-34: put this ViewLatLon component in the library
 // import {LatLonComponent} from '../lat-lon/lat-lon';
-// TODO: CI-32 + navigation changes
-// import {LocEditPage} from '../../pages/loc-edit/loc-edit';
 import {MapDataService} from './data/map-data.service';
 import {MapDragService} from './drag/map-drag.service';
 
@@ -28,6 +26,7 @@ import {MapDragService} from './drag/map-drag.service';
 })
 export class MapComponent {
 
+  // TODO: CI-34: put this ViewLatLon component in the library
   // static latLon: LatLonComponent = {} as any;
 
   public map: any;
@@ -36,11 +35,11 @@ export class MapComponent {
   private zoomLevel: number;
 
   constructor(
-    private navController: NavController,
     private heading: HeadingComponent,
     private poolMarkerService: PoolMarkerService,
     private mapDragService: MapDragService,
     private mapDataService: MapDataService,
+    private router: Router
   ) {
     this.zoomLevel = 14;
 
@@ -50,17 +49,17 @@ export class MapComponent {
 
   /**
    * Reads the Location's readiness level to determine which tab to show.
-   * @param loc Location instance carrying a readinessLevel.
+   * @param attraction instance carrying a readinessLevel.
    * @returns number representing an offset from Draft.
    */
-  private static getTabIdForLocation(loc: Attraction) {
-    switch (loc.readinessLevel) {
-      case 'FEATURED':
-        return 2;
+  private static getTabIdForLocation(attraction: Attraction): string {
+    switch (attraction.readinessLevel) {
       case 'ATTRACTION':
-        return 1;
+        return 'puzzle';
+      case 'PLACE':
+        return 'images';
       default:
-        return 0;
+        return 'draft';
     }
   }
 
@@ -180,7 +179,7 @@ export class MapComponent {
       attraction,
       iconName
     );
-    console.log('Adding ' + attraction.name + ' to the map');
+    // console.log('Adding ' + attraction.name + ' to the map');
     poolMarker.on('click', (mouseEvent) => {
         this.openLocEditPageForMarkerClick(mouseEvent);
       });
@@ -197,16 +196,15 @@ export class MapComponent {
   ): void {
     const crMarker: ClickableMarker = mouseEvent.target;
     console.log('Marker Click for attraction ID: ' + crMarker.attractionId);
-    const attraction = this.mapDataService.getAttractionById(crMarker.attractionId);
+    const selectedAttraction = this.mapDataService.getAttractionById(crMarker.attractionId);
 
-    /* TODO: Routing with parameters (CI-32). */
-    // this.navController.push(
-    //   LocEditPage,
-    //   {
-    //     location: attraction,
-    //     tabId: MapComponent.getTabIdForLocation(attraction)
-    //   }
-    // );
+    this.router.navigate(
+      ['edit', selectedAttraction.id, MapComponent.getTabIdForLocation(selectedAttraction)]
+    ).then(() => {
+      console.log('Successful launch of edit page');
+    }).catch( (error) => {
+      console.log('Failed to launch edit page: ', error);
+    });
   }
 
 }
