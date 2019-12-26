@@ -19,7 +19,7 @@ const routes: Routes = [
     path: 'list',
     loadChildren: () => import('./list/list.module').then(m => m.ListPageModule)
   },
-  /* TODO: CI-49 another piece that is tough to simply drop. */
+  /* This is this lazy-loading of the EditPage Module -- which includes its parent-child routing. */
   { path: 'edit', loadChildren: './edit/edit.module#EditPageModule' },
 ];
 
