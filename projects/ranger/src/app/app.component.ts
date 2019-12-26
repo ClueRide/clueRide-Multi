@@ -20,7 +20,7 @@ import {AppStateService} from './app-state/app-state.service';
 export class AppComponent {
   public appPages = [
     {
-      title: 'Home',
+      title: 'Map',
       url: '/home',
       icon: 'home'
     },
@@ -28,11 +28,6 @@ export class AppComponent {
       title: 'List',
       url: '/list',
       icon: 'list'
-    },
-    {
-      title: 'Edit',
-      url: '/home/edit-attraction',
-      icon: 'pencil'
     }
   ];
 
