@@ -17,10 +17,10 @@ import {ActiveAttractionService} from '../active-attraction.service';
 
 @Component({
   selector: 'app-puzzle',
-  templateUrl: './puzzle.page.html',
-  styleUrls: ['./puzzle.page.scss'],
+  templateUrl: './puzzle-tab.page.html',
+  styleUrls: ['./puzzle-tab.page.scss'],
 })
-export class PuzzlePage implements OnInit, OnDestroy {
+export class PuzzleTabPage implements OnInit, OnDestroy {
 
   /* Expose instance to be edited. */
   public attraction: Attraction;

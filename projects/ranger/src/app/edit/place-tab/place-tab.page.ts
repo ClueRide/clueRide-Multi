@@ -19,10 +19,10 @@ import {ActiveAttractionService} from '../active-attraction.service';
 
 @Component({
   selector: 'app-images',
-  templateUrl: './images.page.html',
-  styleUrls: ['./images.page.scss'],
+  templateUrl: './place-tab.page.html',
+  styleUrls: ['./place-tab.page.scss'],
 })
-export class ImagesPage implements OnInit, OnDestroy {
+export class PlaceTabPage implements OnInit, OnDestroy {
 
   /* Expose instance to be edited. */
   public attraction: Attraction;
@@ -134,7 +134,7 @@ export class ImagesPage implements OnInit, OnDestroy {
   showOtherImages() {
     // TODO: CI-41 Images Page; dependent on CI-50
     // this.navCtrl.push(
-    //   ImagesPage,
+    //   PlaceTabPage,
     //   {attraction: this.attraction}
     // );
   }

@@ -3,9 +3,12 @@ import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 
 import {IonicModule} from '@ionic/angular';
-import {ConnectionStateModule} from 'cr-lib';
+import {
+  ConnectionStateModule,
+  LocTypeChipModule
+} from 'cr-lib';
 
-import {ImagesPage} from './images.page';
+import {DraftTabPage} from './draft-tab.page';
 
 @NgModule({
   imports: [
@@ -13,7 +16,9 @@ import {ImagesPage} from './images.page';
     ConnectionStateModule,
     FormsModule,
     IonicModule,
+    LocTypeChipModule,
   ],
-  declarations: [ImagesPage]
+  declarations: [DraftTabPage]
 })
-export class ImagesPageModule {}
+export class DraftTabModule {}
+

@@ -5,22 +5,22 @@ import {
   TestBed
 } from '@angular/core/testing';
 
-import {ImagesPage} from './images.page';
+import {PlaceTabPage} from './place-tab.page';
 
-describe('ImagesPage', () => {
-  let component: ImagesPage;
-  let fixture: ComponentFixture<ImagesPage>;
+describe('PlaceTabPage', () => {
+  let component: PlaceTabPage;
+  let fixture: ComponentFixture<PlaceTabPage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ImagesPage ],
+      declarations: [ PlaceTabPage ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ImagesPage);
+    fixture = TestBed.createComponent(PlaceTabPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

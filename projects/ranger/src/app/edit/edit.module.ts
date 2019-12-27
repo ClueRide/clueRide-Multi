@@ -8,14 +8,14 @@ import {
 
 import {IonicModule} from '@ionic/angular';
 import {ConnectionStateModule} from 'cr-lib';
-import {DraftPageModule} from './draft/draft.module';
-import {DraftPage} from './draft/draft.page';
+import {DraftTabModule} from './draft-tab/draft-tab.module';
+import {DraftTabPage} from './draft-tab/draft-tab.page';
 
 import {EditPage} from './edit.page';
-import {ImagesPageModule} from './images/images.module';
-import {ImagesPage} from './images/images.page';
-import {PuzzlePageModule} from './puzzle/puzzle.module';
-import {PuzzlePage} from './puzzle/puzzle.page';
+import {PlaceTabModule} from './place-tab/place-tab.module';
+import {PlaceTabPage} from './place-tab/place-tab.page';
+import {PuzzleTabModule} from './puzzle-tab/puzzle-tab.module';
+import {PuzzleTabPage} from './puzzle-tab/puzzle-tab.page';
 
 const routes: Routes = [
   {
@@ -24,15 +24,15 @@ const routes: Routes = [
     children: [
       {
         path: ':id/draft',
-        component: DraftPage
+        component: DraftTabPage
       },
       {
         path: ':id/images',
-        component: ImagesPage
+        component: PlaceTabPage
       },
       {
         path: ':id/puzzle',
-        component: PuzzlePage
+        component: PuzzleTabPage
       }
     ]
   }
@@ -46,9 +46,9 @@ const routes: Routes = [
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes),
-    DraftPageModule,
-    ImagesPageModule,
-    PuzzlePageModule,
+    DraftTabModule,
+    PlaceTabModule,
+    PuzzleTabModule,
   ],
   declarations: [
     EditPage
