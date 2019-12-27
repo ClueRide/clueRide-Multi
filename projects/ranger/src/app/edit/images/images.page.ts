@@ -7,8 +7,10 @@ import {
   ActivatedRoute,
   Router
 } from '@angular/router';
+import {AlertController} from '@ionic/angular';
 import {
   Attraction,
+  ImageService,
   LocationService
 } from 'cr-lib';
 import {Subscription} from 'rxjs';
@@ -25,12 +27,15 @@ export class ImagesPage implements OnInit, OnDestroy {
   /* Expose instance to be edited. */
   public attraction: Attraction;
   public attractionId: number;
+  public hasMultipleImages = false;
 
   private subscription: Subscription;
 
   constructor(
     private activeAttractionService: ActiveAttractionService,
     private activatedRoute: ActivatedRoute,
+    private alertController: AlertController,
+    private imageService: ImageService,
     private locationService: LocationService,
     private mapDataService: MapDataService,
     private router: Router,
@@ -56,6 +61,43 @@ export class ImagesPage implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
+  ionViewWillEnter() {
+    this.imageService.hasMultipleImages(this.attraction.id)
+      .subscribe(
+        (hasMultipleImages) => {this.hasMultipleImages = hasMultipleImages; }
+      );
+  }
+
+  // TODO: CI-51 Long Press response
+  showImageActions() {
+    console.log('Show Image Actions');
+    const alert = this.alertController.create({
+      header: 'Unlink this Image?',
+      message: 'Do you want to unset the Featured Image? (Image can be re-featured later)',
+      buttons: [
+        {
+          text: 'Keep Featured Image',
+          handler: () => {
+            console.log('Keep');
+          }
+        },
+        {
+          text: 'Unset Featured Image',
+          handler: () => {
+            console.log('Removing Featured Image');
+            this.locationService.removeFeaturedImage(this.attraction.id).subscribe(
+              (attraction) => {
+                // TODO: Just noticed that this will overwrite any other changes
+                this.attraction = attraction;
+              }
+            );
+          }
+        }
+      ]
+    });
+
+  }
+
   /**
    * Invoked when the user is ready to persist changes.
    */
@@ -67,6 +109,34 @@ export class ImagesPage implements OnInit, OnDestroy {
       }
     );
     this.router.navigate(['home']);
+  }
+
+  /** Opens the Page that performs Camera operations passing the the attraction and the "Camera" flag. */
+  captureImage() {
+    console.log('Opening Camera');
+    // TODO: CI-42 Image Capture Page
+    // this.navCtrl.push(ImageCapturePage, {
+    //   attraction: this.attraction,
+    //   mode: 'camera'
+    // });
+  }
+
+  /** Opens the Page that performs Gallery upload operations passing the the attraction and the "Gallery" flag. */
+  imageFromGallery() {
+    console.log('Opening Gallery');
+    // TODO: CI-42 Image Capture Page
+    // this.navCtrl.push(ImageCapturePage, {
+    //   attraction: this.attraction,
+    //   mode: 'gallery'
+    // });
+  }
+
+  showOtherImages() {
+    // TODO: CI-41 Images Page; dependent on CI-50
+    // this.navCtrl.push(
+    //   ImagesPage,
+    //   {attraction: this.attraction}
+    // );
   }
 
 }

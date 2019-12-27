@@ -6,7 +6,6 @@ import {
   ActivatedRoute,
   Router
 } from '@angular/router';
-import {AlertController} from '@ionic/angular';
 import {
   Attraction,
   LocationService,
@@ -35,7 +34,6 @@ export class DraftPage implements OnInit {
 
   /* Exposed for the view. */
   public attraction: Attraction;
-  public hasMultipleImages = false;
   public locTypes = [];
   public attractionId: number;
 
@@ -46,8 +44,6 @@ export class DraftPage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private mapDataService: MapDataService,
-    private alertCtrl: AlertController,
-    // private imageService: ImageService,
     private locationService: LocationService,
     private locationTypeService: LocTypeService,
   ) {
@@ -75,13 +71,8 @@ export class DraftPage implements OnInit {
 
   ionViewWillEnter() {
     this.reloadLocTypes();
-    // this.imageService.hasMultipleImages(this.attraction.id)
-    //   .subscribe(
-    //     (hasMultipleImages) => {this.hasMultipleImages = hasMultipleImages; }
-    //   );
   }
 
-  //noinspection JSMethodCanBeStatic
   /**
    * Invoked when the user is ready to persist changes.
    */
@@ -93,66 +84,6 @@ export class DraftPage implements OnInit {
       }
     );
     this.router.navigate(['home']);
-  }
-
-  /** Opens the Page that performs Camera operations passing the the attraction and the "Camera" flag. */
-  captureImage() {
-    console.log('Opening Camera');
-    // TODO: CI-42 Image Capture Page
-    // this.navCtrl.push(ImageCapturePage, {
-    //   attraction: this.attraction,
-    //   mode: 'camera'
-    // });
-  }
-
-  /** Opens the Page that performs Gallery upload operations passing the the attraction and the "Gallery" flag. */
-  imageFromGallery() {
-    console.log('Opening Gallery');
-    // TODO: CI-42 Image Capture Page
-    // this.navCtrl.push(ImageCapturePage, {
-    //   attraction: this.attraction,
-    //   mode: 'gallery'
-    // });
-  }
-
-  showImageActions() {
-    console.log('Show Image Actions');
-    const alert = this.alertCtrl.create({
-      // TODO: Move this forward to Ionic 4
-      // title: 'Unlink this Image?',
-      message: 'Do you want to unset the Featured Image? (Image can be re-featured later)',
-      buttons: [
-        {
-          text: 'Keep Featured Image',
-          handler: () => {
-            console.log('Keep');
-          }
-        },
-        {
-          text: 'Unset Featured Image',
-          handler: () => {
-            console.log('Removing Featured Image');
-            this.locationService.removeFeaturedImage(this.attraction.id).subscribe(
-              (attraction) => {
-                // TODO: Just noticed that this will overwrite any other changes
-                this.attraction = attraction;
-              }
-            );
-          }
-        }
-      ]
-    });
-
-    // TODO: Move this forward to Ionic 4
-    // alert.present();
-  }
-
-  showOtherImages() {
-    // TODO: CI-41 Images Page
-    // this.navCtrl.push(
-    //   ImagesPage,
-    //   {attraction: this.attraction}
-    // );
   }
 
   /** Make sure we've got a currently ordered list of Loc Types. */

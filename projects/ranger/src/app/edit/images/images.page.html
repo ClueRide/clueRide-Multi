@@ -13,5 +13,59 @@
 </ion-header>
 
 <ion-content>
-  Attraction ID: {{attraction.id}}
+
+  <ion-card>
+
+    <ion-card-title>
+      Featured Image
+    </ion-card-title>
+
+    <!-- Featured Image -->
+    <ion-card-content>
+
+      <ion-grid>
+
+        <ion-row>
+          <ion-col>
+            <!-- TODO: CI-51 [press]="showImageActions()" -->
+            <ion-img *ngIf="attraction.featuredImage && attraction.featuredImage.url"
+                 [src]="attraction.featuredImage.url"
+                 alt="Featured Image"
+            >
+            </ion-img>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <ion-buttons>
+              <ion-button (click)="captureImage()">
+                New Image
+              </ion-button>
+            </ion-buttons>
+          </ion-col>
+          <ion-col>
+            <ion-buttons>
+              <ion-button [disabled]="true">
+                From Gallery
+              </ion-button>
+            </ion-buttons>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <ion-button
+                    *ngIf="hasMultipleImages"
+                    (click)="showOtherImages()">
+              See other images
+            </ion-button>
+          </ion-col>
+        </ion-row>
+
+      </ion-grid>
+    </ion-card-content>
+
+  </ion-card>
+
 </ion-content>
