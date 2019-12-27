@@ -3,8 +3,14 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {Attraction} from 'cr-lib';
+import {
+  ActivatedRoute,
+  Router
+} from '@angular/router';
+import {
+  Attraction,
+  LocationService
+} from 'cr-lib';
 import {Subscription} from 'rxjs';
 import {MapDataService} from '../../map/data/map-data.service';
 import {ActiveAttractionService} from '../active-attraction.service';
@@ -24,7 +30,9 @@ export class PuzzlePage implements OnInit, OnDestroy {
   constructor(
     private activeAttractionService: ActiveAttractionService,
     private activatedRoute: ActivatedRoute,
+    private locationService: LocationService,
     private mapDataService: MapDataService,
+    private router: Router,
   ) {
   }
 
@@ -46,6 +54,19 @@ export class PuzzlePage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+  /**
+   * Invoked when the user is ready to persist changes.
+   */
+  save() {
+    console.log('Saving');
+    this.locationService.update(this.attraction).subscribe(
+      (updatedAttraction: Attraction) => {
+        this.mapDataService.updateAttraction(updatedAttraction);
+      }
+    );
+    this.router.navigate(['home']);
   }
 
 }

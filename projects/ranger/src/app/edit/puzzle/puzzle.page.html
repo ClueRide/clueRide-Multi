@@ -1,7 +1,15 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>puzzle</ion-title>
+    <ion-title>Editing: {{attraction.name}}</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="save()">
+        <ion-icon slot="end" name="arrow-up"></ion-icon>
+      </ion-button>
+      <cr-connection-state></cr-connection-state>
+    </ion-buttons>
   </ion-toolbar>
+
 </ion-header>
 
 <ion-content>

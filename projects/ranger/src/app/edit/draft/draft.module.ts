@@ -4,7 +4,7 @@ import {FormsModule} from '@angular/forms';
 
 import {IonicModule} from '@ionic/angular';
 import {
-  ConnectionStateComponentModule,
+  ConnectionStateModule,
   LocTypeChipModule
 } from 'cr-lib';
 
@@ -13,7 +13,7 @@ import {DraftPage} from './draft.page';
 @NgModule({
   imports: [
     CommonModule,
-    ConnectionStateComponentModule,
+    ConnectionStateModule,
     FormsModule,
     IonicModule,
     LocTypeChipModule,

@@ -2,7 +2,10 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {
+  ActivatedRoute,
+  Router
+} from '@angular/router';
 import {AlertController} from '@ionic/angular';
 import {
   Attraction,
@@ -41,6 +44,7 @@ export class DraftPage implements OnInit {
   constructor(
     private activeAttractionService: ActiveAttractionService,
     private activatedRoute: ActivatedRoute,
+    private router: Router,
     private mapDataService: MapDataService,
     private alertCtrl: AlertController,
     // private imageService: ImageService,
@@ -88,8 +92,7 @@ export class DraftPage implements OnInit {
         this.mapDataService.updateAttraction(updatedAttraction);
       }
     );
-    // TODO: How to return to previous page when done on this page.
-    // this.navCtrl.pop();
+    this.router.navigate(['home']);
   }
 
   /** Opens the Page that performs Camera operations passing the the attraction and the "Camera" flag. */
