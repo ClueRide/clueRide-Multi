@@ -5,22 +5,22 @@ import {
   TestBed
 } from '@angular/core/testing';
 
-import {DraftPage} from './draft.page';
+import {DraftTabPage} from './draft-tab.page';
 
-describe('DraftPage', () => {
-  let component: DraftPage;
-  let fixture: ComponentFixture<DraftPage>;
+describe('DraftTabPage', () => {
+  let component: DraftTabPage;
+  let fixture: ComponentFixture<DraftTabPage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DraftPage ],
+      declarations: [ DraftTabPage ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DraftPage);
+    fixture = TestBed.createComponent(DraftTabPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

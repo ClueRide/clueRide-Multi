@@ -27,10 +27,10 @@ import {ActiveAttractionService} from '../active-attraction.service';
  */
 @Component({
   selector: 'app-draft',
-  templateUrl: './draft.page.html',
-  styleUrls: ['./draft.page.scss'],
+  templateUrl: './draft-tab.page.html',
+  styleUrls: ['./draft-tab.page.scss'],
 })
-export class DraftPage implements OnInit {
+export class DraftTabPage implements OnInit {
 
   /* Exposed for the view. */
   public attraction: Attraction;

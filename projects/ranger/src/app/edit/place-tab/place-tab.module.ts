@@ -5,7 +5,7 @@ import {FormsModule} from '@angular/forms';
 import {IonicModule} from '@ionic/angular';
 import {ConnectionStateModule} from 'cr-lib';
 
-import {PuzzlePage} from './puzzle.page';
+import {PlaceTabPage} from './place-tab.page';
 
 @NgModule({
   imports: [
@@ -14,6 +14,6 @@ import {PuzzlePage} from './puzzle.page';
     FormsModule,
     IonicModule,
   ],
-  declarations: [PuzzlePage]
+  declarations: [PlaceTabPage]
 })
-export class PuzzlePageModule {}
+export class PlaceTabModule {}

@@ -5,22 +5,22 @@ import {
   TestBed
 } from '@angular/core/testing';
 
-import {PuzzlePage} from './puzzle.page';
+import {PuzzleTabPage} from './puzzle-tab.page';
 
-describe('PuzzlePage', () => {
-  let component: PuzzlePage;
-  let fixture: ComponentFixture<PuzzlePage>;
+describe('PuzzleTabPage', () => {
+  let component: PuzzleTabPage;
+  let fixture: ComponentFixture<PuzzleTabPage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PuzzlePage ],
+      declarations: [ PuzzleTabPage ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PuzzlePage);
+    fixture = TestBed.createComponent(PuzzleTabPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
