@@ -15,4 +15,4 @@ import {ConnectionStateComponent} from './connection-state';
     ConnectionStateComponent
   ],
 })
-export class ConnectionStateComponentModule {}
+export class ConnectionStateModule {}
