@@ -18,7 +18,7 @@ import {MapDataService} from '../../map/data/map-data.service';
 import {ActiveAttractionService} from '../active-attraction.service';
 
 @Component({
-  selector: 'app-images',
+  selector: 'app-place-tab',
   templateUrl: './place-tab.page.html',
   styleUrls: ['./place-tab.page.scss'],
 })
@@ -44,10 +44,10 @@ export class PlaceTabPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.activatedRoute.queryParams.subscribe(
       (params) => {
-        const attractionId = parseInt(this.activatedRoute.snapshot.paramMap.get('id'), 10);
-        this.attraction = this.mapDataService.getAttractionById(attractionId);
+        this.attractionId = parseInt(this.activatedRoute.snapshot.paramMap.get('id'), 10);
+        this.attraction = this.mapDataService.getAttractionById(this.attractionId);
         console.log('Active Attraction', this.attraction.name);
-        this.activeAttractionService.setActiveAttractionId(attractionId);
+        this.activeAttractionService.setActiveAttractionId(this.attractionId);
 
         // TODO: SVR-50 Move to the server
         if (!this.attraction.mainLink) {
@@ -132,11 +132,15 @@ export class PlaceTabPage implements OnInit, OnDestroy {
   }
 
   showOtherImages() {
-    // TODO: CI-41 Images Page; dependent on CI-50
-    // this.navCtrl.push(
-    //   PlaceTabPage,
-    //   {attraction: this.attraction}
-    // );
+    console.log('Showing Other Images for ID ', this.attractionId);
+
+    this.router.navigate(
+      ['images', this.attractionId]
+    ).then(() => {
+      console.log('Successful launch of Image Page');
+    }).catch( (error) => {
+      console.log('Failed to launch Image Page: ', error);
+    });
   }
 
 }

@@ -8,6 +8,7 @@ import {
   AuthHeaderService,
   BASE_URL
 } from '../../auth/header/auth-header.service';
+import {Attraction} from '../attraction/attraction';
 import {Image} from './image';
 
 @Injectable({
@@ -15,10 +16,14 @@ import {Image} from './image';
 })
 export class ImageService {
 
+  private readonly authHeaders: HttpHeaders;
+
   constructor(
     private http: HttpClient,
     private authHeaderService: AuthHeaderService,
-  ) {}
+  ) {
+    this.authHeaders = this.authHeaderService.getAuthHeaders();
+  }
 
   /**
    * Create a New Image record.
@@ -40,10 +45,9 @@ export class ImageService {
    * @param locationId Unique ID for the Location.
    */
   hasMultipleImages(locationId: number): Observable<boolean> {
-    const uploadHeaders: HttpHeaders = this.authHeaderService.getAuthHeaders();
     return this.http.get<boolean>(
       BASE_URL + 'image/multi-image/' + locationId,
-      {headers: uploadHeaders}
+      {headers: this.authHeaders}
     );
   }
 
@@ -52,10 +56,9 @@ export class ImageService {
    * @param locationId unique identifier for the Location.
    */
   getAllImagesForLocation(locationId: number): Observable<Image[]> {
-    const uploadHeaders: HttpHeaders = this.authHeaderService.getAuthHeaders();
     return this.http.get<Image[]>(
       BASE_URL + 'image/' + locationId,
-      {headers: uploadHeaders}
+      {headers: this.authHeaders}
     );
   }
 
@@ -68,12 +71,11 @@ export class ImageService {
   setFeaturedImage(
     attractionId: number,
     imageId: number
-  ): Observable<Location> {
-    const uploadHeaders: HttpHeaders = this.authHeaderService.getAuthHeaders();
-    return this.http.put<Location>(
+  ): Observable<Attraction> {
+    return this.http.put<Attraction>(
       BASE_URL + 'location/featured/' + attractionId + '/' + imageId,
       {},
-      {headers: uploadHeaders}
+      {headers: this.authHeaders}
     );
   }
 

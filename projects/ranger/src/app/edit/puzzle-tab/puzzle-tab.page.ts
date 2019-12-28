@@ -16,7 +16,7 @@ import {MapDataService} from '../../map/data/map-data.service';
 import {ActiveAttractionService} from '../active-attraction.service';
 
 @Component({
-  selector: 'app-puzzle',
+  selector: 'app-puzzle-tab',
   templateUrl: './puzzle-tab.page.html',
   styleUrls: ['./puzzle-tab.page.scss'],
 })

@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Images</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <!-- TODO: CI-53 Slider styling work. -->
+  <ion-slides pager="true" options="{direction: 'vertical'}">
+    <ion-slide *ngFor="let image of images">
+
+      <ion-grid>
+
+      <ion-row>
+        <ion-img [src]="image.url"
+                 class="image-slide"
+                 [class.featured]="isFeaturedImage(image.id)"
+                 alt="loading"
+        >
+        </ion-img>
+      </ion-row>
+
+      <ion-row>
+        <div *ngIf="isFeaturedImage(image.id)">
+          Featured Image
+        </div>
+
+        <div [hidden]="isFeaturedImage(image.id)">
+          <ion-buttons>
+            <ion-button
+              (click)="setFeaturedImage(image.id)"
+              [class.button-enabled]="!isFeaturedImage(image.id)"
+            >
+              Make Featured Image
+            </ion-button>
+          </ion-buttons>
+          <ion-buttons>
+            <ion-button (click)="removeImage(image.id)">
+              Remove Image
+            </ion-button>
+          </ion-buttons>
+        </div>
+      </ion-row>
+      </ion-grid>
+    </ion-slide>
+
+  </ion-slides>
+
+</ion-content>

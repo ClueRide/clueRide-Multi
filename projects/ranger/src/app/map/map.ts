@@ -57,7 +57,7 @@ export class MapComponent {
       case 'ATTRACTION':
         return 'puzzle';
       case 'PLACE':
-        return 'images';
+        return 'place';
       default:
         return 'draft';
     }

@@ -26,7 +26,7 @@ import {ActiveAttractionService} from '../active-attraction.service';
  * is always editing an existing set of records with established IDs.
  */
 @Component({
-  selector: 'app-draft',
+  selector: 'app-draft-tab',
   templateUrl: './draft-tab.page.html',
   styleUrls: ['./draft-tab.page.scss'],
 })
