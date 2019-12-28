@@ -19,13 +19,20 @@ const routes: Routes = [
     path: 'list',
     loadChildren: () => import('./list/list.module').then(m => m.ListPageModule)
   },
-  /* This is this lazy-loading of the EditPage Module -- which includes its parent-child routing. */
+  /* This is this lazy loading of the EditPage Module -- which includes its parent-child routing. */
   { path: 'edit', loadChildren: './edit/edit.module#EditPageModule' },
+  /* Lazy loading for the Images Edit; wasn't able to make this a child of the Place Tab. */
+  { path: 'images/:id', loadChildren: './images/images.module#ImagesPageModule' },
 ];
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
+    RouterModule.forRoot(routes,
+      {
+        preloadingStrategy: PreloadAllModules,
+        // enableTracing: true  // <-- debugging purposes only
+      }
+    )
   ],
   exports: [RouterModule]
 })

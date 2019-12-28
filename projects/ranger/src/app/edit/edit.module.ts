@@ -27,7 +27,7 @@ const routes: Routes = [
         component: DraftTabPage
       },
       {
-        path: ':id/images',
+        path: ':id/place',
         component: PlaceTabPage
       },
       {
