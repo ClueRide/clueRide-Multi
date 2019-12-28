@@ -23,6 +23,7 @@ const routes: Routes = [
   { path: 'edit', loadChildren: './edit/edit.module#EditPageModule' },
   /* Lazy loading for the Images Edit; wasn't able to make this a child of the Place Tab. */
   { path: 'images/:id', loadChildren: './images/images.module#ImagesPageModule' },
+  { path: 'image-capture', loadChildren: './image-capture/image-capture.module#ImageCapturePageModule' },
 ];
 
 @NgModule({

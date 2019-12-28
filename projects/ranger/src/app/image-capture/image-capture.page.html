@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Capture Image for {{attraction.name}}</ion-title>
+    <ion-buttons slot="end">
+      <cr-connection-state></cr-connection-state>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div id="image-capture">
+    <label>
+      Candidate Image:
+    </label>
+
+    <div *ngIf="haveImagesToShow()">
+
+      <ion-slides>
+        <ion-slide *ngFor="let image of images">
+          <ion-card>
+            <!-- Unable to use ion-img here; does it support base64? -->
+            <img [src]="image.src"/>
+          </ion-card>
+        </ion-slide>
+      </ion-slides>
+
+      <ion-buttons>
+        <ion-button
+                (click)="save()">
+          Save as new Image
+        </ion-button>
+      </ion-buttons>
+
+    </div>
+
+    <div *ngIf="!haveImagesToShow()">
+      No images yet.
+      <ion-buttons>
+        <ion-button (click)="fakeImage()">
+          Save fake Image
+        </ion-button>
+      </ion-buttons>
+    </div>
+
+  </div>
+
+</ion-content>

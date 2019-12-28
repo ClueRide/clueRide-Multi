@@ -114,21 +114,25 @@ export class PlaceTabPage implements OnInit, OnDestroy {
   /** Opens the Page that performs Camera operations passing the the attraction and the "Camera" flag. */
   captureImage() {
     console.log('Opening Camera');
-    // TODO: CI-42 Image Capture Page
-    // this.navCtrl.push(ImageCapturePage, {
-    //   attraction: this.attraction,
-    //   mode: 'camera'
-    // });
+    this.router.navigate(
+      ['image-capture'],
+      {state: {
+          attraction: this.attraction,
+          mode: 'camera'
+        }}
+    );
   }
 
   /** Opens the Page that performs Gallery upload operations passing the the attraction and the "Gallery" flag. */
   imageFromGallery() {
     console.log('Opening Gallery');
-    // TODO: CI-42 Image Capture Page
-    // this.navCtrl.push(ImageCapturePage, {
-    //   attraction: this.attraction,
-    //   mode: 'gallery'
-    // });
+    this.router.navigate(
+      ['image-capture'],
+      {state: {
+          attraction: this.attraction,
+          mode: 'gallery'
+        }}
+    );
   }
 
   showOtherImages() {
