@@ -4,6 +4,7 @@ import {FormsModule} from '@angular/forms';
 
 import {IonicModule} from '@ionic/angular';
 import {ConnectionStateModule} from 'cr-lib';
+import {PuzzleModule} from '../../puzzle/puzzle.module';
 
 import {PuzzleTabPage} from './puzzle-tab.page';
 
@@ -13,6 +14,7 @@ import {PuzzleTabPage} from './puzzle-tab.page';
     ConnectionStateModule,
     FormsModule,
     IonicModule,
+    PuzzleModule,
   ],
   declarations: [PuzzleTabPage]
 })
