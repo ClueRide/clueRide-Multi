@@ -80,7 +80,9 @@ export class MapComponent {
     );
   }
 
-  public openMapAtPosition(position: Geoposition) {
+  public openMapAtPosition(
+    position: Geoposition
+  ) {
     // TODO: LE-70
     /* Assemble Leaflet position object. */
     const leafletPosition = [
@@ -121,7 +123,9 @@ export class MapComponent {
     this.mapDataService.setWatch(this.setNewCenterForMap);
   }
 
-  setNewCenterForMap = (geoposition: Geoposition) => {
+  setNewCenterForMap = (
+    geoposition: Geoposition
+  ) => {
     /* Ignore new position updates until the drag completes. */
     if (this.mapDragService.isDragInProgress()) {
       return;
