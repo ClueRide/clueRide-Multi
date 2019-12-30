@@ -3,7 +3,6 @@ import {Geoposition} from '@ionic-native/geolocation';
 import {
   Attraction,
   GeoLocService,
-  Location,
   LocationService,
   LocTypeService
 } from 'cr-lib';
@@ -12,7 +11,8 @@ import {
   from,
   Observable,
   ReplaySubject,
-  Subject
+  Subject,
+  Subscription
 } from 'rxjs';
 import {filter} from 'rxjs/operators';
 
@@ -26,7 +26,8 @@ import {filter} from 'rxjs/operators';
 export class MapDataService {
 
   private attractionByIdCache = [];
-  private locationToAdd$: Subject<Location> = new Subject<Location>();
+  private attractionToAdd$: Subject<Attraction> = new Subject<Attraction>();
+  private attractionToUpdate$: Subject<Attraction> = new Subject<Attraction>();
   private currentPosition: Geoposition;
   private currentPositionSubject: Subject<Geoposition> = new ReplaySubject<Geoposition>();
 
@@ -85,14 +86,34 @@ export class MapDataService {
     /* Other caches here? */
   }
 
+  logError = (error: any): void => {
+    console.log('Error while updating one of the attractions', error);
+  }
+
   /**
    * Allows a Map Data client to be told whenever there is a new Attraction
-   * to be added to the map.
+   * to be added to the map. Since we've setup the subscription for a new client,
+   * we can populate that client by resending all the locations.
    *
    * @param addAttractionFunction accepts an Attraction.
    */
-  public sendMeNewAttractions(addAttractionFunction) {
-    this.locationToAdd$.subscribe(addAttractionFunction);
+  public sendMeNewAttractions(addAttractionFunction): Subscription {
+    const subscription = this.attractionToAdd$.subscribe(
+      addAttractionFunction,
+      this.logError
+    );
+    this.resendAllLocations();
+    return subscription;
+  }
+
+  /**
+   * Allows a Map Data client to be told whenever this is an updated Attraction
+   * to be added to the map.
+   *
+   * @param updateAttractionFunction accepts an Attraction.
+   */
+  public sendMeUpdatedAttractions(updateAttractionFunction): Subscription {
+    return this.attractionToUpdate$.subscribe((updateAttractionFunction));
   }
 
   /**
@@ -123,16 +144,24 @@ export class MapDataService {
    *
    * @param attraction partially assembled instance from LocationService.
    */
-  assembleAndAddAttraction = (attraction: Attraction) => {
+  assembleAttraction = (attraction: Attraction) => {
     const locationType = this.locationTypeService.getById(attraction.locationTypeId);
     // console.log(attraction.id + ': ' + attraction.name);
     attraction.locationTypeIconName = locationType.icon;
 
     /* Both adds new and replaces existing attractions in the cache. */
     this.attractionByIdCache[attraction.id] = attraction;
+    return attraction;
+  }
 
+  assembleAndAddAttraction = (attraction: Attraction) => {
     /* Push to attraction stream. */
-    this.locationToAdd$.next(attraction);
+    this.attractionToAdd$.next(this.assembleAttraction(attraction));
+  }
+
+  updateAttraction(updatedAttraction: Attraction) {
+    console.log('MapDataService: updateAttraction', updatedAttraction.id);
+    this.attractionToUpdate$.next(this.assembleAttraction(updatedAttraction));
   }
 
   /** Given the Attraction ID, retrieve the cached copy of
@@ -144,21 +173,18 @@ export class MapDataService {
     return this.attractionByIdCache[attractionId];
   }
 
-  updateAttraction(updatedAttraction: Attraction) {
-    this.assembleAndAddAttraction(updatedAttraction);
-  }
-
   /**
    * Request that all currently cached locations be sent to the subscribers.
    *
    * NOTE: This does not refresh the cache from the back-end.
    */
   resendAllLocations() {
+    console.log('MapDataService: Resending all Locations');
     /* `from()` requires an instance that implements iterable. */
     from(this.attractionByIdCache).pipe(
       filter((item) => !!item)
     ).subscribe(
-      (attraction) => {this.locationToAdd$.next(attraction); }
+      (attraction) => {this.attractionToAdd$.next(attraction); }
     );
   }
 
@@ -183,4 +209,5 @@ export class MapDataService {
   public releaseWatch(): void {
     this.geoLoc.clearWatch();
   }
+
 }
