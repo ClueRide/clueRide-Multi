@@ -1,10 +1,5 @@
 import {isDefined} from '@angular/compiler/src/util';
-import {
-  AfterViewInit,
-  Component,
-  OnDestroy,
-  OnInit
-} from '@angular/core';
+import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 import {Geoposition} from '@ionic-native/geolocation';
 import {
@@ -173,7 +168,7 @@ export class MapComponent {
         lng: geoposition.coords.longitude
       };
       this.map.panTo(latLon);
-      console.log('Map.updatePosition: next Reported Position');
+      // console.log('Map.updatePosition: next Reported Position');
 
       /* Restore move event generation. */
       this.map.on('movestart',

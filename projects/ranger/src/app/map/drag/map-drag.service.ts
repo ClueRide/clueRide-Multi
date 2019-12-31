@@ -61,7 +61,8 @@ export class MapDragService {
     });
 
     map.on('moveend', () => {
-      this.sendDragEndLocation(map.getCenter());
+      // TODO CI-64: Not clear that I need to propagate this
+      // this.sendDragEndLocation(map.getCenter());
       this.dragInProgress = false;
     });
 
@@ -73,7 +74,6 @@ export class MapDragService {
 
   sendDragEndLocation(latLon: LatLon) {
     console.log('Setting new map center from Map Drag');
-    // TODO: Not clear that I need to propagate this
     this.centerSubject.next(
       buildGeoPositionFromLatLon(
         latLon
