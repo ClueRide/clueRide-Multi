@@ -86,16 +86,17 @@ export class DraftTabPage implements OnInit {
     this.router.navigate(['home']);
   }
 
+  compareLocType = (o1, o2) => {
+    return o1 && o2 ? o1.id === o2.id : o1 === o2;
+  }
+
   /** Make sure we've got a currently ordered list of Loc Types. */
   reloadLocTypes() {
     this.locTypes = [];
     this.locationTypeService.allLocationTypes().forEach(
       (locationType) => {
         this.locTypes.push(
-          {
-            value: locationType.id,
-            text: locationType.name
-          }
+          locationType
         );
       }
     );
