@@ -59,7 +59,7 @@ export class ImagesPage implements OnInit, OnDestroy {
   }
 
   isFeaturedImage(imageId: number) {
-    return imageId === this.attraction.featuredImage.id;
+    return this.attraction.featuredImage && imageId === this.attraction.featuredImage.id;
   }
 
   setFeaturedImage(imageId: number) {
