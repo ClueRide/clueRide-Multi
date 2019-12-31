@@ -1,6 +1,7 @@
 import {LatLon} from '../../domain/lat-lon/lat-lon';
 import {Image} from '../image/image';
 import {LocLink} from '../loc-link/loc-link';
+import {LocationType} from '../loc-type/loc-type';
 
 /**
  * Attractions are specific instances of Location; they have a
@@ -17,6 +18,7 @@ export class Attraction {
   locationTypeName?: string;
   locationTypeIconName?: string;
   locationTypeId: number;
+  locationType?: LocationType;
   featuredImageUrl?: string;
   featuredImage: Image;
   establishmentId?: number;
