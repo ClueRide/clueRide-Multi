@@ -40,7 +40,7 @@ interface LayerPerCategoryMap {
   templateUrl: 'map.html',
   styleUrls: ['map.scss']
 })
-export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
+export class MapComponent {
 
   // TODO: CI-34: put this ViewLatLon component in the library
   // static latLon: LatLonComponent = {} as any;
