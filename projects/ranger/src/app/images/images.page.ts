@@ -3,6 +3,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
+import {Router} from '@angular/router';
 import {
   Attraction,
   Image,
@@ -32,6 +33,7 @@ export class ImagesPage implements OnInit, OnDestroy {
     private imageService: ImageService,
     private activeAttractionService: ActiveAttractionService,
     private mapDataService: MapDataService,
+    private router: Router,
   ) {
     console.log('Hello, Image Page');
   }
@@ -69,6 +71,10 @@ export class ImagesPage implements OnInit, OnDestroy {
           this.attraction.featuredImage = attraction.featuredImage;
         }
       );
+  }
+
+  save() {
+    this.router.navigate(['edit', this.attraction.id, 'place']);
   }
 
   /* TODO: CI-51 remove image. */
