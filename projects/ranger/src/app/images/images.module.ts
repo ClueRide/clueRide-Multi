@@ -7,6 +7,7 @@ import {
 } from '@angular/router';
 
 import {IonicModule} from '@ionic/angular';
+import {ConnectionStateModule} from 'cr-lib';
 
 import {ImagesPage} from './images.page';
 
@@ -20,6 +21,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
+    ConnectionStateModule,
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes)
