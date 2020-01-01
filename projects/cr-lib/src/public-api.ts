@@ -2,6 +2,8 @@
  * Public API Surface of cr-lib
  */
 
+export * from './lib/alert/alert.module';
+export * from './lib/alert/http-error.interceptor';
 export * from './lib/api/attraction/attraction';
 export * from './lib/api/attraction/attraction.service';
 export * from './lib/api/badge/badge';

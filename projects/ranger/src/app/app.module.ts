@@ -10,6 +10,7 @@ import {
   IonicRouteStrategy
 } from '@ionic/angular';
 import {
+  AlertToastModule,
   AuthModule,
   HeadingModule
 } from 'cr-lib';
@@ -23,6 +24,7 @@ import {AppComponent} from './app.component';
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
+    AlertToastModule,
     AppRoutingModule,
     AuthModule,
     HeadingModule,
