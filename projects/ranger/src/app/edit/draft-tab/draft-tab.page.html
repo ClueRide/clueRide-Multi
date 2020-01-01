@@ -25,7 +25,15 @@
         </ion-input>
     </ion-item>
 
-    <!-- TODO: SVR-36 / LE-76 Add Category -->
+    <!-- TODO: SVR-36 / LE-76 Add Category selection -->
+    <ion-item>
+      <ion-label position="floating">
+        Category
+      </ion-label>
+      <ion-input class="value-field"
+                 [(ngModel)]="attraction.locationType.category.name">
+      </ion-input>
+    </ion-item>
 
     <!-- Type -->
     <ion-item>
