@@ -8,6 +8,8 @@ import {
 } from '@angular/router';
 import {
   Attraction,
+  Category,
+  CategoryService,
   LocationService,
   LocTypeService
 } from 'cr-lib';
@@ -36,6 +38,8 @@ export class DraftTabPage implements OnInit {
   public attraction: Attraction;
   public locTypes = [];
   public attractionId: number;
+  public selectedCategory: Category;
+  public categories = [];
 
   private subscription: Subscription;
 
@@ -46,6 +50,7 @@ export class DraftTabPage implements OnInit {
     private mapDataService: MapDataService,
     private locationService: LocationService,
     private locationTypeService: LocTypeService,
+    private categoryService: CategoryService,
   ) {
   }
 
@@ -56,6 +61,9 @@ export class DraftTabPage implements OnInit {
         this.attraction = this.mapDataService.getAttractionById(this.attractionId);
         console.log('Active Attraction', this.attraction.name);
         this.activeAttractionService.setActiveAttractionId(this.attractionId);
+        if (this.attraction.locationType && this.attraction.locationType.category) {
+          this.selectedCategory = this.attraction.locationType.category;
+        }
 
         // TODO: SVR-50 Move to the server
         if (!this.attraction.mainLink) {
@@ -71,6 +79,12 @@ export class DraftTabPage implements OnInit {
 
   ionViewWillEnter() {
     this.reloadLocTypes();
+    console.log('populating categories');
+    this.categoryService.getAllCategories().subscribe(
+      (category) => {
+        this.categories.push(category);
+      }
+    );
   }
 
   /**
@@ -83,11 +97,21 @@ export class DraftTabPage implements OnInit {
         this.mapDataService.updateAttraction(updatedAttraction);
       }
     );
+    // TODO: This should wait for a good response from the save.
     this.router.navigate(['home']);
   }
 
   compareLocType = (o1, o2) => {
     return o1 && o2 ? o1.id === o2.id : o1 === o2;
+  }
+
+  compareCategory = (o1, o2) => {
+    return o1 && o2 ? o1.id === o2.id : o1 === o2;
+  }
+
+  categoryHasChanged = (event) => {
+    this.attraction.locationType = null;
+    this.locTypes = this.locationTypeService.getByCategoryId(this.selectedCategory.id);
   }
 
   /** Make sure we've got a currently ordered list of Loc Types. */

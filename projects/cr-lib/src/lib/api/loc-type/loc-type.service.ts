@@ -1,8 +1,20 @@
-import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {
+  from,
+  Observable,
+  Subject
+} from 'rxjs';
+import {
+  AuthHeaderService,
+  BASE_URL
+} from '../../auth/header/auth-header.service';
+import {CategoryService} from '../category/category.service';
 import {LocationType} from './loc-type';
-import {Observable, Subject} from 'rxjs';
-import {BASE_URL, AuthHeaderService} from '../../auth/header/auth-header.service';
+
+interface LocTypeCategoryMap {
+  [index: number]: LocationType[];
+}
 
 @Injectable({
   providedIn: 'root'
@@ -10,12 +22,22 @@ import {BASE_URL, AuthHeaderService} from '../../auth/header/auth-header.service
 export class LocTypeService {
 
   static locationTypeCache: LocationType[] = [];
+  private locTypeByCategory: LocTypeCategoryMap = {};
 
   constructor(
     public http: HttpClient,
     private httpService: AuthHeaderService,
+    private categoryService: CategoryService,
   ) {
-
+    /* Reserve an empty array for each of the known Categories. */
+    // TODO: Not sure why this doesn't execute prior to the initializeCache call.
+    // this.categoryService.getAllCategories().subscribe(
+    from([1, 4, 5, 6, 7, 8, 10]).subscribe(
+      (category) => {
+        // this.locTypeByCategory[category.id] = [];
+        this.locTypeByCategory[category] = [];
+      }
+    );
   }
 
   /**
@@ -33,6 +55,12 @@ export class LocTypeService {
         (response) =>  {
           response.forEach(locType => {
             LocTypeService.locationTypeCache[locType.id] = locType;
+            console.log('LocTypeService: classifying', locType.name);
+            if (locType.category) {
+              this.locTypeByCategory[locType.category.id].push(locType);
+            } else {
+              console.log('Location Type ' + locType.name + ' has no category assigned');
+            }
           });
           console.log('Loc Type Cache filled. total: ' + LocTypeService.locationTypeCache.length);
           cacheFilledSubject.next(true);
@@ -51,6 +79,11 @@ export class LocTypeService {
 
   public getById(id: number): LocationType {
     return LocTypeService.locationTypeCache[id];
+  }
+
+  public getByCategoryId(id: number): LocationType[] {
+    if (!id) { return ([]); }
+    return this.locTypeByCategory[id];
   }
 
 }
