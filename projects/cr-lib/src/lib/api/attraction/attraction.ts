@@ -18,7 +18,7 @@ export class Attraction {
   locationTypeName?: string;
   locationTypeIconName?: string;
   locationTypeId: number;
-  locationType?: LocationType;
+  locationType?: LocationType | null;
   featuredImageUrl?: string;
   featuredImage: Image;
   establishmentId?: number;

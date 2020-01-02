@@ -25,14 +25,23 @@
         </ion-input>
     </ion-item>
 
-    <!-- TODO: SVR-36 / LE-76 Add Category selection -->
     <ion-item>
       <ion-label position="floating">
         Category
       </ion-label>
-      <ion-input class="value-field"
-                 [(ngModel)]="attraction.locationType.category.name">
-      </ion-input>
+      <ion-select class="value-field"
+                  interface="popover"
+                  (ionChange)="categoryHasChanged($event)"
+                  [compareWith]="compareCategory"
+                  [selectedText]="selectedCategory && selectedCategory.name"
+                  [(ngModel)]="selectedCategory">
+        <ion-select-option
+          *ngFor="let category of categories"
+          [value]="category"
+        >
+          {{category.name}}
+       </ion-select-option>
+      </ion-select>
     </ion-item>
 
     <!-- Type -->
