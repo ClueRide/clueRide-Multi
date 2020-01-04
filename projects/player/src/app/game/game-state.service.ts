@@ -103,9 +103,7 @@ export class GameStateService {
     console.log('Explicit Request for Game State');
     this.http.get(
       BASE_URL + 'game-state',
-      {
-        headers: this.authHeaderService.getAuthHeaders()
-      }
+      {headers: this.authHeaderService.getAuthHeaders()}
     ).subscribe(
       (response) => {
         const gameState: GameState = response as GameState;
@@ -130,7 +128,7 @@ export class GameStateService {
   }
 
   ngOnDestroy() {
-    console.log('Unsubscribing to SSE Events for Game State');
+    console.log('Un-subscribing to SSE Events for Game State');
     this.sseSubscription.unsubscribe();
   }
 }
