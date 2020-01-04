@@ -5,9 +5,15 @@ import {RouteReuseStrategy} from '@angular/router';
 import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 
-import {IonicModule, IonicRouteStrategy} from '@ionic/angular';
+import {
+  IonicModule,
+  IonicRouteStrategy
+} from '@ionic/angular';
+import {
+  AlertToastModule,
+  AuthModule
+} from 'cr-lib';
 import {AppRoutingModule} from './app-routing.module';
-import {AuthModule} from 'cr-lib';
 
 import {AppComponent} from './app.component';
 import {SummaryComponentsModule} from './components.module';
@@ -19,6 +25,7 @@ import {OutingPageModule} from './outing-page/outing.module';
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
+    AlertToastModule,
     AppRoutingModule,
     AuthModule,
     HttpClientModule,
