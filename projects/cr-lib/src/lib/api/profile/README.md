@@ -10,4 +10,5 @@ Profile Service works with:
 - Back-end REST API to retrieve current session's Member record.
 - Clients requesting Email Address or the URL of the user's image.
 - Clients requesting the Member ID of logged in user.
+- Clients requesting the BadgeOS ID of logged in user.
 - Confirmation Page informs the profile of confirmation status and notifies listeners of this event.

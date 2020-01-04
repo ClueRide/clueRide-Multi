@@ -1,10 +1,19 @@
-import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {BASE_URL, AuthHeaderService} from '../../auth/header/auth-header.service';
-import {Member} from '../member/member';
-import {Observable, of} from 'rxjs';
+import {Injectable} from '@angular/core';
+import {
+  Observable,
+  of
+} from 'rxjs';
+import {
+  map,
+  share
+} from 'rxjs/operators';
+import {
+  AuthHeaderService,
+  BASE_URL
+} from '../../auth/header/auth-header.service';
 import {TokenService} from '../../auth/token/token.service';
-import {map, share} from 'rxjs/operators';
+import {Member} from '../member/member';
 
 /**
  * Responsible for the Member's Profile.
@@ -115,6 +124,14 @@ export class ProfileService {
       }
     }
     return '';
+  }
+
+  public getBadgeOsId(): number {
+    if (this.member) {
+      return this.member.badgeOSId;
+    } else {
+      return -1;
+    }
   }
 
   public getGivenName(): string {

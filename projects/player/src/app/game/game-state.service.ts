@@ -2,7 +2,8 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {
   AuthHeaderService,
-  BASE_URL
+  BASE_URL,
+  ServerEventsService
 } from 'cr-lib';
 import {
   Observable,
@@ -28,7 +29,7 @@ export class GameStateService {
   constructor(
     private http: HttpClient,
     private authHeaderService: AuthHeaderService,
-    // private sseService: ServerEventsService,
+    private sseService: ServerEventsService,
   ) {
     console.log('Hello GameStateService Provider');
     this.puzzleEvent$ = new Subject<GameState>();
@@ -49,10 +50,10 @@ export class GameStateService {
 
   setupSseEventSubscription() {
     console.log('Listening to SSE Events for Game State');
-    // this.sseSubscription = this.sseService.getGameStateEventObservable()
-    //   .subscribe(
-    //     (event) => this.updateFromSSE(event)
-    //   );
+    this.sseSubscription = this.sseService.getGameStateEventObservable()
+      .subscribe(
+        (event) => this.updateFromSSE(event)
+      );
   }
 
   ngOnInit() {
