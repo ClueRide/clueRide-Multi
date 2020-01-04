@@ -1,0 +1,36 @@
+<div [ngSwitch]="gameStateService.getOutingState()" class="begin-game">
+
+  <ng-template [ngSwitchCase]= "'PENDING'">
+    <div class="section-heading">
+      Awaiting Start
+    </div>
+    <ion-button (click) = "showGame()">
+      <span class="button-inner">View Start</span>
+    </ion-button>
+  </ng-template>
+
+  <ng-template [ngSwitchCase]= "'IN_PROGRESS'">
+    <div class="section-heading">
+      Back to Game
+    </div>
+    <ion-button (click) = "showGame()">
+      <span class="button-inner">Resume</span>
+    </ion-button>
+  </ng-template>
+
+  <ng-template [ngSwitchCase]= "'COMPLETE'">
+    <div class="section-heading">
+      Course Completed
+    </div>
+    <ion-button (click) = "showGame()">
+      <span class="button-inner">Review Course</span>
+    </ion-button>
+  </ng-template>
+
+  <ng-template [ngSwitchCase]="'NO_ACTIVE_OUTING'">
+    <div class="section-heading">
+      No Active Game
+    </div>
+  </ng-template>
+
+</div>
