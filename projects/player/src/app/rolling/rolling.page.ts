@@ -1,7 +1,4 @@
-import {
-  AfterViewInit,
-  Component
-} from '@angular/core';
+import {Component} from '@angular/core';
 import {
   Attraction,
   AttractionService,
@@ -45,7 +42,7 @@ const BLUE_LINE = {
   templateUrl: './rolling.page.html',
   styleUrls: ['./rolling.page.scss'],
 })
-export class RollingPage implements AfterViewInit {
+export class RollingPage {
 
   private map: any;
   /* Providing a layer upon which we pile on the stuff we show the user should be easier this way. */
@@ -65,8 +62,8 @@ export class RollingPage implements AfterViewInit {
     private pathService: PathService,
   ) { }
 
-  ngAfterViewInit() {
-    console.log('ngAfterViewInit RollingPage');
+  ionViewWillEnter() {
+    console.log('RollingPage: Map Creation (ionViewWillEnter)');
 
     /* TODO: This should be synchronous for most clients of this service. */
     this.outingService.getSessionOuting().subscribe(

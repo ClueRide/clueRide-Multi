@@ -1,6 +1,10 @@
 import {Injectable} from '@angular/core';
 import {NavController} from '@ionic/angular';
-import {InviteService, OutingService, SessionInviteState} from 'cr-lib';
+import {
+  InviteService,
+  OutingService,
+  SessionInviteState
+} from 'cr-lib';
 import {AppState} from './app-state';
 
 /**
@@ -52,14 +56,14 @@ export class AppStateService {
         break;
 
       case AppState.NO_INVITES:
-        // TODO: Temporary until we create the new page
+        // TODO: CI-90 Temporary until we create the new page
         console.log('Headed to the Home Page - No Invites');
         pageReadyPromise = this.nav.navigateRoot('home');
         break;
 
       default:
       case AppState.EXCEPTION:
-        // TODO: Define an Exception page (maybe the server is down?)
+        // TODO: CI-89 Define an Exception page (maybe the server is down?)
         console.log('Unrecognized state: ' + appState);
         break;
     }

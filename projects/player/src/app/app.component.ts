@@ -3,8 +3,11 @@ import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 
 import {Platform} from '@ionic/angular';
-import {AwaitRegistrationService, PlatformStateService} from 'cr-lib';
-import {AppStateService} from './app-state/app-state.service';
+import {
+  AwaitRegistrationService,
+  PlatformStateService
+} from 'cr-lib';
+import {AppStateService} from './state/app/app-state.service';
 
 @Component({
   selector: 'app-root',
