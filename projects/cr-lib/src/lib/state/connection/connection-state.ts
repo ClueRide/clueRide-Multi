@@ -16,7 +16,7 @@ export class ConnectionStateComponent {
   constructor(
     private serverEventsService: ServerEventsService
   ) {
-    console.log('Hello ConnectionStateComponent Component');
+    console.log('Hello ConnectionStateComponent: Obtaining SSE EventSource');
     this.eventSource = serverEventsService.getEventSource();
   }
 

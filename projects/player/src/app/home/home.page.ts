@@ -1,9 +1,14 @@
-import {AfterContentInit, Component, OnInit} from '@angular/core';
+import {
+  AfterContentInit,
+  Component,
+  OnInit
+} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {
   Member,
   ProfileService
 } from 'cr-lib';
+import {LoadStateService} from '../state/load/load-state-service.service';
 
 @Component({
   selector: 'app-home',
@@ -16,6 +21,7 @@ export class HomePage implements OnInit, AfterContentInit {
 
   constructor(
     private profileService: ProfileService,
+    private loadStateService: LoadStateService,
     private titleService: Title
   ) {}
 
@@ -26,7 +32,7 @@ export class HomePage implements OnInit, AfterContentInit {
           this.member = member;
         }
       );
-    // this.loadStateService.loadOutingData();
+    this.loadStateService.loadOutingData();
   }
 
   ngAfterContentInit(): void {
