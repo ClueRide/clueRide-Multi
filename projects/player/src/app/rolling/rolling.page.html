@@ -1,9 +1,23 @@
 <ion-header>
+  <ion-buttons slot="start">
+    <ion-menu-button></ion-menu-button>
+  </ion-buttons>
   <ion-toolbar>
-    <ion-title>Rolling</ion-title>
+    <ion-title>{{title}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <div class="map-container" id="rolling-map">
 
+    <div *ngIf="isGuide() && isGameStarted()">
+      <ion-fab left bottom>
+        <button ion-fab mini (tap)="signalArrival()">
+          <ion-icon name="add"></ion-icon>
+        </button>
+        c_type
+      </ion-fab>
+    </div>
+
+  </div>
 </ion-content>
