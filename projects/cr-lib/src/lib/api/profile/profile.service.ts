@@ -127,37 +127,37 @@ export class ProfileService {
   }
 
   public getBadgeOsId(): number {
-    if (this.member) {
-      return this.member.badgeOSId;
+    if (this.cachedMember) {
+      return this.cachedMember.badgeOSId;
     } else {
       return -1;
     }
   }
 
   public getGivenName(): string {
-    if (this.member) {
-      return this.member.lastName;
+    if (this.cachedMember) {
+      return this.cachedMember.lastName;
     }
     return '';
   }
 
   public getDisplayName(): string {
-    if (this.member) {
-      return this.member.displayName;
+    if (this.cachedMember) {
+      return this.cachedMember.displayName;
     }
     return '';
   }
 
   public getUserImageUrl(): string {
-    if (this.member) {
-      return this.member.imageUrl;
+    if (this.cachedMember) {
+      return this.cachedMember.imageUrl;
     }
     return '';
   }
 
   /* Provides the ID of the profile, the Member ID. */
   public getCurrentMemberId() {
-    return this.member.id;
+    return this.cachedMember.id;
   }
 
   // TODO: FEC-57 Implement this and return an Observable.
