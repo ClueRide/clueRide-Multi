@@ -5,7 +5,8 @@ import {
   Outing,
   OutingService,
   Path,
-  PathService
+  PathService,
+  PoolMarkerService
 } from 'cr-lib';
 
 import * as L from 'leaflet';
@@ -18,9 +19,9 @@ import {
   map,
   tap
 } from 'rxjs/operators';
-import {PoolMarkerService} from '../../../../cr-lib/src/lib/marker/pool/pool-marker.service';
 import {GameState} from '../game/game-state';
 import {GameStateService} from '../game/game-state.service';
+import {GuideEventService} from '../state/guide-event-service.service';
 
 /** Defines reasonable Zoom Level for initially opening the map. */
 const DEFAULT_ZOOM_LEVEL = 14;
@@ -56,7 +57,7 @@ export class RollingPage {
   constructor(
     private attractionService: AttractionService,
     private gameStateService: GameStateService,
-    // private guideService: GuideService,
+    private guideEventService: GuideEventService,
     private markerService: PoolMarkerService,
     private outingService: OutingService,
     private pathService: PathService,
@@ -192,8 +193,7 @@ export class RollingPage {
    * Tells whether the current session is associated with a Guide.
    */
   public isGuide(): boolean {
-    // return this.guideEventService.isCurrentMemberGuide();
-    return true;
+    return this.guideEventService.isCurrentMemberGuide();
   }
 
   public isGameStarted(): boolean {
@@ -201,7 +201,7 @@ export class RollingPage {
   }
 
   public signalArrival() {
-    // this.guideEventService.sendArrival();
+    this.guideEventService.sendArrival();
   }
 
 }
