@@ -50,6 +50,7 @@ export class ProfileService {
     private authHeaderService: AuthHeaderService,
     private tokenService: TokenService,
   ) {
+    console.log('ProfileService: Constructing');
   }
 
   /**
