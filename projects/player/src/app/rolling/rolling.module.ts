@@ -7,13 +7,15 @@ import {
 } from '@angular/router';
 
 import {IonicModule} from '@ionic/angular';
+import {RollingGuard} from './rolling.guard';
 
 import {RollingPage} from './rolling.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: RollingPage
+    component: RollingPage,
+    canActivate: [RollingGuard]
   }
 ];
 

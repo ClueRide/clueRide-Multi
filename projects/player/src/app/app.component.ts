@@ -5,9 +5,11 @@ import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {Platform} from '@ionic/angular';
 import {
   AwaitRegistrationService,
-  PlatformStateService
+  PlatformStateService,
+  ProfileService
 } from 'cr-lib';
 import {AppStateService} from './state/app/app-state.service';
+import {LoadStateService} from './state/load/load-state-service.service';
 
 @Component({
   selector: 'app-root',
@@ -30,8 +32,10 @@ export class AppComponent {
 
   constructor(
     private appStateService: AppStateService,
+    private loadStateService: LoadStateService,
     private platform: Platform,
     private platformStateService: PlatformStateService,
+    private profileService: ProfileService,
     private authClient: AwaitRegistrationService,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar
@@ -54,9 +58,14 @@ export class AppComponent {
           if (ready) {
             console.log('Registered');
             /* Proceed with the application. */
-            this.appStateService.checkInviteIsAccepted()
-              .then()
-              .catch();
+            this.profileService.loadMemberProfile().subscribe(
+              () => {
+                this.appStateService.checkInviteIsAccepted()
+                  .then()
+                  .catch();
+                this.loadStateService.loadOutingData();
+              }
+            );
           }
         });
     });

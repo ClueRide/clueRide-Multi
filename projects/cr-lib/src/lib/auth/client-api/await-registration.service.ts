@@ -1,7 +1,18 @@
-import {Injectable, NgZone} from '@angular/core';
+import {
+  Injectable,
+  NgZone
+} from '@angular/core';
 import {NavController} from '@ionic/angular';
-import {Observable, ReplaySubject, Subject} from 'rxjs';
-import {filter, find} from 'rxjs/operators';
+import {
+  Observable,
+  ReplaySubject,
+  Subject
+} from 'rxjs';
+import {
+  filter,
+  find
+} from 'rxjs/operators';
+import {ProfileService} from '../../api/profile/profile.service';
 import {RegStateKey} from '../state/reg-state-key';
 import {RegStateService} from '../state/reg-state.service';
 
@@ -18,6 +29,7 @@ export class AwaitRegistrationService {
   constructor(
     private regStateService: RegStateService,
     private nav: NavController,
+    private profileService: ProfileService,
     private zone: NgZone,
   ) {
     this.registrationActiveSubject = new ReplaySubject();
@@ -69,8 +81,14 @@ export class AwaitRegistrationService {
       find(regState => regState.state === RegStateKey.ACTIVE)
     ).subscribe(regState => {
       console.log('Active by the grace of', regState.source );
-      /* Proceed with the application. */
-      this.registrationActiveSubject.next(true);
+      /* Now able to load ProfileService. */
+      this.profileService.loadMemberProfile().subscribe(
+        () => {
+          console.log('Profile is loaded for user', this.profileService.getDisplayName());
+          /* Proceed with the application. */
+          this.registrationActiveSubject.next(true);
+        }
+      );
     });
 
     return this.registrationActiveSubject.asObservable();

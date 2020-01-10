@@ -11,6 +11,7 @@ import {
 } from 'cr-lib';
 import {
   Observable,
+  ReplaySubject,
   Subject
 } from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
@@ -38,7 +39,7 @@ export class LoadStateService {
     private teamService: TeamService,
   ) {
     console.log('Hello LoadStateService');
-    this.loadStateSubject = new Subject<boolean>();
+    this.loadStateSubject = new ReplaySubject<boolean>(1);
     this.loadStateObservable = this.loadStateSubject.asObservable();
   }
 
