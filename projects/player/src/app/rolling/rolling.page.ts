@@ -21,7 +21,7 @@ import {
 } from 'rxjs/operators';
 import {GameState} from '../game/game-state';
 import {GameStateService} from '../game/game-state.service';
-import {GuideEventService} from '../state/guide-event-service.service';
+import {GuideEventService} from '../state/guide-event.service';
 
 /** Defines reasonable Zoom Level for initially opening the map. */
 const DEFAULT_ZOOM_LEVEL = 14;
@@ -66,7 +66,7 @@ export class RollingPage {
   ionViewWillEnter() {
     console.log('RollingPage: Map Creation (ionViewWillEnter)');
 
-    /* TODO: This should be synchronous for most clients of this service. */
+    /* TODO: CI-97 This should be synchronous for most clients of this service. */
     this.outingService.getSessionOuting().subscribe(
       (outing) => {
         this.outing = outing;
@@ -198,6 +198,13 @@ export class RollingPage {
 
   public isGameStarted(): boolean {
     return this.gameStateService.isGameStarted();
+  }
+
+  /**
+   * Returns true if the current session is opened by a Guide and we're currently rolling.
+   */
+  public canSignalArrival(): boolean {
+    return this.guideEventService.isCurrentMemberGuide() && this.gameStateService.isRolling();
   }
 
   public signalArrival() {

@@ -128,8 +128,16 @@ export class GameStateService {
     return this.cachedGameState.teamAssembled;
   }
 
+  /**
+   * Tells whether or not we're rolling.
+   */
+  isRolling(): boolean {
+    return this.cachedGameState.rolling;
+  }
+
   ngOnDestroy() {
     console.log('Un-subscribing to SSE Events for Game State');
     this.sseSubscription.unsubscribe();
   }
+
 }

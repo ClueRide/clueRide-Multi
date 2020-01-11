@@ -10,7 +10,7 @@
 <ion-content>
   <div class="map-container" id="rolling-map">
 
-    <div *ngIf="isGuide() && isGameStarted()">
+    <div *ngIf="canSignalArrival()">
       <ion-fab horizontal="start" vertical="bottom">
         <ion-fab-button size="small" (click)="signalArrival($event)">
           <ion-icon name="add"></ion-icon>
