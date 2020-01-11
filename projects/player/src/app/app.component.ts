@@ -9,7 +9,7 @@ import {
   ProfileService
 } from 'cr-lib';
 import {AppStateService} from './state/app/app-state.service';
-import {LoadStateService} from './state/load/load-state-service.service';
+import {LoadStateService} from './state/load/load-state.service';
 
 @Component({
   selector: 'app-root',

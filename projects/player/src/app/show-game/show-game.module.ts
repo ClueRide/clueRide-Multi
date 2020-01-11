@@ -1,7 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {IonicModule} from '@ionic/angular';
-import {ShowGameComponent} from './show/show-game.component';
+import {ShowGameComponent} from './show-game.component';
 
 
 @NgModule({
@@ -16,4 +16,4 @@ import {ShowGameComponent} from './show/show-game.component';
     ShowGameComponent
   ]
 })
-export class GameModule { }
+export class ShowGameModule { }

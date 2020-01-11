@@ -5,7 +5,7 @@ import {RouterModule} from '@angular/router';
 import {IonicModule} from '@ionic/angular';
 import {MemberChipComponentModule} from 'cr-lib';
 import {SummaryComponentsModule} from '../components.module';
-import {GameModule} from '../game/game.module';
+import {ShowGameModule} from '../show-game/show-game.module';
 
 import {HomePage} from './home.page';
 
@@ -14,7 +14,7 @@ import {HomePage} from './home.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    GameModule,
+    ShowGameModule,
     MemberChipComponentModule,
     RouterModule.forChild([
       {

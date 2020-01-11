@@ -6,7 +6,7 @@ import {
   UrlTree
 } from '@angular/router';
 import {Observable} from 'rxjs';
-import {LoadStateService} from '../state/load/load-state-service.service';
+import {LoadStateService} from '../state/load/load-state.service';
 
 @Injectable({
   providedIn: 'root'
