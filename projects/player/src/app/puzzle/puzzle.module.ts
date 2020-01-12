@@ -13,7 +13,7 @@ import {PuzzlePage} from './puzzle.page';
 
 const routes: Routes = [
   {
-    path: '',
+    path: ':id',
     component: PuzzlePage
   }
 ];

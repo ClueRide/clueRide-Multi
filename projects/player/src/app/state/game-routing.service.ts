@@ -50,10 +50,7 @@ export class GameRoutingService implements OnDestroy {
 
     /* Case where we send out a Puzzle to be solved. */
     this.router.navigate(
-      ['puzzle'],
-      {state:
-          {id: puzzleId}
-      }
+      ['puzzle', puzzleId]
     );
   }
 
