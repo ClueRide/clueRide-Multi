@@ -14,14 +14,14 @@ describe('ShowGameComponent', () => {
   let component: ShowGameComponent;
   let fixture: ComponentFixture<ShowGameComponent>;
 
-  beforeEach(async(() => {
-    const httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
-    const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
-    const gameStateSpy = jasmine.createSpyObj('GameStateService', [
-      'requestGameState',
-      'getOutingState'
-    ]);
+  const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+  const httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
+  const gameStateSpy = jasmine.createSpyObj('GameStateService', [
+    'requestGameState',
+    'getOutingState'
+  ]);
 
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ ShowGameComponent ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -43,6 +43,47 @@ describe('ShowGameComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('routeBasedOnGameState', () => {
+
+    beforeEach(() => {
+      routerSpy.navigate.calls.reset();
+    });
+
+    it('should route to Rolling if we are indeed rolling', () => {
+      /* train mocks */
+      routerSpy.navigate.and.returnValue(Promise.resolve());
+
+      /* make call */
+      component.routeBasedOnGameState({rolling: true, teamAssembled: true});
+
+      /* verify results */
+      expect(routerSpy.navigate).toHaveBeenCalledWith(['rolling']);
+    });
+
+    it('should route to Rolling if we\'re still gathering', () => {
+      /* train mocks */
+      routerSpy.navigate.and.returnValue(Promise.resolve());
+
+      /* make call */
+      component.routeBasedOnGameState({rolling: false, teamAssembled: false});
+
+      /* verify results */
+      expect(routerSpy.navigate).toHaveBeenCalledWith(['rolling']);
+    });
+
+    it('should route to Puzzle if Team is assembled and we haven\'t started rolling yet.', () => {
+      /* train mocks */
+      routerSpy.navigate.and.returnValue(Promise.resolve());
+
+      /* make call */
+      component.routeBasedOnGameState({rolling: false, teamAssembled: true});
+
+      /* verify results */
+      expect(routerSpy.navigate).toHaveBeenCalledWith(['puzzle']);
+    });
+
   });
 
 });
