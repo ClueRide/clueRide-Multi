@@ -37,7 +37,7 @@ export class ShowGameComponent {
     let promise;
 
     if (
-      gameState.rolling
+      gameState.rolling || !gameState.teamAssembled
     ) {
       promise = this.router.navigate(['rolling']);
     } else {
