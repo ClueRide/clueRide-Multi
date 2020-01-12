@@ -11,7 +11,7 @@ import {
   PathService,
   PoolMarkerService
 } from 'cr-lib';
-import {GameStateService} from '../game/game-state.service';
+import {GameStateService} from '../state/game/game-state.service';
 import {GuideEventService} from '../state/guide-event.service';
 
 import {RollingPage} from './rolling.page';

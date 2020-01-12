@@ -10,7 +10,7 @@ import {
 } from 'cr-lib';
 import {of} from 'rxjs';
 import {PuzzleService} from '../../../../../cr-lib/src/lib/api/puzzle/puzzle.service';
-import {GameStateService} from '../../game/game-state.service';
+import {GameStateService} from '../game/game-state.service';
 
 import {LoadStateService} from './load-state.service';
 

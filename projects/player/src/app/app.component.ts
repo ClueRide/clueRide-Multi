@@ -9,6 +9,7 @@ import {
   ProfileService
 } from 'cr-lib';
 import {AppStateService} from './state/app/app-state.service';
+import {GameRoutingService} from './state/game-routing.service';
 import {LoadStateService} from './state/load/load-state.service';
 
 @Component({
@@ -32,6 +33,7 @@ export class AppComponent {
 
   constructor(
     private appStateService: AppStateService,
+    private gameRoutingService: GameRoutingService,
     private loadStateService: LoadStateService,
     private platform: Platform,
     private platformStateService: PlatformStateService,
@@ -54,15 +56,26 @@ export class AppComponent {
       }
 
       this.authClient.getRegistrationActiveObservable('com.clueride.player')
-        .subscribe(ready => {
-          if (ready) {
+        .subscribe(registrationActive => {
+          if (registrationActive) {
             console.log('Registered');
             /* Proceed with the application. */
             this.profileService.loadMemberProfile().subscribe(
               () => {
+                /* Setup navigation responses to GameState changes. */
+                this.loadStateService.getLoadStateObservable().subscribe(
+                  loadReady => {
+                    if (loadReady) {
+                      this.gameRoutingService.setupSubscriptions();
+                    }
+                  }
+                );
+
                 this.appStateService.checkInviteIsAccepted()
                   .then()
                   .catch();
+
+                /* Bring in the data for this outing. */
                 this.loadStateService.loadOutingData();
               }
             );

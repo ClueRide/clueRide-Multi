@@ -5,7 +5,7 @@ import {
   TestBed
 } from '@angular/core/testing';
 import {Router} from '@angular/router';
-import {GameStateService} from '../game/game-state.service';
+import {GameStateService} from '../state/game/game-state.service';
 
 import {ShowGameComponent} from './show-game.component';
 
