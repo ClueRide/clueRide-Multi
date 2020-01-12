@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Team</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+
+    <ion-card-header>Team Members for this Outing</ion-card-header>
+    <ion-card-content>
+
+      <ion-list *ngFor="let member of team.members">
+        <ion-item>
+          <cr-member-chip [member]="member">
+          </cr-member-chip>
+        </ion-item>
+      </ion-list>
+
+    </ion-card-content>
+  </ion-card>
+
+  <div *ngIf="canSignalTeamAssembled()">
+    <ion-fab horizontal="start" vertical="bottom">
+      <ion-fab-button size="small" (click)="signalTeamAssembled($event)">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </div>
+</ion-content>
