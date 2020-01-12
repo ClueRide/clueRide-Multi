@@ -9,12 +9,12 @@ import {
 import {IonicModule} from '@ionic/angular';
 import {DepartModule} from '../depart/depart.module';
 
-import {PuzzlePage} from './puzzle.page';
+import {AnswerPage} from './answer.page';
 
 const routes: Routes = [
   {
     path: ':id',
-    component: PuzzlePage
+    component: AnswerPage
   }
 ];
 
@@ -26,6 +26,6 @@ const routes: Routes = [
     DepartModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [PuzzlePage]
+  declarations: [AnswerPage]
 })
-export class PuzzlePageModule {}
+export class AnswerPageModule {}

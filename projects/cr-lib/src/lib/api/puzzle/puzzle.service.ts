@@ -1,7 +1,14 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {from, Observable, Subject} from 'rxjs';
-import {AuthHeaderService, BASE_URL} from '../../auth/header/auth-header.service';
+import {
+  from,
+  Observable,
+  Subject
+} from 'rxjs';
+import {
+  AuthHeaderService,
+  BASE_URL
+} from '../../auth/header/auth-header.service';
 import {AttractionService} from '../attraction/attraction.service';
 import {Location} from '../location/location';
 import {Puzzle} from './puzzle';
@@ -52,6 +59,7 @@ export class PuzzleService {
    * @param locationId unique identifier for the Location.
    */
   public getPuzzles(locationId: number): Observable<Puzzle[]> {
+    console.log('Populating puzzle for attraction ID', locationId);
     return this.http.get<Puzzle[]>(
       BASE_URL + 'puzzle/location/' + locationId,
       {headers: this.httpService.getAuthHeaders()}

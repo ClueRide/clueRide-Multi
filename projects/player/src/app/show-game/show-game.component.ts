@@ -41,7 +41,7 @@ export class ShowGameComponent {
     ) {
       promise = this.router.navigate(['rolling']);
     } else {
-      promise = this.router.navigate(['puzzle']);
+      promise = this.router.navigate(['puzzle', gameState.puzzleId]);
     }
 
     promise.catch(

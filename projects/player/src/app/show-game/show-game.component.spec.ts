@@ -75,10 +75,10 @@ describe('ShowGameComponent', () => {
       routerSpy.navigate.and.returnValue(Promise.resolve());
 
       /* make call */
-      component.routeBasedOnGameState({rolling: false, teamAssembled: true});
+      component.routeBasedOnGameState({rolling: false, teamAssembled: true, puzzleId: 42});
 
       /* verify results */
-      expect(routerSpy.navigate).toHaveBeenCalledWith(['puzzle']);
+      expect(routerSpy.navigate).toHaveBeenCalledWith(['puzzle', 42]);
     });
 
   });
