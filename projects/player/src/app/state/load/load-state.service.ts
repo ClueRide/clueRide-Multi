@@ -15,7 +15,7 @@ import {
   Subject
 } from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {GameStateService} from '../../game/game-state.service';
+import {GameStateService} from '../game/game-state.service';
 
 @Injectable({
   providedIn: 'root'

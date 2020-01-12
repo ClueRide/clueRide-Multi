@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 import {take} from 'rxjs/operators';
-import {GameStateService} from '../game/game-state.service';
+import {GameStateService} from '../state/game/game-state.service';
 
 @Component({
   selector: 'app-show-game',
