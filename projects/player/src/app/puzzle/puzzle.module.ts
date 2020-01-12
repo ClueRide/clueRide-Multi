@@ -7,6 +7,7 @@ import {
 } from '@angular/router';
 
 import {IonicModule} from '@ionic/angular';
+import {DepartModule} from '../depart/depart.module';
 
 import {PuzzlePage} from './puzzle.page';
 
@@ -22,6 +23,7 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
+    DepartModule,
     RouterModule.forChild(routes)
   ],
   declarations: [PuzzlePage]

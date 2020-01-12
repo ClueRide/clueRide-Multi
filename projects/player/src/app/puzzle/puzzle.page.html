@@ -5,5 +5,27 @@
 </ion-header>
 
 <ion-content>
+  <ion-grid>
+
+    <div class="question">
+      {{puzzle.question}}
+    </div>
+
+    <!-- Answer Section -->
+    <ion-buttons>
+      <div class="answer"
+           *ngFor="let answer of puzzle.answers"
+      >
+        <ion-button text-wrap style="height: 75px"
+                (click)="selectAsAnswer(answer.key)"
+        >
+          {{answer.key}}: {{answer.answer}}
+        </ion-button>
+      </div>
+    </ion-buttons>
+
+  </ion-grid>
+
+  <app-depart></app-depart>
 
 </ion-content>
