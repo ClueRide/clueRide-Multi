@@ -8,7 +8,7 @@ import {
   Member,
   ProfileService
 } from 'cr-lib';
-import {LoadStateService} from '../state/load/load-state-service.service';
+import {LoadStateService} from '../state/load/load-state.service';
 
 @Component({
   selector: 'app-home',

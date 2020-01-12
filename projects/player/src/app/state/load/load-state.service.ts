@@ -29,13 +29,13 @@ export class LoadStateService {
   private readonly loadStateObservable: Observable<boolean>;
 
   constructor(
-    private outingService: OutingService,
+    private attractionService: AttractionService,
     private courseService: CourseService,
     private gameStateService: GameStateService,
-    private attractionService: AttractionService,
+    private outingService: OutingService,
     private pathService: PathService,
-    private serverEventsService: ServerEventsService,
     private puzzleService: PuzzleService,
+    private serverEventsService: ServerEventsService,
     private teamService: TeamService,
   ) {
     console.log('Hello LoadStateService');

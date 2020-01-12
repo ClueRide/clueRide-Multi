@@ -1,9 +1,9 @@
 import {CommonModule} from '@angular/common';
-import { NgModule } from '@angular/core';
+import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {IonicModule} from '@ionic/angular';
-// import { IonicPageModule } from '@ionic/angular';
-import { OutingPage } from './outing.page';
+import {OutingPage} from './outing.page';
+
 // import {SummaryComponentsModule} from "../../components/components.module";
 
 @NgModule({
@@ -11,7 +11,6 @@ import { OutingPage } from './outing.page';
     OutingPage,
   ],
   imports: [
-    // IonicPageModule.forChild(OutingPage),
     // SummaryComponentsModule
     CommonModule,
     IonicModule,
