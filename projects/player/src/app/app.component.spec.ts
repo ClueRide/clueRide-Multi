@@ -35,6 +35,7 @@ describe('AppComponent', () => {
   let  mockBackButton,
     mockPlatform,
     checkInviteIsAcceptedSpy,
+    getLoadStateObservableSpy,
     getRegistrationActiveObservableSpy,
     loadMemberProfileSpy;
 
@@ -42,7 +43,10 @@ describe('AppComponent', () => {
   const authClient = jasmine.createSpyObj('AwaitRegistrationService', {
     getRegistrationActiveObservable: () => of(true)
   });
-  const loadStateSpy = jasmine.createSpyObj('LoadStateService', ['loadOutingData']);
+  const loadStateSpy = jasmine.createSpyObj('LoadStateService', [
+    'loadOutingData',
+    'getLoadStateObservable'
+  ]);
   const httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
   const statusBarSpy = jasmine.createSpyObj('StatusBar', ['styleDefault']);
   const splashScreenSpy = jasmine.createSpyObj('SplashScreen', ['hide']);
@@ -62,6 +66,7 @@ describe('AppComponent', () => {
     getRegistrationActiveObservableSpy = authClient.getRegistrationActiveObservable.and.returnValue(of (true));
     loadMemberProfileSpy = profileSpy.loadMemberProfile.and.returnValue(of({}));
     checkInviteIsAcceptedSpy = appStateSpy.checkInviteIsAccepted.and.returnValue(Promise.resolve());
+    getLoadStateObservableSpy = loadStateSpy.getLoadStateObservable.and.returnValue(of(true));
 
     TestBed.configureTestingModule({
       declarations: [AppComponent],
