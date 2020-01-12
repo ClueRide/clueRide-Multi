@@ -20,7 +20,8 @@ const routes: Routes = [
     loadChildren: () => import('./list/list.module').then(m => m.ListPageModule)
   },
   { path: 'rolling', loadChildren: './rolling/rolling.module#RollingPageModule' },
-  { path: 'puzzle', loadChildren: './puzzle/puzzle.module#PuzzlePageModule' }
+  { path: 'puzzle', loadChildren: './puzzle/puzzle.module#PuzzlePageModule' },
+  { path: 'team', loadChildren: './team/team.module#TeamPageModule' }
 ];
 
 @NgModule({

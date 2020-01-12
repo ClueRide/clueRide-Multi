@@ -1,4 +1,3 @@
-import {HttpClient} from '@angular/common/http';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {
   async,
@@ -15,7 +14,6 @@ describe('ShowGameComponent', () => {
   let fixture: ComponentFixture<ShowGameComponent>;
 
   const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
-  const httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
   const gameStateSpy = jasmine.createSpyObj('GameStateService', [
     'requestGameState',
     'getOutingState'
@@ -27,7 +25,6 @@ describe('ShowGameComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         ShowGameComponent,
-        {provide: HttpClient, useValue: httpClientSpy},
         {provide: GameStateService, useValue: gameStateSpy},
         {provide: Router, useValue: routerSpy},
       ]
