@@ -1,9 +1,33 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Answer</ion-title>
+    <ion-title>{{puzzle.name}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-grid>
+
+    <div class="question">
+      {{puzzle.question}}
+    </div>
+
+    <!-- Answer Section -->
+    <div *ngIf="answerSummary">
+        <ion-item class="answer-container"
+             *ngFor="let answer of puzzle.answers"
+                  [color]="answerColor(answer.key)">
+          <div class="answer">
+            <span class="answerCount">
+              {{answerSummary.answerMap[answer.key]}}
+            </span>
+            <span class="answerText">
+              {{answer.answer}}
+            </span>
+          </div>
+        </ion-item>
+    </div>
+
+  </ion-grid>
+
   <app-depart></app-depart>
 </ion-content>

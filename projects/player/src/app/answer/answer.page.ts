@@ -2,6 +2,14 @@ import {
   Component,
   OnInit
 } from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {
+  AnswerSummary,
+  AnswerSummaryService,
+  Puzzle,
+  PuzzleService
+} from 'cr-lib';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-answer',
@@ -10,9 +18,42 @@ import {
 })
 export class AnswerPage implements OnInit {
 
-  constructor() { }
+  public puzzle: Puzzle;
+  public answerSummary: AnswerSummary;
+
+  private subscription: Subscription;
+
+  constructor(
+    private answerSummaryService: AnswerSummaryService,
+    private activatedRoute: ActivatedRoute,
+    private puzzleService: PuzzleService,
+  ) { }
 
   ngOnInit() {
+    this.subscription = this.activatedRoute.queryParams.subscribe(
+      (params) => {
+        const puzzleId = parseInt(this.activatedRoute.snapshot.paramMap.get('id'), 10);
+        console.log('AnswerPage.ngOnInit; puzzleId = ', puzzleId);
+        this.puzzle = this.puzzleService.getPuzzle(puzzleId);
+      });
+
+    this.subscription.add(this.answerSummaryService.openAnswerSummaryChannel().subscribe(
+      (answerSummary) => {
+        this.answerSummary = answerSummary;
+      }
+    ));
+  }
+
+  public isCorrectAnswer(answer: string): boolean {
+    return this.answerSummary && this.answerSummary.correctAnswer.toString() === answer;
+  }
+
+  public answerColor(answer: string): string {
+    if (this.isCorrectAnswer(answer)) {
+      return 'success';
+    } else {
+      return 'danger';
+    }
   }
 
 }

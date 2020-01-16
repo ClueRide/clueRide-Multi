@@ -5,12 +5,10 @@ import {
 } from 'ng-event-source';
 import {
   Observable,
+  ReplaySubject,
   Subject
 } from 'rxjs';
-import {
-  filter,
-  map
-} from 'rxjs/operators';
+import {filter} from 'rxjs/operators';
 import {ProfileService} from '../api/profile/profile.service';
 import {AuthHeaderService} from '../auth/header/auth-header.service';
 import {AnswerSummary} from './answer-summary/answer-summary';
@@ -30,18 +28,18 @@ export class ServerEventsService {
 
   private eventSource: EventSourcePolyfill;
 
-  private answerSummary$: Subject<OnMessageEvent>;
-  readonly badgeEvent$: Subject<string>;
-  private gameStateEvent$: Subject<OnMessageEvent>;
+  private answerSummary$: Subject<AnswerSummary>;
+  readonly badgeEvent$: Subject<BadgeEvent>;
+  private gameStateEvent$: Subject<any>;
   private tetherEvent$: Subject<OnMessageEvent>;
 
   constructor(
     private authHeaderService: AuthHeaderService,
     private profileService: ProfileService,
   ) {
-    this.answerSummary$ = new Subject<OnMessageEvent>();
-    this.badgeEvent$ = new Subject<string>();
-    this.gameStateEvent$ = new Subject<OnMessageEvent>();
+    this.answerSummary$ = new ReplaySubject<AnswerSummary>(1);
+    this.badgeEvent$ = new Subject<BadgeEvent>();
+    this.gameStateEvent$ = new Subject<any>();
     this.tetherEvent$ = new Subject<OnMessageEvent>();
   }
 
@@ -67,7 +65,10 @@ export class ServerEventsService {
       let eventSourceUrl = gameStateUrl;
       /* Event Source may or may not be paying attention to a specific Outing. */
       if (outingId) {
+        console.log('Opened against Outing ID', outingId);
         eventSourceUrl += '/' + outingId;
+      } else {
+        console.log('Opened against non-outing-specific messages');
       }
 
       this.eventSource = new EventSourcePolyfill(
@@ -77,24 +78,41 @@ export class ServerEventsService {
         }
       );
 
-      /* All custom message types fire the `onmessage` event for our chosen EventSource polyfill. */
+      /* This is the generic message type. */
       this.eventSource.onmessage = (
         (messageEvent: MessageEvent) => {
-          console.log('SSE Message (type ' + messageEvent.type + '): ' + JSON.stringify(messageEvent.data));
-          /* Handle the various Named Messages. */
-          if (messageEvent.type === 'tether') {
-            this.tetherEvent$.next(messageEvent);
-          } else if (messageEvent.type === 'message' || messageEvent.type === 'game_state') {
-            this.gameStateEvent$.next(messageEvent);
-          } else if (messageEvent.type === 'badge-award') {
-            this.badgeEvent$.next(messageEvent.data);
-          } else if (messageEvent.type === 'answer-summary') {
-            this.answerSummary$.next(messageEvent);
-          } else {
-            console.error('Unrecognized Message Type: ', messageEvent.type);
-          }
+          const eventData = JSON.parse(messageEvent.data);
+          console.log('SSE Message (type ' + messageEvent.type + '): ' + JSON.stringify(eventData));
+
+          /* No longer expecting the generic 'message' type. */
+          console.error('Unrecognized Message Type: ', messageEvent.type);
         }
       );
+
+      /* Map each event type to the corresponding event queue. */
+      this.eventSource.addEventListener('answer-summary',
+        (messageEvent: MessageEvent) => {
+          const event = JSON.parse(messageEvent.data);
+          this.answerSummary$.next(event.answerSummary);
+        });
+
+      this.eventSource.addEventListener('badge-award',
+        (messageEvent: MessageEvent) => {
+          const event = JSON.parse(messageEvent.data);
+          this.badgeEvent$.next(event);
+        });
+
+      this.eventSource.addEventListener('game-state',
+        (messageEvent: MessageEvent) => {
+          const event = JSON.parse(messageEvent.data);
+          this.gameStateEvent$.next(event);
+        });
+
+      this.eventSource.addEventListener('tether',
+        (messageEvent: MessageEvent) => {
+          const event = JSON.parse(messageEvent.data);
+          this.tetherEvent$.next(event);
+        });
 
       this.eventSource.onopen = (
         (openEvent) => {
@@ -116,31 +134,23 @@ export class ServerEventsService {
    * Observable that streams the answer-summary events.
    */
   public getAnswerSummaryObservable(): Observable<AnswerSummary> {
-    return this.answerSummary$.pipe(
-      map(event => {
-        return JSON.parse(event.data).answerSummary;
-      })
-    );
+    return this.answerSummary$.asObservable();
   }
 
   public getBadgeEventObservable(): Observable<BadgeEvent> {
     return this.badgeEvent$.pipe(
-      map(eventData => {
-        return JSON.parse(eventData);
-      }),
       filter(
         /* Check that this badge award is for this session's user. */
-        badgeEvent => (badgeEvent.userId === this.profileService.getBadgeOsId()))
-      );
+        (badgeEvent: BadgeEvent) => (badgeEvent.userId === this.profileService.getBadgeOsId())
+      )
+    );
   }
 
   /**
    * Observable that streams Game State events.
    */
   public getGameStateEventObservable(): Observable<any> {
-    return this.gameStateEvent$.pipe(
-      map( event => JSON.parse(event.data))
-    );
+    return this.gameStateEvent$.asObservable();
   }
 
 }

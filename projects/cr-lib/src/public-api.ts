@@ -61,6 +61,7 @@ export * from './lib/marker/clickableMarker';
 export * from './lib/marker/pool/pool-icon.service';
 export * from './lib/marker/pool/pool-marker.service';
 export * from './lib/position-source-type';
+export * from './lib/sse-event/answer-summary/answer-summary';
 export * from './lib/sse-event/answer-summary/answer-summary.service';
 export * from './lib/sse-event/sse-event.service';
 export * from './lib/state/connection/connection-state.module';
