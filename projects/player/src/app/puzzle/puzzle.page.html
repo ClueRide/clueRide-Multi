@@ -14,7 +14,7 @@
     <!-- Answer Section -->
     <ion-item *ngFor="let answer of puzzle.answers">
         <div class="answer">
-          <ion-button text-wrap style="height: 75px"
+          <ion-button class="ion-text-wrap" style="height: 75px"
                       (click)="selectAsAnswer(answer.key)">
             {{answer.key}}: {{answer.answer}}
           </ion-button>
