@@ -45,7 +45,7 @@ const BLUE_LINE = {
 })
 export class RollingPage {
 
-  private map: any;
+  static map: any;
   /* Providing a layer upon which we pile on the stuff we show the user should be easier this way. */
   private edgeLayer: any;
 
@@ -73,7 +73,9 @@ export class RollingPage {
       }
     );
 
-    this.map = L.map('rolling-map');
+    if (!RollingPage.map) {
+      RollingPage.map = L.map('rolling-map');
+    }
     this.prepareRollingMap();
     this.gameStateService.requestGameState()
       .subscribe(
@@ -112,9 +114,9 @@ export class RollingPage {
       startingAttraction.latLon.lon
     ];
 
-    this.map.setView(leafletPosition, DEFAULT_ZOOM_LEVEL);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(this.map);
-    this.edgeLayer = L.geoJSON().addTo(this.map);
+    RollingPage.map.setView(leafletPosition, DEFAULT_ZOOM_LEVEL);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(RollingPage.map);
+    this.edgeLayer = L.geoJSON().addTo(RollingPage.map);
 
     if (!this.gameState || this.gameState.pathIndex < 0) {
       this.addMarkerForAttraction(startingAttraction);
@@ -136,9 +138,9 @@ export class RollingPage {
         const styledPath = L.geoJSON(path.features, {
           style: GREEN_LINE
         });
-        styledPath.addTo(this.map);
+        styledPath.addTo(RollingPage.map);
         /* Adjust map zoom/center to fit the last path added. */
-        this.map.fitBounds(styledPath.getBounds().pad(.2));
+        RollingPage.map.fitBounds(styledPath.getBounds().pad(.2));
       }
     );
 
@@ -154,7 +156,7 @@ export class RollingPage {
               path.features, {
                 style: BLUE_LINE,
               }
-            ).addTo(this.map);
+            ).addTo(RollingPage.map);
           }
         ),
         last(),
