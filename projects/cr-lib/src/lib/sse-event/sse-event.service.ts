@@ -14,7 +14,8 @@ import {AuthHeaderService} from '../auth/header/auth-header.service';
 import {AnswerSummary} from './answer-summary/answer-summary';
 import {BadgeEvent} from './badge-event';
 
-const gameStateUrl = 'http://sse.clueride.com/game-state-broadcast';
+// const gameStateUrl = 'http://sse.clueride.com/game-state-broadcast';
+const gameStateUrl = 'http://sse.clueride.com/sse-channel';
 
 /**
  * Handles subscriptions to the SSE Server.
