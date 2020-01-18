@@ -2,8 +2,6 @@ import {Component} from '@angular/core';
 import {
   Attraction,
   AttractionService,
-  Outing,
-  OutingService,
   Path,
   PathService,
   PoolMarkerService
@@ -51,7 +49,6 @@ export class RollingPage {
 
   /* Exposed for the view. */
   public title = 'Map';
-  public outing: Outing;
   public gameState: GameState;
 
   constructor(
@@ -59,24 +56,18 @@ export class RollingPage {
     private gameStateService: GameStateService,
     private guideEventService: GuideEventService,
     private markerService: PoolMarkerService,
-    private outingService: OutingService,
     private pathService: PathService,
   ) { }
 
   ionViewWillEnter() {
     console.log('RollingPage: Map Creation (ionViewWillEnter)');
 
-    /* TODO: CI-97 This should be synchronous for most clients of this service. */
-    this.outingService.getSessionOuting().subscribe(
-      (outing) => {
-        this.outing = outing;
-      }
-    );
-
     if (!RollingPage.map) {
       RollingPage.map = L.map('rolling-map');
     }
     this.prepareRollingMap();
+
+    // TODO: Is this the place to request the Game State if we don't already have one? Is this CI-105?
     this.gameStateService.requestGameState()
       .subscribe(
         (gameState) => {
