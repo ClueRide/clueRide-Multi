@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 import {
   from,
   Observable,
+  of,
   Subject
 } from 'rxjs';
 import {
@@ -39,9 +40,12 @@ interface PuzzlesById {
 export class PuzzleService {
   private puzzles: PuzzlesById = {};
 
+  private puzzleSubject: Subject<boolean>;
   private puzzlesPerAttractionId: PuzzlesPerAttractionId = {};
   private expectedAttractionCount: number;
   private attractionCount = 0;
+  private sessionLoaded: boolean;
+  private loadRequested: boolean;
 
   constructor(
     public http: HttpClient,
@@ -49,6 +53,8 @@ export class PuzzleService {
     private attractionService: AttractionService,
   ) {
     console.log('Hello PuzzleService');
+    this.sessionLoaded = false;
+    this.loadRequested = false;
   }
 
   /* Editing Puzzles for prospective Locations. */
@@ -95,7 +101,23 @@ export class PuzzleService {
    * completely loaded.
    */
   public loadSessionPuzzles(): Observable<any> {
-    const puzzleSubject: Subject<boolean> = new Subject();
+
+    /* If we have a request to load, simply return existing subject. */
+    if (this.loadRequested) {
+      return this.puzzleSubject.asObservable();
+    }
+
+    /* If we have loaded a set, let observers know. */
+    if (this.sessionLoaded) {
+      of(true).subscribe(
+        () => this.puzzleSubject.next(true)
+      );
+      return this.puzzleSubject.asObservable();
+    }
+
+    /* Not yet loaded; bring in a set from the back-end. */
+    this.puzzleSubject = new Subject();
+    this.loadRequested = true;
     const attractions = this.attractionService.getAttractions();
     this.expectedAttractionCount = attractions.length;
     for (const attraction of attractions) {
@@ -113,12 +135,13 @@ export class PuzzleService {
           }
           this.attractionCount++;
           if (this.attractionCount === this.expectedAttractionCount) {
-            puzzleSubject.next(true);
+            this.puzzleSubject.next(true);
+            this.sessionLoaded = true;
           }
         }
       );
     }
-    return puzzleSubject.asObservable();
+    return this.puzzleSubject.asObservable();
   }
 
   /**

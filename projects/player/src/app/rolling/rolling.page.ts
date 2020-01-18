@@ -76,7 +76,6 @@ export class RollingPage {
       RollingPage.map = L.map('rolling-map');
       RollingPage.pathGroup = L.geoJSON().addTo(RollingPage.map);
       RollingPage.markerGroup = L.layerGroup().addTo(RollingPage.map);
-      // RollingPage.map.addLayer(RollingPage.markerGroup);
     }
     this.prepareRollingMap();
     this.updatePathsOnMap(this.gameState);
@@ -99,7 +98,6 @@ export class RollingPage {
         this.title = 'Game Complete';
         break;
     }
-    // this.titleService.setTitle(this.title);
   }
 
   public prepareRollingMap() {
