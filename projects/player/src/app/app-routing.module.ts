@@ -22,7 +22,8 @@ const routes: Routes = [
   { path: 'rolling', loadChildren: './rolling/rolling.module#RollingPageModule' },
   { path: 'puzzle', loadChildren: './puzzle/puzzle.module#PuzzlePageModule' },
   { path: 'team', loadChildren: './team/team.module#TeamPageModule' },
-  { path: 'answer', loadChildren: './answer/answer.module#AnswerPageModule' }
+  { path: 'answer', loadChildren: './answer/answer.module#AnswerPageModule' },
+  { path: 'attraction', loadChildren: './attraction/attraction.module#AttractionPageModule' }
 ];
 
 @NgModule({

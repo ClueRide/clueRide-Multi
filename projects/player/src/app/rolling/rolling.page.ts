@@ -2,9 +2,9 @@ import {Component} from '@angular/core';
 import {
   Attraction,
   AttractionService,
+  GameMarkerService,
   Path,
-  PathService,
-  PoolMarkerService
+  PathService
 } from 'cr-lib';
 
 import * as L from 'leaflet';
@@ -45,7 +45,8 @@ export class RollingPage {
 
   static map: any;
   /* Providing a layer upon which we pile on the stuff we show the user should be easier this way. */
-  private edgeLayer: any;
+  static pathGroup: any;
+  static markerGroup: any;
 
   /* Exposed for the view. */
   public title = 'Map';
@@ -53,28 +54,33 @@ export class RollingPage {
 
   constructor(
     private attractionService: AttractionService,
+    private gameMarkerService: GameMarkerService,
     private gameStateService: GameStateService,
     private guideEventService: GuideEventService,
-    private markerService: PoolMarkerService,
     private pathService: PathService,
-  ) { }
+  ) {
+    /* Initialize GameState here to make sure we are caught up with current state as we join in. */
+    /* This should pull from a ReplaySubject that holds just the last GameState; don't care how that gets populated. */
+    this.gameStateService.requestGameState()
+      .subscribe(
+        (gameState) => {
+          this.gameState = gameState;
+        }
+      );
+  }
 
   ionViewWillEnter() {
     console.log('RollingPage: Map Creation (ionViewWillEnter)');
 
     if (!RollingPage.map) {
       RollingPage.map = L.map('rolling-map');
+      RollingPage.pathGroup = L.geoJSON().addTo(RollingPage.map);
+      RollingPage.markerGroup = L.layerGroup().addTo(RollingPage.map);
+      // RollingPage.map.addLayer(RollingPage.markerGroup);
     }
     this.prepareRollingMap();
+    this.updatePathsOnMap(this.gameState);
 
-    // TODO: Is this the place to request the Game State if we don't already have one? Is this CI-105?
-    this.gameStateService.requestGameState()
-      .subscribe(
-        (gameState) => {
-          this.gameState = gameState;
-          this.updatePathsOnMap(this.gameState);
-        }
-      );
   }
 
   ionViewDidEnter() {
@@ -100,6 +106,7 @@ export class RollingPage {
     const startingAttraction: Attraction = this.attractionService.getVisibleAttractions(0)[0];
 
     /* Temporary just to get the map in the ball-park of the track I've pulled in. */
+    // TODO: CI-37 / LE-70 - translating position.
     const leafletPosition = [
       startingAttraction.latLon.lat,
       startingAttraction.latLon.lon
@@ -107,8 +114,8 @@ export class RollingPage {
 
     RollingPage.map.setView(leafletPosition, DEFAULT_ZOOM_LEVEL);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(RollingPage.map);
-    this.edgeLayer = L.geoJSON().addTo(RollingPage.map);
 
+    /* In case the game hasn't begun, at least show the Starting Location. */
     if (!this.gameState || this.gameState.pathIndex < 0) {
       this.addMarkerForAttraction(startingAttraction);
     }
@@ -117,6 +124,8 @@ export class RollingPage {
   /**
    * Draw all the cached paths up to our current attraction along with those attractions.
    * History paths are a different color from the current path.
+   *
+   * If there are existing paths/markers, these are first cleared and then re-drawn.
    */
   private updatePathsOnMap(gameState: GameState) {
     if (gameState.pathIndex < 0) {
@@ -124,12 +133,14 @@ export class RollingPage {
       return;
     }
 
+    this.clearMap();
+
     /* Define operation that adds Current (green) line to the map. */
     const addCurrentPathToMap = tap((path: Path) => {
         const styledPath = L.geoJSON(path.features, {
           style: GREEN_LINE
         });
-        styledPath.addTo(RollingPage.map);
+        styledPath.addTo(RollingPage.pathGroup);
         /* Adjust map zoom/center to fit the last path added. */
         RollingPage.map.fitBounds(styledPath.getBounds().pad(.2));
       }
@@ -147,7 +158,7 @@ export class RollingPage {
               path.features, {
                 style: BLUE_LINE,
               }
-            ).addTo(RollingPage.map);
+            ).addTo(RollingPage.pathGroup);
           }
         ),
         last(),
@@ -172,15 +183,15 @@ export class RollingPage {
   private addMarkerForAttraction(
     attraction: Attraction
   ) {
-    // TODO: Awaiting CI-87 GameMarkerService.
-    // const marker = this.markerService.generateAttractionMarker(
-    //   attraction,
-    //   this.navCtrl
-    // );
-
-    // marker.addTo(this.edgeLayer);
+    const marker = this.gameMarkerService.generateAttractionMarker(attraction);
+    marker.addTo(RollingPage.markerGroup);
   }
 
+  /** Removes existing paths and markers to prepare for redrawing the map. */
+  private clearMap() {
+    RollingPage.markerGroup.clearLayers();
+    RollingPage.pathGroup.clearLayers();
+  }
 
   /**
    * Tells whether the current session is associated with a Guide.

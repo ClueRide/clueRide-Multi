@@ -5,12 +5,15 @@ import {
   ComponentFixture,
   TestBed
 } from '@angular/core/testing';
+import {Router} from '@angular/router';
 import {
   AttractionService,
+  GameMarkerService,
   OutingService,
-  PathService,
-  PoolMarkerService
+  PathService
 } from 'cr-lib';
+import {of} from 'rxjs';
+import {GameState} from '../state/game/game-state';
 import {GameStateService} from '../state/game/game-state.service';
 import {GuideEventService} from '../state/guide-event.service';
 
@@ -20,16 +23,21 @@ describe('RollingPage', () => {
   let component: RollingPage;
   let fixture: ComponentFixture<RollingPage>;
 
+  const attractionSpy = jasmine.createSpyObj('AttractionService', ['isRolling']);
+  const gameStateSpy = jasmine.createSpyObj('GameStateService', ['isRolling', 'requestGameState']);
+  const guideEventSpy = jasmine.createSpyObj('GuideEventService', {
+    isCurrentMemberGuide: jasmine.createSpy()
+  });
+  const markerSpy = jasmine.createSpyObj('GameMarkerService', ['get']);
+  const outingSpy = jasmine.createSpyObj('OutingService', ['get']);
+  const pathSpy = jasmine.createSpyObj('PathService', ['get']);
+  const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+  const httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
+
   beforeEach(async(() => {
-    const attractionSpy = jasmine.createSpyObj('AttractionService', ['isRolling']);
-    const gameStateSpy = jasmine.createSpyObj('GameStateService', ['isRolling']);
-    const guideEventSpy = jasmine.createSpyObj('GuideEventService', {
-      isCurrentMemberGuide: jasmine.createSpy()
-    });
-    const markerSpy = jasmine.createSpyObj('PoolMarkerService', ['get']);
-    const outingSpy = jasmine.createSpyObj('OutingService', ['get']);
-    const pathSpy = jasmine.createSpyObj('PathService', ['get']);
-    const httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
+
+    gameStateSpy.requestGameState = jasmine.createSpy('requestGameState').and.returnValue(of(new GameState()));
+
     TestBed.configureTestingModule({
       declarations: [ RollingPage ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -38,9 +46,10 @@ describe('RollingPage', () => {
         {provide: AttractionService, useValue: attractionSpy},
         {provide: GameStateService, useValue: gameStateSpy},
         {provide: GuideEventService, useValue: guideEventSpy},
-        {provide: PoolMarkerService, useValue: markerSpy},
+        {provide: GameMarkerService, useValue: markerSpy},
         {provide: OutingService, useValue: outingSpy},
         {provide: PathService, useValue: pathSpy},
+        {provide: Router, useValue: routerSpy},
         {provide: HttpClient, useValue: httpClientSpy}
       ]
     })
