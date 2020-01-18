@@ -58,6 +58,7 @@ export * from './lib/heading/heading';
 export * from './lib/heading/heading.module';
 export * from './lib/loader/loader.module';
 export * from './lib/marker/clickableMarker';
+export * from './lib/marker/game/game-marker.service';
 export * from './lib/marker/pool/pool-icon.service';
 export * from './lib/marker/pool/pool-marker.service';
 export * from './lib/position-source-type';
