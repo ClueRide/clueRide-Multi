@@ -3,6 +3,7 @@ import {Geoposition} from '@ionic-native/geolocation';
 import {
   Attraction,
   GeoLocService,
+  LatLonService,
   LocationService,
   LocTypeService
 } from 'cr-lib';
@@ -35,6 +36,7 @@ export class MapDataService {
   readonly reportedPosition: BehaviorSubject<Geoposition>;
 
   constructor(
+    private latLonService: LatLonService,
     public locationService: LocationService,
     public locationTypeService: LocTypeService,
     public geoLoc: GeoLocService,
@@ -121,12 +123,9 @@ export class MapDataService {
    * @param position to center the search for Attractions.
    */
   loadNearestLocations(position) {
-    this.locationService.nearest({
-      id: null,
-      lat: position.coords.latitude,
-      lon: position.coords.longitude,
-      lng: position.coords.longitude,
-    }).subscribe(
+    this.locationService.nearest(
+      this.latLonService.toLatLon(position)
+    ).subscribe(
       (attractions) => {
         this.attractionByIdCache = [];
         attractions.forEach(

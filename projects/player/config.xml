@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.ionic.starter" version="0.0.1" xmlns="http://www.w3.org/ns/widgets">
+<widget id="com.clueride.seeker" version="0.0.1" xmlns="http://www.w3.org/ns/widgets">
     <name>Seeker</name>
     <description>Clue Ride Game-Playing App</description>
     <author email="clueride@gmail.com" href="https://clueride.com/">Clue Ride</author>
