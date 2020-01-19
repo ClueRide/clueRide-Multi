@@ -1,7 +1,10 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {AuthHeaderService, BASE_URL} from '../../auth/header/auth-header.service';
+import {
+  AuthHeaderService,
+  BASE_URL
+} from '../../auth/header/auth-header.service';
 import {LatLon} from '../../domain/lat-lon/lat-lon';
 import {Location} from './location';
 
@@ -65,6 +68,14 @@ export class LocationService {
       BASE_URL + 'location/featured?id=' + locationId,
       {headers: this.httpService.getAuthHeaders()}
     );
+  }
+
+  /* Currently, the filter is ignored; we're just hitting a specific course right now. */
+  getFilteredAttractions(attractionFilter: any): Observable<Location[]> {
+   return this.http.get<Location[]>(
+     BASE_URL + 'location/4/course',
+     {headers: this.httpService.getAuthHeaders()}
+   );
   }
 
 }

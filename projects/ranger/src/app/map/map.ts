@@ -137,6 +137,7 @@ export class MapComponent {
 
     /* Begin paying attention to Attraction changes. */
     console.log('Map Component: subscribing to Attraction changes');
+    this.mapDataService.onMapClear(this.clearMap);
     this.subscription = this.mapDataService.sendMeNewAttractions(this.addAttraction);
     this.subscription.add(this.mapDataService.sendMeUpdatedAttractions(this.updateAttraction));
   }
@@ -196,7 +197,8 @@ export class MapComponent {
       iconName
     );
     // console.log('Adding ' + attraction.name + ' to the map');
-    /* TODO: Setting up the event can happen inside the service. */
+    /* TODO: Setting up the event can happen inside the service. Or can it? We have different destinations
+     *  for different apps. */
     poolMarker.on('click', (mouseEvent) => {
         this.openLocEditPageForMarkerClick(mouseEvent);
       });
@@ -207,6 +209,11 @@ export class MapComponent {
     this.layerIdPerAttraction[attraction.id] = this.layerPerCategory[DEFAULT_CATEGORY].getLayerId(poolMarker);
   }
 
+  /**
+   * Replace an existing Attraction with this new version of the same Attraction.
+   *
+   * @param attraction with updated information.
+   */
   updateAttraction = (
     attraction: Attraction
   ): void => {
@@ -238,6 +245,17 @@ export class MapComponent {
     }).catch( (error) => {
       console.log('Failed to launch edit page: ', error);
     });
+  }
+
+  /**
+   * Passed to Map Data Service whenever it determines that the map needs to be cleared in preparation for a new
+   * set of Attractions. This will eventually serve as the main Attraction layer for a focused set of Attractions.
+   *
+   * This is separate from the Category Group Layers discussed as part of ticket LE-76.
+   */
+  clearMap = (): void => {
+    // TODO: perhaps touched by LE-76
+    this.layerPerCategory[DEFAULT_CATEGORY].clearLayers();
   }
 
 }
