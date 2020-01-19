@@ -1,9 +1,35 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
     <ion-title>Attraction</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <div *ngIf="attraction">
+    <img [src]="attraction.featuredImage.url"
+         *ngIf="attraction.featuredImage">
+    <ion-card>
+      <ion-card-title>
+        {{attraction.name}}
+      </ion-card-title>
+      <ion-card-content>
+        {{attraction.description}}
+      </ion-card-content>
+    </ion-card>
 
+    <ion-card *ngIf="attraction.mainLink">
+      <ion-card-title>
+        Links
+      </ion-card-title>
+      <ion-card-content>
+        <ion-label>Main Link</ion-label>
+        <a class="item" href="#" (click)="openLocLink(attraction.mainLink)">
+          {{attraction.mainLink.linkString}}
+        </a>
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>
