@@ -13,11 +13,15 @@ import {MapStateService} from '../state/map-state.service';
 })
 export class MapActionComponent implements OnInit {
 
+  private attractionsFilterFlag: boolean;
+
   constructor(
     private mapDataService: MapDataService,
     private mapStateService: MapStateService,
     private mapDragService: MapDragService,
-  ) { }
+  ) {
+    this.attractionsFilterFlag = false;
+  }
 
   ngOnInit() {}
 
@@ -63,6 +67,12 @@ export class MapActionComponent implements OnInit {
     /* Clear existing list of locations. */
     /* Trigger sending us another set of locations. */
     this.mapDataService.resendAllLocations();
+  }
+
+  toggleFilter(event: Event) {
+    this.attractionsFilterFlag = !this.attractionsFilterFlag;
+    console.log('Filter Attractions', this.attractionsFilterFlag);
+    // this.mapDataService.filterAttractions();
   }
 
 }
