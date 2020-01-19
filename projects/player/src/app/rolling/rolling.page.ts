@@ -3,6 +3,7 @@ import {
   Attraction,
   AttractionService,
   GameMarkerService,
+  LatLonService,
   Path,
   PathService
 } from 'cr-lib';
@@ -47,6 +48,7 @@ export class RollingPage {
   /* Providing a layer upon which we pile on the stuff we show the user should be easier this way. */
   static pathGroup: any;
   static markerGroup: any;
+  static startingAttraction: Attraction;
 
   /* Exposed for the view. */
   public title = 'Map';
@@ -57,6 +59,7 @@ export class RollingPage {
     private gameMarkerService: GameMarkerService,
     private gameStateService: GameStateService,
     private guideEventService: GuideEventService,
+    private latLonService: LatLonService,
     private pathService: PathService,
   ) {
     /* Initialize GameState here to make sure we are caught up with current state as we join in. */
@@ -73,13 +76,15 @@ export class RollingPage {
     console.log('RollingPage: Map Creation (ionViewWillEnter)');
 
     if (!RollingPage.map) {
-      RollingPage.map = L.map('rolling-map');
-      RollingPage.pathGroup = L.geoJSON().addTo(RollingPage.map);
-      RollingPage.markerGroup = L.layerGroup().addTo(RollingPage.map);
+      this.prepareRollingMap();
     }
-    this.prepareRollingMap();
-    this.updatePathsOnMap(this.gameState);
 
+    /* In case the game hasn't begun, at least show the Starting Location. */
+    if (!this.gameState || this.gameState.pathIndex < 0) {
+      this.addMarkerForAttraction(RollingPage.startingAttraction);
+    }
+
+    this.updatePathsOnMap(this.gameState);
   }
 
   ionViewDidEnter() {
@@ -100,23 +105,20 @@ export class RollingPage {
     }
   }
 
-  public prepareRollingMap() {
-    const startingAttraction: Attraction = this.attractionService.getVisibleAttractions(0)[0];
+  private prepareRollingMap() {
+    RollingPage.map = L.map('rolling-map');
+    RollingPage.pathGroup = L.geoJSON().addTo(RollingPage.map);
+    RollingPage.markerGroup = L.layerGroup().addTo(RollingPage.map);
+    RollingPage.startingAttraction = this.attractionService.getVisibleAttractions(0)[0];
 
-    /* Temporary just to get the map in the ball-park of the track I've pulled in. */
-    // TODO: CI-37 / LE-70 - translating position.
-    const leafletPosition = [
-      startingAttraction.latLon.lat,
-      startingAttraction.latLon.lon
-    ];
+    /* Just get the map in the ball-park of the track I've pulled in. */
+    RollingPage.map.setView(
+      this.latLonService.toLatLng(RollingPage.startingAttraction.latLon),
+      DEFAULT_ZOOM_LEVEL
+    );
 
-    RollingPage.map.setView(leafletPosition, DEFAULT_ZOOM_LEVEL);
+    /* Sets up the tiling layer for the maps. */
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(RollingPage.map);
-
-    /* In case the game hasn't begun, at least show the Starting Location. */
-    if (!this.gameState || this.gameState.pathIndex < 0) {
-      this.addMarkerForAttraction(startingAttraction);
-    }
   }
 
   /**

@@ -1,15 +1,10 @@
 /**
  * Created by jett on 1/20/18.
  */
-import {TestBed} from '@angular/core/testing';
-import {TokenService} from './token.service';
-import {Platform} from '@ionic/angular';
+import {REGISTRATION_TYPE} from '../registration-type';
 import {STORAGE_KEYS} from '../storage-keys';
 import {BddMockToken} from './bddMockToken';
-import {ProfileService} from '../../api/profile/profile.service';
-import {SecureStorageMock} from '@ionic-native-mocks/secure-storage';
-import {SecureStorage} from '@ionic-native/secure-storage';
-import {REGISTRATION_TYPE} from '../registration-type';
+import {TokenService} from './token.service';
 
 let toTest: TokenService;
 const bddMockToken: BddMockToken = new BddMockToken();
@@ -18,23 +13,7 @@ describe('Services: TokenService', () => {
 
   beforeEach(() => {
 
-    TestBed.configureTestingModule({
-      providers: [
-        ProfileService,
-        {
-          provide: SecureStorage,
-          useClass: SecureStorageMock,
-          deps: [SecureStorageMock]
-        },
-        SecureStorageMock,
-        TokenService,
-        Platform
-      ],
-      imports: [
-      ]
-    }).compileComponents();
-
-    toTest = TestBed.get(TokenService);
+    toTest = new TokenService();
     window.localStorage.clear();
   });
 

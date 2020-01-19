@@ -13,21 +13,26 @@
 
     <!-- Answer Section -->
     <div *ngIf="answerSummary">
-        <ion-item class="answer-container"
-             *ngFor="let answer of puzzle.answers"
-                  [color]="answerColor(answer.key)">
-          <div class="answer">
-            <span class="answerCount">
+        <ion-item *ngFor="let answer of puzzle.answers"
+                  class="answer-item">
+
+          <span>
+            <ion-label class="answerCount">
               {{answerSummary.answerMap[answer.key]}}
-            </span>
-            <span class="answerText">
+            </ion-label>
+          </span>
+
+          <span>
+            <ion-note class="answer" [color]="answerColor(answer.key)">
               {{answer.answer}}
-            </span>
-          </div>
+            </ion-note>
+          </span>
+
         </ion-item>
     </div>
 
   </ion-grid>
 
   <app-depart></app-depart>
+
 </ion-content>

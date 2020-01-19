@@ -1,24 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Geoposition} from '@ionic-native/geolocation';
-import {LatLon} from 'cr-lib';
+import {
+  LatLon,
+  LatLonService
+} from 'cr-lib';
 import {Subject} from 'rxjs';
 import {MapDataService} from '../data/map-data.service';
-
-// TODO: CI-37 - part of the transformation of Geoposition and LatLon.
-function buildGeoPositionFromLatLon(latLon: LatLon): Geoposition {
-  return {
-    coords: {
-      latitude: latLon.lat,
-      longitude: latLon.lng || latLon.lon,
-      accuracy: 0.0,
-      altitude: null,
-      altitudeAccuracy: null,
-      heading: null,
-      speed: null
-    },
-    timestamp: null
-  };
-}
 
 /**
  * This responds to map drag events and is a source of new position info which is pushed
@@ -36,6 +23,7 @@ export class MapDragService {
   private dragInProgress = false;
 
   constructor(
+    private latLonService: LatLonService,
     private mapDataService: MapDataService
   ) {
     this.centerSubject = mapDataService.getReportedPositionSubject();
@@ -75,7 +63,7 @@ export class MapDragService {
   sendDragEndLocation(latLon: LatLon) {
     console.log('Setting new map center from Map Drag');
     this.centerSubject.next(
-      buildGeoPositionFromLatLon(
+      this.latLonService.toGeoposition(
         latLon
       )
     );

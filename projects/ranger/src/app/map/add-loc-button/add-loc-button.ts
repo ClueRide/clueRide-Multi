@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 import {Geoposition} from '@ionic-native/geolocation';
 import {
-  LatLon,
+  LatLonService,
   LocationService
 } from 'cr-lib';
 import {MapDataService} from '../data/map-data.service';
@@ -19,6 +19,7 @@ import {MapDataService} from '../data/map-data.service';
 export class AddLocButtonComponent {
 
   constructor(
+    private latLonService: LatLonService,
     private locationService: LocationService,
     private mapDataService: MapDataService,
     private router: Router,
@@ -30,15 +31,10 @@ export class AddLocButtonComponent {
     const newGeoposition: Geoposition = this.mapDataService.getReportedPosition();
     alert(JSON.stringify(newGeoposition.coords));
 
-    // TODO CI-37: LatLon <==> Geoposition translation
-    const newLatLon = new LatLon();
-    newLatLon.lat = newGeoposition.coords.latitude;
-    newLatLon.lon = newGeoposition.coords.longitude;
-    newLatLon.lng = newGeoposition.coords.longitude;
-
     // TODO: CA-256 Turn this into AttractionService
-    this.locationService.proposeLocation(newLatLon)
-      .subscribe(newAttraction => {
+    this.locationService.proposeLocation(
+      this.latLonService.toLatLon(newGeoposition)
+    ).subscribe(newAttraction => {
 
         /* TODO: SVR-79: take care of this server-side. */
         newAttraction.readinessLevel = 'DRAFT';

@@ -3,33 +3,33 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "shared": {
+    "cr-lib": {
       "projectType": "library",
-      "root": "projects/shared",
-      "sourceRoot": "projects/shared/src",
+      "root": "projects/cr-lib",
+      "sourceRoot": "projects/cr-lib/src",
       "prefix": "cr",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "projects/shared/tsconfig.lib.json",
-            "project": "projects/shared/ng-package.json"
+            "tsConfig": "projects/cr-lib/tsconfig.lib.json",
+            "project": "projects/cr-lib/ng-package.json"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/shared/src/test.ts",
-            "tsConfig": "projects/shared/tsconfig.spec.json",
-            "karmaConfig": "projects/shared/karma.conf.js"
+            "main": "projects/cr-lib/src/test.ts",
+            "tsConfig": "projects/cr-lib/tsconfig.spec.json",
+            "karmaConfig": "projects/cr-lib/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/shared/tsconfig.lib.json",
-              "projects/shared/tsconfig.spec.json"
+              "projects/cr-lib/tsconfig.lib.json",
+              "projects/cr-lib/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"

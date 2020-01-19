@@ -6,7 +6,7 @@ import {
   Attraction,
   ClickableMarker,
   HeadingComponent,
-  LatLon,
+  LatLonService,
   PoolMarkerService
 } from 'cr-lib';
 import * as L from 'leaflet';
@@ -51,9 +51,10 @@ export class MapComponent {
 
   constructor(
     private heading: HeadingComponent,
-    private poolMarkerService: PoolMarkerService,
+    private latLonService: LatLonService,
     private mapDragService: MapDragService,
     private mapDataService: MapDataService,
+    private poolMarkerService: PoolMarkerService,
     private router: Router
   ) {
     console.log('Map Component: constructor()');
@@ -94,18 +95,15 @@ export class MapComponent {
   private openMapAtPosition(
     position: Geoposition
   ) {
-    // TODO: LE-70
-    /* Assemble Leaflet position object. */
-    const leafletPosition = [
-      position.coords.latitude,
-      position.coords.longitude
-    ];
 
     /* If map is already initialized, no need to re-initialize. */
     if (!this.map) {
       console.log('MapComponent Initializing');
       this.map = L.map('map');
-      this.map.setView(leafletPosition, DEFAULT_ZOOM_LEVEL);
+      this.map.setView(
+        this.latLonService.toLatLng(position),
+        DEFAULT_ZOOM_LEVEL
+      );
 
       /* TODO: CI-34 Rename this presentation component. */
       // MapComponent.latLon = new LatLonComponent();
@@ -144,7 +142,7 @@ export class MapComponent {
   }
 
   setNewCenterForMap = (
-    geoposition: Geoposition
+    geoPosition: Geoposition
   ) => {
     /* Ignore new position updates until the drag completes. */
     if (this.mapDragService.isDragInProgress()) {
@@ -152,7 +150,7 @@ export class MapComponent {
     }
 
     // TODO: Have this guy subscribe to the MapDataService
-    this.heading.updateLocation(geoposition.coords);
+    this.heading.updateLocation(geoPosition.coords);
 
     /* Move map so current location is centered. */
     if (this.mapDragService.isAutoCenter() && this.map) {
@@ -160,14 +158,7 @@ export class MapComponent {
       /* Suspend move event generation. */
       this.map.off('movestart');
 
-      // TODO: LE-70 Prepare a better pattern for converting between these two representations.
-      const latLon: LatLon = {
-        id: 0,
-        lat: geoposition.coords.latitude,
-        lon: geoposition.coords.longitude,
-        lng: geoposition.coords.longitude
-      };
-      this.map.panTo(latLon);
+      this.map.panTo(this.latLonService.toLatLon(geoPosition));
       // console.log('Map.updatePosition: next Reported Position');
 
       /* Restore move event generation. */
