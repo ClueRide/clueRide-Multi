@@ -63,7 +63,7 @@ export class MapDragService {
   sendDragEndLocation(latLon: LatLon) {
     console.log('Setting new map center from Map Drag');
     this.centerSubject.next(
-      this.latLonService.toGeoposition(
+      this.latLonService.toGeoPosition(
         latLon
       )
     );
