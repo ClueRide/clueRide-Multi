@@ -1,29 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import {RegStateService} from '../state/reg-state.service';
+import {Component} from '@angular/core';
 import {PlatformStateService} from '../../state/platform/platform-state.service';
-import {Title} from '@angular/platform-browser';
+import {RegStateService} from '../state/reg-state.service';
 
 @Component({
-  // TODO: CI-11 update references to this component.
-  // selector: 'registration',
   selector: 'cr-registration',
   templateUrl: './registration.page.html',
   styleUrls: ['./registration.page.scss'],
 })
 // tslint:disable-next-line:component-class-suffix
-export class RegistrationPage implements OnInit {
+export class RegistrationPage {
 
   constructor(
     private regState: RegStateService,
     private platformState: PlatformStateService,
-    private titleService: Title,
   ) { }
-
-  // TODO: Do we need to explicitly set the Title?
-  // This was done in Ionic 3 pages to allow the browser tab to show the title properly.
-
-  ngOnInit() {
-  }
 
   /**
    * Accepts user choice of registering via Social Media and delegates to RegStateService.

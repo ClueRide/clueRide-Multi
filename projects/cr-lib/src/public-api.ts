@@ -52,6 +52,7 @@ export * from './lib/auth/header/auth-header.service';
 export * from './lib/api/image/image';
 export * from './lib/api/image/image.service';
 export * from './lib/domain/lat-lon/lat-lon';
+export * from './lib/domain/lat-lon/lat-lon.service';
 export * from './lib/geo/device-geo-loc/device-geo-loc.service';
 export * from './lib/geo/geo-loc/geo-loc';
 export * from './lib/heading/heading';

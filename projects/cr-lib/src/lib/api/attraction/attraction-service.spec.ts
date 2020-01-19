@@ -1,40 +1,21 @@
-import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {TestBed} from '@angular/core/testing';
+import {HttpClient} from '@angular/common/http';
 import {AuthHeaderService} from '../../auth/header/auth-header.service';
-import {TokenService} from '../../auth/token/token.service';
 import {OutingService} from '../outing/outing.service';
 import {AttractionService} from './attraction.service';
 
-let toTest: AttractionService;
+const authHeaderSpy = jasmine.createSpyObj('AuthHeaderService', ['get']);
+const outingSpy = jasmine.createSpyObj('OutingService', ['get']);
+const httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
 
 describe('attraction-service', () => {
+  let toTest: AttractionService;
 
   beforeEach (() => {
-    TestBed.configureTestingModule(
-      {
-        providers: [
-          AttractionService,
-          AuthHeaderService,
-          OutingService,
-          TokenService,
-        ],
-        imports: [
-          HttpClientTestingModule,
-        ],
-      }
-    ).compileComponents()
-      .then(
-        () => {
-          console.log('Compile successful');
-        }
-      );
-
-    // We don't see the compilation errors if we catch them.
-      // .catch(reason => {
-      //   console.log("Unable to Compile")
-      // });
-
-    toTest = TestBed.get(AttractionService);
+    toTest = new AttractionService(
+      httpClientSpy,
+      authHeaderSpy,
+      outingSpy
+    );
   });
 
   it('should exist', () => {
@@ -50,6 +31,7 @@ describe('attraction-service', () => {
     it('should exist', () => {
       expect(toTest.classifyVisibleAttractions).toBeTruthy();
     });
+
   });
 
 });

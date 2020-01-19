@@ -1,12 +1,10 @@
-import {TestBed} from '@angular/core/testing';
-
 import {GameMarkerService} from './game-marker.service';
 
-describe('GameMarkerService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+const routerSpy = jasmine.createSpyObj('Router', ['get']);
 
+describe('GameMarkerService', () => {
   it('should be created', () => {
-    const service: GameMarkerService = TestBed.get(GameMarkerService);
+    const service: GameMarkerService = new GameMarkerService(routerSpy);
     expect(service).toBeTruthy();
   });
 });

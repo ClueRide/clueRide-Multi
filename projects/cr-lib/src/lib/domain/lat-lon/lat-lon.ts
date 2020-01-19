@@ -1,11 +1,11 @@
 /**
- * How we place this on the Map.
+ * Position information as tracked within the back-end.
+ *
+ * This may have an empty or undefined id if it is has not yet been sent
+ * to the back-end for assigning an ID.
  */
 export class LatLon {
   id: number;
-  // TODO: Resolve the confusion over both lon and lng accessors.
-  // May want one of the geographical types understood by leaflet
   lat: number;
   lon: number;
-  lng: number;
 }
