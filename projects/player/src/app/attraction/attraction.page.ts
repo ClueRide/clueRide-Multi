@@ -5,10 +5,10 @@ import {
 import {ActivatedRoute} from '@angular/router';
 import {
   Attraction,
-  AttractionService
+  AttractionService,
+  LocLink
 } from 'cr-lib';
 import {Subscription} from 'rxjs';
-import {LocLink} from '../../../../cr-lib/src/lib/api/loc-link/loc-link';
 
 @Component({
   selector: 'app-attraction',

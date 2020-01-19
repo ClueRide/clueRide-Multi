@@ -27,7 +27,6 @@ describe('AttractionPage', () => {
 
   const activatedRouteSpy = jasmine.createSpyObj('ActivatedRoute', ['get']);
   const attractionSpy = jasmine.createSpyObj('AttractionService', ['getAttraction']);
-  // const httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
 
   beforeEach(async(() => {
     activatedRouteSpy.queryParams = of(true);
