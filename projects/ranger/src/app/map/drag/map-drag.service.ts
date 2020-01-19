@@ -34,7 +34,6 @@ export class MapDragService {
   }
 
   setAutoCenter(autoCenter: boolean) {
-    console.log('AutoCenter set to ' + autoCenter);
     this.autoCenterFlag = autoCenter;
   }
 
@@ -49,8 +48,7 @@ export class MapDragService {
     });
 
     map.on('moveend', () => {
-      // TODO CI-64: Not clear that I need to propagate this
-      // this.sendDragEndLocation(map.getCenter());
+      this.sendDragEndLocation(map.getCenter());
       this.dragInProgress = false;
     });
 
@@ -60,8 +58,14 @@ export class MapDragService {
     return this.dragInProgress;
   }
 
+  /**
+   * This sends notification to listeners paying attention to where
+   * the map is centered, typically components that want to create
+   * an object at the map's current center.
+   *
+   * @param latLon LatLon representation of the current position.
+   */
   sendDragEndLocation(latLon: LatLon) {
-    console.log('Setting new map center from Map Drag');
     this.centerSubject.next(
       this.latLonService.toGeoPosition(
         latLon
