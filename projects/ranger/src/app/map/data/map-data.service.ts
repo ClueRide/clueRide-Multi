@@ -32,6 +32,9 @@ export class MapDataService {
   private currentPosition: Geoposition;
   private currentPositionSubject: Subject<Geoposition> = new ReplaySubject<Geoposition>();
 
+  /* Function which responds to clear map events. */
+  private respondToClearMap: any;
+
   /* Our current Center of the map. */
   readonly reportedPosition: BehaviorSubject<Geoposition>;
 
@@ -207,6 +210,43 @@ export class MapDataService {
 
   public releaseWatch(): void {
     this.geoLoc.clearWatch();
+  }
+
+  /**
+   * Notification that we're ready to change to another filter for the Attractions.
+   *
+   * @param attractionFilter currently just a boolean, but expect that there will be details
+   * about the filter being applied so this service can retrieve the right set of records.
+   */
+  public changeAttractionFilter(attractionFilter: any): void {
+    if (this.respondToClearMap) {
+      this.respondToClearMap();
+    } else {
+      console.log('No response setup for clearing the map');
+    }
+
+    if (attractionFilter) {
+      this.locationService.getFilteredAttractions(attractionFilter).subscribe(
+        (attractions: Attraction[]) => {
+          from(attractions).subscribe(
+            (attraction: Attraction) => {
+              this.assembleAndAddAttraction(attraction);
+            }
+          );
+        }
+      );
+    } else {
+      this.resendAllLocations();
+    }
+  }
+
+  /**
+   * Assigns the function to call when the map needs to be cleared.
+   *
+   * @param clearMap function supplied by caller to perform the map clearing.
+   */
+  onMapClear(clearMap: any) {
+    this.respondToClearMap = clearMap;
   }
 
 }
