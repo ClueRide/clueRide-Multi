@@ -2,10 +2,7 @@ import {Component} from '@angular/core';
 import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 
-import {
-  NavController,
-  Platform
-} from '@ionic/angular';
+import {Platform} from '@ionic/angular';
 import {
   AwaitRegistrationService,
   PlatformStateService
@@ -32,11 +29,10 @@ export class AppComponent {
   ];
 
   constructor(
+    private authClient: AwaitRegistrationService,
     private appStateService: AppStateService,
-    private nav: NavController,
     private platform: Platform,
     private platformStateService: PlatformStateService,
-    private authClient: AwaitRegistrationService,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar
   ) {

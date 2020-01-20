@@ -1,10 +1,7 @@
 import {
-  AfterContentInit,
   Component,
   ViewChild
 } from '@angular/core';
-import {Title} from '@angular/platform-browser';
-import {MapDataService} from '../map/data/map-data.service';
 import {MapComponent} from '../map/map';
 
 @Component({
@@ -12,19 +9,12 @@ import {MapComponent} from '../map/map';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage implements AfterContentInit {
+export class HomePage {
 
   @ViewChild(MapComponent, {static: true}) map: MapComponent;
 
   constructor(
-    private mapDataService: MapDataService,
-    private titleService: Title,
   ) {
-
-  }
-
-  ngAfterContentInit(): void {
-    this.titleService.setTitle('Home');
   }
 
   /**

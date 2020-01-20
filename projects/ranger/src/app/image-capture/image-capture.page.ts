@@ -41,10 +41,10 @@ export class ImageCapturePage implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private camera: Camera,
     private imageService: ImageService,
     private loadingCtrl: LoadingController,
+    private router: Router,
   ) { }
 
   ngOnInit() {

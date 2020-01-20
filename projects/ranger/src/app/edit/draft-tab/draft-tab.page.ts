@@ -46,11 +46,11 @@ export class DraftTabPage implements OnInit {
   constructor(
     private activeAttractionService: ActiveAttractionService,
     private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private mapDataService: MapDataService,
+    private categoryService: CategoryService,
     private locationService: LocationService,
     private locationTypeService: LocTypeService,
-    private categoryService: CategoryService,
+    private mapDataService: MapDataService,
+    private router: Router,
   ) {
   }
 
@@ -59,7 +59,6 @@ export class DraftTabPage implements OnInit {
       (params) => {
         this.attractionId = parseInt(this.activatedRoute.snapshot.paramMap.get('id'), 10);
         this.attraction = this.mapDataService.getAttractionById(this.attractionId);
-        console.log('Active Attraction', this.attraction.name);
         this.activeAttractionService.setActiveAttractionId(this.attractionId);
         if (this.attraction.locationType && this.attraction.locationType.category) {
           this.selectedCategory = this.attraction.locationType.category;
