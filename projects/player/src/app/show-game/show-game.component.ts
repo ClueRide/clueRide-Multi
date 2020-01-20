@@ -11,7 +11,8 @@ import {GameStateService} from '../state/game/game-state.service';
 export class ShowGameComponent {
 
   constructor(
-    private gameStateService: GameStateService,
+    /* Exposed for the view. */
+    public gameStateService: GameStateService,
     private router: Router
   ) { }
 
