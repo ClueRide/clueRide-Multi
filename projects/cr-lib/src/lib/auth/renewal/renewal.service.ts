@@ -1,10 +1,16 @@
-import {Observable, Subject} from 'rxjs';
-import {RegState} from '../state/reg-state';
+import {
+  HttpClient,
+  HttpHeaders
+} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {TokenService} from '../token/token.service';
+import {
+  Observable,
+  Subject
+} from 'rxjs';
 import {Auth0ConfigService} from '../auth0Config/Auth0Config.service';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {RegState} from '../state/reg-state';
 import {RegStateKey} from '../state/reg-state-key';
+import {TokenService} from '../token/token.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +26,7 @@ export class RenewalService {
     private tokenService: TokenService,
     private auth0ConfigService: Auth0ConfigService,
   ) {
+    console.log('RenewalService: constructing');
     this.registrationType = this.tokenService.getRegistrationType();
     if (this.registrationType) {
       // tslint:disable-next-line:no-console
@@ -57,11 +64,13 @@ export class RenewalService {
       }
     ).subscribe(
       (renewResponse: any) => {
+        console.log('Old AT:', TokenService.getBearerToken());
         console.log('Picked up new Access Token');
         /* NOTE: these property names use snake_case instead of camelCase. */
         this.tokenService.unpackAndStorePayload(renewResponse.id_token);
         this.tokenService.setExpiresAtFromPeriod(renewResponse.expires_in);
         this.tokenService.setAccessToken(renewResponse.access_token);
+        console.log('New AT:', TokenService.getBearerToken());
         subscription.next(new RegState(RegStateKey.ACTIVE, 'Renewed'));
       }
     );
