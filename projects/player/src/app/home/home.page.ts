@@ -3,7 +3,6 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import {Title} from '@angular/platform-browser';
 import {
   Member,
   ProfileService
@@ -22,21 +21,25 @@ export class HomePage implements OnInit, AfterContentInit {
   constructor(
     private profileService: ProfileService,
     private loadStateService: LoadStateService,
-    private titleService: Title
   ) {}
 
   ngOnInit(): void {
+  }
+
+  ngAfterContentInit(): void {
+  }
+
+  ionViewDidEnter() {
+    console.log('HomePage ViewDidEnter()');
+    /* This may need to happen regardless of which page we come into. */
+    this.loadStateService.loadOutingData();
+    /* Same with this, by the way. */
     this.profileService.loadMemberProfile()
       .subscribe(
         (member) => {
           this.member = member;
         }
       );
-    this.loadStateService.loadOutingData();
-  }
-
-  ngAfterContentInit(): void {
-    this.titleService.setTitle('Home');
   }
 
 }
