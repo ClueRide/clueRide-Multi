@@ -6,6 +6,7 @@ import {IonicModule} from '@ionic/angular';
 import {MemberChipComponentModule} from 'cr-lib';
 import {SummaryComponentsModule} from '../components.module';
 import {ShowGameModule} from '../show-game/show-game.module';
+import {HomeGuard} from './home.guard';
 
 import {HomePage} from './home.page';
 
@@ -19,7 +20,8 @@ import {HomePage} from './home.page';
     RouterModule.forChild([
       {
         path: '',
-        component: HomePage
+        component: HomePage,
+        canActivate: [HomeGuard]
       }
     ]),
     SummaryComponentsModule

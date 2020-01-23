@@ -24,7 +24,7 @@ import {RegStateService} from '../state/reg-state.service';
 })
 export class AwaitRegistrationService {
   // TODO: Determine what we want to return when we're registered. (boolean vs RegState)
-  private registrationActiveSubject: Subject<any>;
+  private registrationActiveSubject: Subject<boolean>;
 
   constructor(
     private regStateService: RegStateService,
@@ -32,7 +32,7 @@ export class AwaitRegistrationService {
     private profileService: ProfileService,
     private zone: NgZone,
   ) {
-    this.registrationActiveSubject = new ReplaySubject();
+    this.registrationActiveSubject = null;
   }
 
   /**
@@ -47,7 +47,15 @@ export class AwaitRegistrationService {
    */
   public getRegistrationActiveObservable(
     appScheme: string
-  ): Observable<any> {
+  ): Observable<boolean> {
+
+    if (this.registrationActiveSubject) {
+      /* If we already have one, return it. */
+      return this.registrationActiveSubject.asObservable();
+    } else {
+      /* Create one and then set it up for checking our registration state. */
+      this.registrationActiveSubject = new ReplaySubject();
+    }
 
     const regStateObservable = this.regStateService.requestRegState(
       appScheme
@@ -71,7 +79,7 @@ export class AwaitRegistrationService {
         this.zone.run(
           () => this.nav.navigateRoot('reg-confirm')
             .then()
-            .catch(error => console.error('Did not get Registration Page', error))
+            .catch(error => console.error('Did not get Confirmation Page', error))
         );
       }
     );
