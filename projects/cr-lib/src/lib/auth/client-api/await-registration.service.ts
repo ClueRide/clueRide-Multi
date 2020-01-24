@@ -54,7 +54,7 @@ export class AwaitRegistrationService {
       return this.registrationActiveSubject.asObservable();
     } else {
       /* Create one and then set it up for checking our registration state. */
-      this.registrationActiveSubject = new ReplaySubject();
+      this.registrationActiveSubject = new ReplaySubject(1);
     }
 
     const regStateObservable = this.regStateService.requestRegState(
