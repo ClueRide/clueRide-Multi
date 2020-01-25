@@ -45,3 +45,13 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+/projects/player/resources/icon.png.md5
+/projects/player/resources/icon.png
+/projects/player/resources/splash.png.md5
+/projects/player/resources/splash.png
+/projects/player/resources/ios/icon/
+/projects/player/resources/ios/splash/
+/projects/player/resources/android/icon/
+/projects/player/resources/android/splash/
+projects/course/src/app/lib/
+www/
