@@ -139,7 +139,7 @@ export class LoadStateService {
           this.allCachedUp = true;
 
           /* Turns on SSE against our session's Outing ID. */
-          // TODO: PLAY-22 When does this turn off? Application life-cycle?
+          // TODO: CI-125 When does this turn off? Application life-cycle?
           this.serverEventsService.initializeSubscriptions(
             this.outing.id
           );
