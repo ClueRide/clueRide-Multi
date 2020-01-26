@@ -7,7 +7,7 @@ import {
   ConnectionStateModule,
   MemberChipComponentModule
 } from 'cr-lib';
-import {SummaryComponentsModule} from '../components.module';
+import {OutingSummaryModule} from '../outing-summary/outing-summary.module';
 import {ShowGameModule} from '../show-game/show-game.module';
 import {HomeGuard} from './home.guard';
 
@@ -21,6 +21,7 @@ import {HomePage} from './home.page';
     IonicModule,
     ShowGameModule,
     MemberChipComponentModule,
+    OutingSummaryModule,
     RouterModule.forChild([
       {
         path: '',
@@ -28,7 +29,6 @@ import {HomePage} from './home.page';
         canActivate: [HomeGuard]
       }
     ]),
-    SummaryComponentsModule
   ],
   declarations: [HomePage]
 })

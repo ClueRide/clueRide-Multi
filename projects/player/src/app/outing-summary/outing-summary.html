@@ -1,25 +1,28 @@
-<div class="outing-summary">
+  <ion-card class="cr-card">
+    <ion-card-header>
+      <ion-card-title>
+        <span *ngIf="outingTense === 'past'">Recent Outing</span>
+        <span *ngIf="outingTense === 'present'">Today's Outing</span>
+        <span *ngIf="outingTense === 'future'">Upcoming Outing</span>
+      </ion-card-title>
+      <ion-card-subtitle>
+        <a href="{{outing.courseUrl}}">{{outing.courseName}}</a>
+      </ion-card-subtitle>
+    </ion-card-header>
 
-  <div class="section-heading">
-    <span *ngIf="outingTense === 'past'">Recent Outing</span>
-    <span *ngIf="outingTense === 'present'">Current Outing</span>
-    <span *ngIf="outingTense === 'future'">Upcoming Outing</span>
-  </div>
+    <ion-card-content>
 
-  <div class="course-name">
-    <a href="{{outing.courseUrl}}">{{outing.courseName}}</a>
-  </div>
+      <div class="date">
+        Date: {{outing.scheduledTime | date}}
+      </div>
 
-  <div class="date">
-    Date: {{outing.scheduledTime | date}}
-  </div>
+      <div class="time">
+        Time: {{outing.scheduledTime | date: 'shortTime'}}
+      </div>
 
-  <div class="time">
-    Time: {{outing.scheduledTime | date: 'shortTime'}}
-  </div>
+      <div>
+        <a (click)="viewDetails()">View Outing Details</a>
+      </div>
+    </ion-card-content>
 
-  <div>
-    <a (click)="viewDetails()">View Outing Details</a>
-  </div>
-
-</div>
+  </ion-card>

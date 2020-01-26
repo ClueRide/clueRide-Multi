@@ -1,7 +1,10 @@
-import {AfterViewInit, Component} from '@angular/core';
-import {NavController} from '@ionic/angular';
+import {Component} from '@angular/core';
+import {Router} from '@angular/router';
 // import {OutingPage} from '../outing/outing';
-import {OutingService, Outing} from 'cr-lib';
+import {
+  Outing,
+  OutingService
+} from 'cr-lib';
 import {Subscription} from 'rxjs';
 
 /**
@@ -13,17 +16,17 @@ import {Subscription} from 'rxjs';
  */
 @Component({
   selector: 'outing-summary',
-  templateUrl: 'outing-summary.html'
+  templateUrl: 'outing-summary.html',
 })
-export class OutingSummaryComponent
-implements AfterViewInit {
+export class OutingSummaryComponent {
+// implements AfterViewInit {
 
   outing: Outing;
   outingTense: 'past' | 'present' | 'future';
   private outingSubscription: Subscription;
 
   constructor(
-    public navCtrl: NavController,
+    private router: Router,
     private outingService: OutingService,
   ) {
     this.outing = {} as any;
@@ -48,8 +51,7 @@ implements AfterViewInit {
   }
 
   public viewDetails() {
-    // TODO: CI-10 Hook into routing:
-    // this.navCtrl.push(OutingPage);
+    this.router.navigate(['outing']);
   }
 
   ngOnDestroy() {

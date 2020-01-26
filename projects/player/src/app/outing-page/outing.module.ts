@@ -16,7 +16,7 @@ import {OutingPage} from './outing.page';
     IonicModule,
     RouterModule.forChild([
       {
-        path: '',
+        path: 'outing',
         component: OutingPage
       }
     ]),
