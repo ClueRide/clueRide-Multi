@@ -7,7 +7,10 @@ import {
 } from '@angular/router';
 
 import {IonicModule} from '@ionic/angular';
-import {MemberChipComponentModule} from 'cr-lib';
+import {
+  ConnectionStateModule,
+  MemberChipComponentModule
+} from 'cr-lib';
 
 import {TeamPage} from './team.page';
 
@@ -21,6 +24,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
+    ConnectionStateModule,
     FormsModule,
     IonicModule,
     MemberChipComponentModule,

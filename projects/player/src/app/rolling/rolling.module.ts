@@ -7,6 +7,7 @@ import {
 } from '@angular/router';
 
 import {IonicModule} from '@ionic/angular';
+import {ConnectionStateModule} from 'cr-lib';
 import {RollingGuard} from './rolling.guard';
 
 import {RollingPage} from './rolling.page';
@@ -22,6 +23,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
+    ConnectionStateModule,
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes)

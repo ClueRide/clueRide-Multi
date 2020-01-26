@@ -7,7 +7,8 @@ import {ServerEventsService} from '../../sse-event/sse-event.service';
  */
 @Component({
   selector: 'cr-connection-state',
-  templateUrl: 'connection-state.html'
+  templateUrl: 'connection-state.html',
+  styleUrls: ['connection-state.scss']
 })
 export class ConnectionStateComponent {
 
