@@ -28,6 +28,7 @@ const gameStateUrl = 'http://sse.clueride.com/sse-channel';
 export class ServerEventsService {
 
   private eventSource: EventSourcePolyfill;
+  private eventSourceSubject: Subject<EventSourcePolyfill>;
 
   private answerSummary$: Subject<AnswerSummary>;
   readonly badgeEvent$: Subject<BadgeEvent>;
@@ -42,13 +43,11 @@ export class ServerEventsService {
     this.badgeEvent$ = new Subject<BadgeEvent>();
     this.gameStateEvent$ = new Subject<any>();
     this.tetherEvent$ = new Subject<OnMessageEvent>();
+    this.eventSourceSubject = new ReplaySubject<EventSourcePolyfill>(1);
   }
 
-  getEventSource(): EventSourcePolyfill {
-    if (this.eventSource == null) {
-      this.initializeSubscriptions(null);
-    }
-    return this.eventSource;
+  getEventSource(): Observable<EventSourcePolyfill> {
+    return this.eventSourceSubject.asObservable();
   }
 
   /**
@@ -63,7 +62,7 @@ export class ServerEventsService {
 
     if (!this.eventSource) {
       console.log('Opening Event Source');
-      let eventSourceUrl = gameStateUrl;
+      let eventSourceUrl = gameStateUrl + '/' + this.profileService.getBadgeOsId();
       /* Event Source may or may not be paying attention to a specific Outing. */
       if (outingId) {
         console.log('Opened against Outing ID', outingId);
@@ -127,6 +126,8 @@ export class ServerEventsService {
         }
       );
 
+      /* Now that the polyfill is prepared, notify clients that may be waiting on it. */
+      this.eventSourceSubject.next(this.eventSource);
     }
 
   }

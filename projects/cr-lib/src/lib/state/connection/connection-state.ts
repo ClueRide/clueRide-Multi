@@ -16,20 +16,38 @@ export class ConnectionStateComponent {
   constructor(
     private serverEventsService: ServerEventsService
   ) {
-    console.log('Hello ConnectionStateComponent: Obtaining SSE EventSource');
-    this.eventSource = serverEventsService.getEventSource();
+    console.log('Hello ConnectionStateComponent: Requesting SSE EventSource');
+    serverEventsService.getEventSource().subscribe(
+      (eventSource) => this.eventSource = eventSource
+    );
   }
 
+  /**
+   * This is used to tell if we've yet received the EventSource Polyfill.
+   */
+  public haveEventSource(): boolean {
+    return !!this.eventSource;
+  }
+
+  /**
+   * True if the current SSE event channel is open.
+   */
   public isOpen(): boolean {
-    return this.eventSource.readyState === this.eventSource.OPEN;
+    return this.haveEventSource() && this.eventSource.readyState === this.eventSource.OPEN;
   }
 
+  /**
+   * True if the current SSE event channel is attempting to reconnect.
+   */
   public isConnecting(): boolean {
-    return this.eventSource.readyState === this.eventSource.CONNECTING;
+    return this.haveEventSource() && this.eventSource.readyState === this.eventSource.CONNECTING;
   }
 
+  /**
+   * True if the current SSE event channel is closed or not yet opened.
+   */
   public isClosed(): boolean {
-    return this.eventSource.readyState === this.eventSource.CLOSED;
+    return !this.haveEventSource() || this.eventSource.readyState === this.eventSource.CLOSED;
   }
 
 }
