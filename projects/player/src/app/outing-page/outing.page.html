@@ -10,36 +10,47 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-  <div>
-    Course Name: <a [href]='outing.courseUrl'>{{outing.courseName}}</a>
-  </div>
-  <div>
-    <span>
-      Date: {{outing.scheduledTime | date}}
-    </span>
-    <span float-right>
-      Time: {{outing.scheduledTime | date:'shortTime'}}
-    </span>
-  </div>
-  <div class="section-button-right"
-       *ngIf="false">
-    <ion-button (click)="addToCalendar()">Add to Calendar</ion-button>
-  </div>
+<ion-content class="ion-padding">
 
-  <div class="section-heading">
-    Team
-  </div>
-  <div>
-    <a (click)="showTeam()">{{outing.teamName}}</a>
-  </div>
+  <ion-card class="cr-card">
+    <ion-card-header>
+      <ion-card-subtitle>
+        Course Name: <a [href]='outing.courseUrl'>{{outing.courseName}}</a>
+      </ion-card-subtitle>
+    </ion-card-header>
 
-  <!-- TODO: Put this back in
-  <pinned-map class="map-content"
-              [startingLocationObservable]="startingAttractionSubject"
-              [pin]='outing.startPin'>
-  </pinned-map>
+    <ion-card-content>
+      <div>
+        <span>
+          Date: {{outing.scheduledTime | date}}
+        </span>
+        <span float-right>
+          Time: {{outing.scheduledTime | date:'shortTime'}}
+        </span>
+      </div>
 
-  <begin-game></begin-game>
-  -->
+      <div class="section-button-right"
+           *ngIf="false">
+        <ion-button (click)="addToCalendar()">
+          Add to Calendar
+        </ion-button>
+      </div>
+
+      <div class="section-heading">
+        Team
+      </div>
+      <div>
+        <a (click)="showTeam()">{{outing.teamName}}</a>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  Starting Location
+  <app-pinned-map class="map-content"
+                  [startingLocationObservable]="startingAttractionSubject"
+                  [pin]='outing.startPin'>
+  </app-pinned-map>
+
+  <app-show-game></app-show-game>
+
 </ion-content>

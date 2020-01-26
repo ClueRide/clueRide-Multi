@@ -1,8 +1,19 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-// import {TeamPage} from '../team/team-page';
+import {
+  Component,
+  OnDestroy
+} from '@angular/core';
 import {Title} from '@angular/platform-browser';
-import {Attraction, AttractionService, Outing, OutingService} from 'cr-lib';
-import {ReplaySubject, Subject} from 'rxjs';
+import {Router} from '@angular/router';
+import {
+  Attraction,
+  AttractionService,
+  Outing,
+  OutingService
+} from 'cr-lib';
+import {
+  ReplaySubject,
+  Subject
+} from 'rxjs';
 
 /**
  * Orients players having accepted an invite by presenting an overview of the Outing.
@@ -11,40 +22,36 @@ import {ReplaySubject, Subject} from 'rxjs';
   selector: 'page-outing',
   templateUrl: 'outing.page.html',
 })
-export class OutingPage implements OnInit, OnDestroy {
+export class OutingPage implements OnDestroy {
 
   outing: Outing = new Outing();
   startingAttractionSubject: Subject<Attraction>;
 
   constructor(
-    // private navCtrl: NavController,
     private titleService: Title,
     private outingService: OutingService,
     private attractionService: AttractionService,
+    private router: Router,
   ) {
     this.startingAttractionSubject = new ReplaySubject<Attraction>(1);
   }
 
-  ngOnInit(): void {
-    // this.outingService.getSessionOuting().subscribe(
-    //   /* Generally, the Outing has been cached. */
-    //   (response) => {
-    //     console.log('Receiving Outing from Service');
-    //     this.outing = response;
-    //
-    //     /* With the outing, we can load the starting location. */
-    //     this.startingAttractionSubject.next(
-    //       this.attractionService.getAttraction(
-    //         this.outing.startingLocationId
-    //       )
-    //     );
-    //
-    //   }
-    // );
-  }
-
   ionViewDidEnter() {
-    this.titleService.setTitle('Outing');
+    this.outingService.getSessionOuting().subscribe(
+      /* Generally, the Outing has been cached. */
+      (response) => {
+        console.log('Receiving Outing from Service');
+        this.outing = response;
+
+        /* With the outing, we can load the starting location. */
+        this.startingAttractionSubject.next(
+          this.attractionService.getAttraction(
+            this.outing.startingLocationId
+          )
+        );
+
+      }
+    );
   }
 
   public addToCalendar() {
@@ -52,8 +59,7 @@ export class OutingPage implements OnInit, OnDestroy {
   }
 
   public showTeam() {
-    // TODO: CI-10 Hook into routing:
-    // this.navCtrl.push(TeamPage);
+    this.router.navigate(['team']);
   }
 
   ngOnDestroy(): void {
