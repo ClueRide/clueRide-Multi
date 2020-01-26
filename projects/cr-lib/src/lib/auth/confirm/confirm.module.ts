@@ -1,12 +1,12 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+import {FormsModule} from '@angular/forms';
 
-import { IonicModule } from '@ionic/angular';
+import {IonicModule} from '@ionic/angular';
 
-import { ConfirmPageRoutingModule } from './confirm-routing.module';
+import {ConfirmPageRoutingModule} from './confirm-routing.module';
 
-import { ConfirmPage } from './confirm.page';
+import {ConfirmPage} from './confirm.page';
 
 @NgModule({
   imports: [

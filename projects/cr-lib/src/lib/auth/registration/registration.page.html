@@ -6,36 +6,48 @@
 </ion-header>
 
 <ion-content>
-  <div id="welcome">
-    Welcome to Clue Ride.
-  </div>
+  <ion-card>
 
-  <div>
-    This device is not yet registered on the Clue Ride network.
-  </div>
+    <ion-card-header>
+      <ion-card-subtitle>
+        Completing Clue Ride Installation
+      </ion-card-subtitle>
+      <ion-card-title>
+        Provide Email Account
+      </ion-card-title>
+    </ion-card-header>
 
-  <div>
-    Registering your device involves confirming the email address
-    under which earned badges will be awarded. Your choice of
-    registration method should be based on which email you want to
-    present any badges you may earn.
-  </div>
+    <ion-card-content>
+      <div class="registration-content">
+        Clue Ride uses your email address to register this device. This registration is a one-time confirmation and
+        is used to award badges and assure your privacy. To learn more about how your email address is protected,
+        click here. To learn more about privacy, click here.
+      </div>
 
-  <div id="register-social">
-    Use Register via Social Media to specify an existing Google or Facebook
-    account's email to use for receiving and presenting badges.
-    <div>
-      <button ion-button (click) = "registerSocial()">Register via Google or Facebook</button>
-    </div>
-  </div>
+      <div>
+        Earned badges are sent to an email account that you will choose below.
+        There are two ways to register:
+        <ul>
+          <li>Use the Email account that is tied Social Media - Google or Facebook</li>
+          <li>Tell us what specific email account you want to use.</li>
+        </ul>
+      </div>
 
-  <div id="register-email">
-    Use Register via Email to specify
-    an exact email to receive and present badges.
-    <div>
-      <button ion-button (click) = "registerEmail()">Register via Email</button>
-    </div>
-  </div>
+      <div>
+        <ion-button (click) = "registerSocial()">
+          Register via Google or Facebook
+        </ion-button>
+      </div>
+
+      <div>
+        <ion-button (click) = "registerEmail()">
+          Register via Specific Email
+        </ion-button>
+      </div>
+
+    </ion-card-content>
+
+  </ion-card>
 
   <!-- This is good if we want to force the user to confirm a BDD registration.
   TODO: Come back to this.

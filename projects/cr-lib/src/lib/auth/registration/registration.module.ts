@@ -1,12 +1,12 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+import {FormsModule} from '@angular/forms';
 
-import { IonicModule } from '@ionic/angular';
+import {IonicModule} from '@ionic/angular';
 
-import { RegistrationPageRoutingModule } from './registration-routing.module';
+import {RegistrationPageRoutingModule} from './registration-routing.module';
 
-import { RegistrationPage } from './registration.page';
+import {RegistrationPage} from './registration.page';
 
 @NgModule({
   imports: [
