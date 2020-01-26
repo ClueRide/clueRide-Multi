@@ -16,8 +16,8 @@ import {
 import {AppRoutingModule} from './app-routing.module';
 
 import {AppComponent} from './app.component';
-import {SummaryComponentsModule} from './components.module';
 import {OutingPageModule} from './outing-page/outing.module';
+import {OutingSummaryModule} from './outing-summary/outing-summary.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -30,7 +30,7 @@ import {OutingPageModule} from './outing-page/outing.module';
     AuthModule,
     HttpClientModule,
     OutingPageModule,
-    SummaryComponentsModule.forRoot()
+    OutingSummaryModule,
   ],
   providers: [
     StatusBar,
