@@ -7,6 +7,7 @@ import {
 } from '@angular/router';
 
 import {IonicModule} from '@ionic/angular';
+import {ConnectionStateModule} from 'cr-lib';
 import {DepartModule} from '../depart/depart.module';
 
 import {AnswerPage} from './answer.page';
@@ -21,6 +22,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
+    ConnectionStateModule,
     FormsModule,
     IonicModule,
     DepartModule,
