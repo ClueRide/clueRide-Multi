@@ -215,4 +215,9 @@ export class RollingPage {
     this.guideEventService.sendArrival();
   }
 
+  ngOnDestroy() {
+    console.log('Rolling page does get destroyed.');
+    RollingPage.map = null;
+  }
+
 }
