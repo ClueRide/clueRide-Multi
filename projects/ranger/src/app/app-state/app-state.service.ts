@@ -1,10 +1,21 @@
 import {Injectable} from '@angular/core';
 import {SplashScreen} from '@ionic-native/splash-screen/ngx';
-import {NavController, Platform} from '@ionic/angular';
-import {GeoLocService, PlatformStateService, ProfileService} from 'cr-lib';
+import {
+  NavController,
+  Platform
+} from '@ionic/angular';
+import {
+  GeoLocService,
+  PlatformStateService,
+  ProfileService,
+  ServerEventsService
+} from 'cr-lib';
 import {Observable} from 'rxjs';
 import {fromPromise} from 'rxjs/internal-compatibility';
-import {share, tap} from 'rxjs/operators';
+import {
+  share,
+  tap
+} from 'rxjs/operators';
 import {MapDataService} from '../map/data/map-data.service';
 import {AppState} from './app-state';
 
@@ -26,8 +37,9 @@ export class AppStateService {
     private geoLoc: GeoLocService,
     private mapDataService: MapDataService,
     public platformStateService: PlatformStateService,
-    public profileService: ProfileService,
+    private profileService: ProfileService,
     public splashScreen: SplashScreen,
+    private sseService: ServerEventsService,
   ) {
     console.log('Hello AppStateService Provider');
     this.appState.isRunningBrowser = !this.platformStateService.isNativeMode();
@@ -83,6 +95,14 @@ export class AppStateService {
     cacheInit$.subscribe(
       () => {
         this.appState.cacheState = 'filled';
+      }
+    );
+
+    /* When we have the member profile, we can establish the SSE Session. */
+    this.profileService.loadMemberProfile().subscribe(
+      () => {
+        this.sseService.getEventSource().subscribe();
+        this.sseService.initializeSubscriptions(null);
       }
     );
 
