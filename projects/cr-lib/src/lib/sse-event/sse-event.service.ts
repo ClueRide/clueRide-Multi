@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {Platform} from '@ionic/angular';
 import {
   EventSourcePolyfill,
   OnMessageEvent
@@ -38,6 +39,7 @@ export class ServerEventsService {
   constructor(
     private authHeaderService: AuthHeaderService,
     private profileService: ProfileService,
+    private platform: Platform,
   ) {
     this.answerSummary$ = new ReplaySubject<AnswerSummary>(1);
     this.badgeEvent$ = new Subject<BadgeEvent>();
@@ -124,6 +126,17 @@ export class ServerEventsService {
         (error) => {
           console.log('SSE Error: ' + JSON.stringify(error));
         }
+      );
+
+      /* Register to shutdown this channel when app is being paused. */
+      /* For mobile devices: */
+      this.platform.pause.subscribe(
+        () => this.eventSource.close()
+      );
+
+      /* For Browsers. */
+      window.addEventListener('beforeunload',
+        () => this.eventSource.close()
       );
 
       /* Now that the polyfill is prepared, notify clients that may be waiting on it. */
