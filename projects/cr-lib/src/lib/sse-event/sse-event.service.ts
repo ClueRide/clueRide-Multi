@@ -131,12 +131,18 @@ export class ServerEventsService {
       /* Register to shutdown this channel when app is being paused. */
       /* For mobile devices: */
       this.platform.pause.subscribe(
-        () => this.eventSource.close()
+        () => {
+          console.log('Mobile closing SSE');
+          this.eventSource.close();
+        }
       );
 
       /* For Browsers. */
       window.addEventListener('beforeunload',
-        () => this.eventSource.close()
+        () => {
+          console.log('Browser closing SSE');
+          this.eventSource.close();
+        }
       );
 
       /* Now that the polyfill is prepared, notify clients that may be waiting on it. */
