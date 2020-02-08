@@ -35,6 +35,7 @@ export class ServerEventsService {
   readonly badgeEvent$: Subject<BadgeEvent>;
   private gameStateEvent$: Subject<any>;
   private tetherEvent$: Subject<OnMessageEvent>;
+  private savedOutingId: number;
 
   constructor(
     private authHeaderService: AuthHeaderService,
@@ -67,6 +68,7 @@ export class ServerEventsService {
       let eventSourceUrl = gameStateUrl + '/' + this.profileService.getBadgeOsId();
       /* Event Source may or may not be paying attention to a specific Outing. */
       if (outingId) {
+        this.savedOutingId = outingId;
         console.log('Opened against Outing ID', outingId);
         eventSourceUrl += '/' + outingId;
       } else {
@@ -131,17 +133,26 @@ export class ServerEventsService {
       /* Register to shutdown this channel when app is being paused. */
       /* For mobile devices: */
       this.platform.pause.subscribe(
-        () => {
+        async () => {
           console.log('Mobile closing SSE');
           this.eventSource.close();
+          this.eventSource = undefined;
+        }
+      );
+
+      this.platform.resume.subscribe(
+        () => {
+          console.log('Mobile re-opening SSE');
+          this.initializeSubscriptions(this.savedOutingId);
         }
       );
 
       /* For Browsers. */
       window.addEventListener('beforeunload',
-        () => {
+        async () => {
           console.log('Browser closing SSE');
           this.eventSource.close();
+          this.eventSource = undefined;
         }
       );
 
@@ -172,6 +183,19 @@ export class ServerEventsService {
    */
   public getGameStateEventObservable(): Observable<any> {
     return this.gameStateEvent$.asObservable();
+  }
+
+  /**
+   * Used to manually change the state of the connection -- primarily for testing.
+   */
+  toggleConnection() {
+    if (this.eventSource) {
+      console.log('Manual request to close SSE Connection');
+      this.eventSource.close();
+    } else {
+      console.log('Manual request to open SSE Connection');
+      this.initializeSubscriptions(this.savedOutingId);
+    }
   }
 
 }

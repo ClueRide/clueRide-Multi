@@ -51,4 +51,8 @@ export class ConnectionStateComponent {
     return !this.haveEventSource() || this.eventSource.readyState === this.eventSource.CLOSED;
   }
 
+  public toggleConnection() {
+    this.serverEventsService.toggleConnection();
+  }
+
 }
