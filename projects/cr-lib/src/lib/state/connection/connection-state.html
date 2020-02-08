@@ -1,5 +1,6 @@
 <span
   class="network-status"
+  (click)="toggleConnection()"
   [class.open]='isOpen()'
   [class.connecting]='isConnecting()'
   [class.closed]='isClosed()'
