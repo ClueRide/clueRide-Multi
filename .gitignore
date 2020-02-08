@@ -45,6 +45,8 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# Image files we can't check-in to GitHub
 /projects/player/resources/icon.png.md5
 /projects/player/resources/icon.png
 /projects/player/resources/splash.png.md5
@@ -53,5 +55,16 @@ Thumbs.db
 /projects/player/resources/ios/splash/
 /projects/player/resources/android/icon/
 /projects/player/resources/android/splash/
+
+/projects/ranger/resources/icon.png.md5
+/projects/ranger/resources/icon.png
+/projects/ranger/resources/splash.png.md5
+/projects/ranger/resources/splash.png
+/projects/ranger/resources/ios/icon/
+/projects/ranger/resources/ios/splash/
+/projects/ranger/resources/android/icon/
+/projects/ranger/resources/android/splash/
+
+
 projects/course/src/app/lib/
 www/
