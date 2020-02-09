@@ -9,13 +9,15 @@ import {
 import {IonicModule} from '@ionic/angular';
 import {ConnectionStateModule} from 'cr-lib';
 import {DepartModule} from '../depart/depart.module';
+import {PuzzleGuard} from './puzzle.guard';
 
 import {PuzzlePage} from './puzzle.page';
 
 const routes: Routes = [
   {
     path: ':id',
-    component: PuzzlePage
+    component: PuzzlePage,
+    canActivate: [PuzzleGuard]
   }
 ];
 
