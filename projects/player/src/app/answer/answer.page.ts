@@ -1,5 +1,6 @@
 import {
   Component,
+  OnDestroy,
   OnInit
 } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
@@ -16,7 +17,7 @@ import {Subscription} from 'rxjs';
   templateUrl: './answer.page.html',
   styleUrls: ['./answer.page.scss'],
 })
-export class AnswerPage implements OnInit {
+export class AnswerPage implements OnInit, OnDestroy {
 
   public puzzle: Puzzle;
   public answerSummary: AnswerSummary;
@@ -33,15 +34,20 @@ export class AnswerPage implements OnInit {
     this.subscription = this.activatedRoute.queryParams.subscribe(
       (params) => {
         const puzzleId = parseInt(this.activatedRoute.snapshot.paramMap.get('id'), 10);
-        console.log('AnswerPage.ngOnInit; puzzleId = ', puzzleId);
+        console.log('AnswerPage.ngOnInit: puzzleId = ', puzzleId);
         this.puzzle = this.puzzleService.getPuzzle(puzzleId);
       });
 
-    this.subscription.add(this.answerSummaryService.openAnswerSummaryChannel().subscribe(
+    this.subscription.add(this.answerSummaryService.getAnswerSummaryChannel().subscribe(
       (answerSummary) => {
         this.answerSummary = answerSummary;
+        console.log('AnswerPage: Received Answer Summary for ', answerSummary.puzzleId);
       }
     ));
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   public isCorrectAnswer(answer: string): boolean {
