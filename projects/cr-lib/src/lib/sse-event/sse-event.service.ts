@@ -15,7 +15,6 @@ import {AuthHeaderService} from '../auth/header/auth-header.service';
 import {AnswerSummary} from './answer-summary/answer-summary';
 import {BadgeEvent} from './badge-event';
 
-// const gameStateUrl = 'http://sse.clueride.com/game-state-broadcast';
 const gameStateUrl = 'http://sse.clueride.com/sse-channel';
 
 /**
@@ -54,15 +53,19 @@ export class ServerEventsService {
   }
 
   /**
-   * Handles life-cycle for Game State events on the channel for the given Outing ID.
+   * Opens connection to Server-Sent Events (SSE) and dispatches each event type to
+   * an appropriate RxJS subject for publishing to any service that wishes to subscribe.
    *
-   * TODO: It shouldn't be all messages:
-   * All Messages are forwarded to the GameStateService for triggering UI changes.
+   * This also sets up aborting the channel when either
+   * - the browser tab closes or
+   * - the mobile app pauses.
+   *
+   * Mobile apps may not leave memory and are able to respond to a "resume" event
+   * to pick up by re-establishing a new connection.
    *
    * @param outingId the unique ID for the Outing we're paying attention to.
    */
-  public initializeSubscriptions(outingId: number): void {
-
+  public openChannel(outingId: number): void {
     if (!this.eventSource) {
       console.log('Opening Event Source');
       let eventSourceUrl = gameStateUrl + '/' + this.profileService.getBadgeOsId();
@@ -75,10 +78,12 @@ export class ServerEventsService {
         console.log('Opened against non-outing-specific messages');
       }
 
+      /* Open the connection passing valid Auth Headers and turning off the default errors thrown upon timeout. */
       this.eventSource = new EventSourcePolyfill(
         eventSourceUrl,
         {
-          headers: this.authHeaderService.getAuthHeaders()
+          headers: this.authHeaderService.getAuthHeaders(),
+          errorOnTimeout: false
         }
       );
 
@@ -143,7 +148,7 @@ export class ServerEventsService {
       this.platform.resume.subscribe(
         () => {
           console.log('Mobile re-opening SSE');
-          this.initializeSubscriptions(this.savedOutingId);
+          this.openChannel(this.savedOutingId);
         }
       );
 
@@ -194,7 +199,7 @@ export class ServerEventsService {
       this.eventSource.close();
     } else {
       console.log('Manual request to open SSE Connection');
-      this.initializeSubscriptions(this.savedOutingId);
+      this.openChannel(this.savedOutingId);
     }
   }
 

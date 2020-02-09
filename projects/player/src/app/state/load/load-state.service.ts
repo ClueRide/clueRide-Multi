@@ -139,8 +139,7 @@ export class LoadStateService {
           this.allCachedUp = true;
 
           /* Turns on SSE against our session's Outing ID. */
-          // TODO: CI-125 When does this turn off? Application life-cycle?
-          this.serverEventsService.initializeSubscriptions(
+          this.serverEventsService.openChannel(
             this.outing.id
           );
 
