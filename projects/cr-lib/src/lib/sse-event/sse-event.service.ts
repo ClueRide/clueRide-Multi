@@ -136,34 +136,46 @@ export class ServerEventsService {
       );
 
       /* Register to shutdown this channel when app is being paused. */
-      /* For mobile devices: */
-      this.platform.pause.subscribe(
-        async () => {
-          console.log('Mobile closing SSE');
-          this.eventSource.close();
-          this.eventSource = undefined;
-        }
-      );
-
-      this.platform.resume.subscribe(
-        () => {
-          console.log('Mobile re-opening SSE');
-          this.openChannel(this.savedOutingId);
-        }
-      );
-
-      /* For Browsers. */
-      window.addEventListener('beforeunload',
-        async () => {
-          console.log('Browser closing SSE');
-          this.eventSource.close();
-          this.eventSource = undefined;
-        }
-      );
+      this.listenForShutdown();
 
       /* Now that the polyfill is prepared, notify clients that may be waiting on it. */
       this.eventSourceSubject.next(this.eventSource);
     }
+
+  }
+
+  /**
+   * Tells the platform to listen for events that tell us it's time to release the SSE channel.
+   */
+  public listenForShutdown() {
+    /* For mobile devices: */
+    this.platform.pause.subscribe(
+      async () => {
+        if (this.eventSource) {
+          console.log('Mobile closing SSE');
+          this.eventSource.close();
+          this.eventSource = undefined;
+        } else {
+          console.log('Mobile pausing');
+        }
+      }
+    );
+
+    this.platform.resume.subscribe(
+      () => {
+        console.log('Mobile re-opening SSE');
+        this.openChannel(this.savedOutingId);
+      }
+    );
+
+    /* For Browsers. */
+    window.addEventListener('beforeunload',
+      async () => {
+        console.log('Browser closing SSE');
+        this.eventSource.close();
+        this.eventSource = undefined;
+      }
+    );
 
   }
 
