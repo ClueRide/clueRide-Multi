@@ -43,7 +43,7 @@ export class PuzzlePage implements OnInit {
     this.subscription = this.activatedRoute.queryParams.subscribe(
       (params) => {
         this.puzzleId = parseInt(this.activatedRoute.snapshot.paramMap.get('id'), 10);
-        console.log('PuzzlePage.ngOnInit; puzzleId = ', this.puzzleId);
+        console.log('PuzzlePage.ngOnInit: puzzleId =', this.puzzleId);
         this.puzzle = this.puzzleService.getPuzzle(
           this.puzzleId
         );
@@ -59,7 +59,7 @@ export class PuzzlePage implements OnInit {
   selectAsAnswer(choice: string) {
     this.answerSummaryService.postAnswer(this.puzzle.id, AnswerKey[choice]).subscribe(
       (answerSummary) => {
-        console.log('Got answer summary');
+        console.log('PuzzlePage: got result from posting answer for puzzle', answerSummary.puzzleId);
         this.router.navigate(['answer', this.puzzle.id]);
       }
     );

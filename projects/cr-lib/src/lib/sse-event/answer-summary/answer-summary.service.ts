@@ -1,9 +1,7 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {
-  Observable,
-  Subscription
-} from 'rxjs';
+import {Observable} from 'rxjs';
+import {tap} from 'rxjs/operators';
 import {AnswerKey} from '../../api/puzzle/answer';
 import {
   AuthHeaderService,
@@ -23,9 +21,6 @@ import {AnswerSummary} from './answer-summary';
 })
 export class AnswerSummaryService {
 
-  /* This life-cycle probably goes with the page. */
-  private subscription: Subscription;
-
   constructor(
     public http: HttpClient,
     public httpService: AuthHeaderService,
@@ -34,18 +29,19 @@ export class AnswerSummaryService {
     console.log('Hello AnswerSummaryService');
   }
 
-  public openAnswerSummaryChannel(): Observable<AnswerSummary> {
-    const answerSummary$: Observable<AnswerSummary> = this.sseService.getAnswerSummaryObservable();
-    this.subscription = answerSummary$.subscribe(
-      (answerSummary) => {
-        console.log('Answers received for puzzle ID: ' + answerSummary.puzzleId);
-      }
-    );
-    return answerSummary$;
-  }
-
-  public closeAnswerSummaryChannel(): void {
-    this.subscription.unsubscribe();
+  /**
+   * Retrieves the Observable for the AnswerSummary SSE events.
+   *
+   * No need to open a subscription here.
+   */
+  public getAnswerSummaryChannel(): Observable<AnswerSummary> {
+    return this.sseService.getAnswerSummaryObservable()
+      .pipe(
+        tap((answerSummary) => console.log(
+          'AnswerSummaryService: Received AnswerSummary for puzzle',
+          answerSummary.puzzleId)
+        )
+      );
   }
 
   /**
