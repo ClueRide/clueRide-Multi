@@ -102,7 +102,7 @@ export class AppStateService {
     this.profileService.loadMemberProfile().subscribe(
       () => {
         this.sseService.getEventSource().subscribe();
-        this.sseService.initializeSubscriptions(null);
+        this.sseService.openChannel(null);
       }
     );
 
