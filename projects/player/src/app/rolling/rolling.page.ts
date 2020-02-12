@@ -64,6 +64,7 @@ export class RollingPage {
   ) {
     /* Initialize GameState here to make sure we are caught up with current state as we join in. */
     /* This should pull from a ReplaySubject that holds just the last GameState; don't care how that gets populated. */
+    // TODO: CI-143
     this.gameStateService.requestGameState()
       .subscribe(
         (gameState) => {

@@ -17,7 +17,7 @@ export class ShowGameComponent {
   ) { }
 
   public showGame(): void {
-    // TODO: This probably could be either a) synchronous or b) pulled from a ReplaySubject.
+    // TODO: CI-143 This probably could be either a) synchronous or b) pulled from a ReplaySubject.
     this.gameStateService.requestGameState()
       .pipe(
         take(1)

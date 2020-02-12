@@ -17,7 +17,6 @@ import {
 import {of} from 'rxjs';
 
 import {AppComponent} from './app.component';
-import {SummaryComponentsModule} from './components.module';
 import {AppStateService} from './state/app/app-state.service';
 import {LoadStateService} from './state/load/load-state.service';
 
@@ -83,8 +82,7 @@ describe('AppComponent', () => {
         { provide: SplashScreen, useValue: splashScreenSpy },
       ],
       imports: [
-        RouterTestingModule.withRoutes([]),
-        SummaryComponentsModule.forRoot()
+        RouterTestingModule.withRoutes([])
       ],
     }).compileComponents();
   }));
