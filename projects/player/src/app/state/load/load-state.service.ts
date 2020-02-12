@@ -129,6 +129,7 @@ export class LoadStateService {
   private loadGameState() {
     /* This service doesn't use the game state.
      * It only makes sure the server has game state available before proceeding. */
+    // TODO: CI-143, this could be the single appropriate place to kick-off a read from the server regarding game-state.
     this.gameStateService.requestGameState()
       .pipe(
         takeUntil(this.loadStateObservable)

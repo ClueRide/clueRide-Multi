@@ -17,14 +17,18 @@ import {GameState} from './game-state';
   providedIn: 'root'
 })
 export class GameStateService {
-  private gameStateSubject: Subject<GameState> = new ReplaySubject(1);
-  private gameStateObservable: Observable<GameState> = this.gameStateSubject.asObservable();
+  private totallyDifferentSubject: Subject<GameState>;
+  readonly totallyDifferentObservable: Observable<GameState>;
+
+  private gameStateSubject: Subject<GameState>;
+  readonly gameStateObservable: Observable<GameState>;
   readonly puzzleEvent$: Subject<GameState>;
   readonly rollingEvent$: Subject<GameState>;
 
   private sseSubscription: Subscription;
 
   private cachedGameState: GameState;
+  private gameStateAlreadyRequested: boolean;
 
   constructor(
     private http: HttpClient,
@@ -32,9 +36,20 @@ export class GameStateService {
     private sseService: ServerEventsService,
   ) {
     console.log('Hello GameStateService Provider');
+    this.gameStateSubject = new ReplaySubject(1);
+    this.gameStateObservable = this.gameStateSubject.asObservable();
+
+    this.totallyDifferentSubject = new ReplaySubject(1);
+    this.totallyDifferentObservable = this.totallyDifferentSubject.asObservable();
+
     this.puzzleEvent$ = new Subject<GameState>();
     this.rollingEvent$ = new Subject<GameState>();
-    this.setupSseEventSubscription();
+
+    /* Not making direct calls to the back-end until we're asked to do so, and we're going to only do it once. */
+    this.gameStateAlreadyRequested = false;
+
+    /* DO not kick off an initial subscription until we're ready for this. */
+    // this.setupSseEventSubscription();
 
     this.cachedGameState = {
       teamAssembled: false,
@@ -57,6 +72,14 @@ export class GameStateService {
   }
 
   ngOnInit() {
+  }
+
+  /**
+   * Instead of sitting around until a change of GameState occurs, this method makes it possible to retrieve the
+   * last game state.
+   */
+  getGameState(): Observable<GameState> {
+    return this.gameStateObservable;
   }
 
   /**
@@ -100,8 +123,18 @@ export class GameStateService {
    *
    * Uses the same observable to pass along Game State changes.
    */
+  // TODO: CI-143: This should only be invoked when nothing else has invoked it. All other clients wishing to
+  // pickup the GameState prior to receiving the events should pull from a ReplaySubject that holds the
+  // most recent state.
   requestGameState(): Observable<GameState> {
     console.log('Explicit Request for Game State');
+    if (this.gameStateAlreadyRequested) {
+      console.log('There has already been a call to request an initial game state; no need to make this call');
+      return this.gameStateObservable;
+    }
+
+    this.gameStateAlreadyRequested = true;
+
     this.http.get(
       BASE_URL + 'game-state',
       {headers: this.authHeaderService.getAuthHeaders()}
