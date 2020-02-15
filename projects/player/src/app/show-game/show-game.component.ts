@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
-import {Router} from '@angular/router';
-import {take} from 'rxjs/operators';
 import {GameStateService} from '../state/game/game-state.service';
+import {ShowGameService} from './show-game.service';
 
 @Component({
   selector: 'app-show-game',
@@ -13,43 +12,14 @@ export class ShowGameComponent {
   constructor(
     /* Exposed for the view. */
     public gameStateService: GameStateService,
-    private router: Router
+    private showGameService: ShowGameService,
   ) { }
 
-  public showGame(): void {
-    // TODO: CI-143 This probably could be either a) synchronous or b) pulled from a ReplaySubject.
-    this.gameStateService.requestGameState()
-      .pipe(
-        take(1)
-      )
-      .subscribe(
-        (gameState) => {
-          this.routeBasedOnGameState(gameState);
-        }
-      );
-  }
-
   /**
-   * Choose the next page based on whether we're rolling or not.
-   *
-   * @param gameState tells us whether we're rolling or not.
+   * Simply wraps the service call to expose to our view.
    */
-  routeBasedOnGameState(gameState): void {
-    let promise;
-
-    if (
-      gameState.rolling || !gameState.teamAssembled
-    ) {
-      promise = this.router.navigate(['rolling']);
-    } else {
-      promise = this.router.navigate(['puzzle', gameState.puzzleId]);
-    }
-
-    promise.catch(
-      (error) => {
-        console.log('Error navigating to Game:', error);
-      }
-    );
+  public showGame(): void {
+    this.showGameService.showGame();
   }
 
 }

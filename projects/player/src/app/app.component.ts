@@ -8,8 +8,10 @@ import {
   PlatformStateService,
   ProfileService
 } from 'cr-lib';
+import {ShowGameService} from './show-game/show-game.service';
 import {AppStateService} from './state/app/app-state.service';
 import {GameRoutingService} from './state/game-routing.service';
+import {GameStateService} from './state/game/game-state.service';
 import {LoadStateService} from './state/load/load-state.service';
 
 @Component({
@@ -33,12 +35,14 @@ export class AppComponent {
 
   constructor(
     private appStateService: AppStateService,
+    private authClient: AwaitRegistrationService,
     private gameRoutingService: GameRoutingService,
+    private gameStateService: GameStateService,
     private loadStateService: LoadStateService,
     private platform: Platform,
     private platformStateService: PlatformStateService,
     private profileService: ProfileService,
-    private authClient: AwaitRegistrationService,
+    private showGameService: ShowGameService,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar
   ) {
@@ -59,21 +63,24 @@ export class AppComponent {
         .subscribe(registrationActive => {
           if (registrationActive) {
             console.log('Registered');
-            /* Proceed with the application. */
+            /* Proceed with pulling up the profile under which we've registered. */
             this.profileService.loadMemberProfile().subscribe(
               () => {
-                /* Setup navigation responses to GameState changes. */
+                /* When we have the profile, we do a few things: */
                 this.loadStateService.getLoadStateObservable().subscribe(
                   loadReady => {
                     if (loadReady) {
+                      /* Setup navigation responses to GameState changes. */
+                      this.gameStateService.setupSseEventSubscription();
                       this.gameRoutingService.setupSubscriptions();
+                      this.showGameService.showGame();
                     }
                   }
                 );
 
-                this.appStateService.checkInviteIsAccepted()
-                  .then()
-                  .catch();
+                // this.appStateService.checkInviteIsAccepted()
+                //   .then()
+                //   .catch();
 
                 /* Bring in the data for this outing. */
                 this.loadStateService.loadOutingData();
