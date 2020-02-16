@@ -1,6 +1,8 @@
 <div *ngIf="canSignalDeparture()">
   <ion-fab horizontal="left" vertical="bottom">
-    <ion-fab-button mini (click)="signalDeparture()">
+    <ion-fab-button size="small"
+                    crPreventDoubleClick
+                    (throttledClick)="signalDeparture()">
       <ion-icon name="thumbs-up"></ion-icon>
     </ion-fab-button>
   </ion-fab>

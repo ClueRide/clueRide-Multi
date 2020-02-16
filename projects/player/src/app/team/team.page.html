@@ -28,7 +28,9 @@
 
   <div *ngIf="canSignalTeamAssembled()">
     <ion-fab horizontal="start" vertical="bottom">
-      <ion-fab-button size="small" (click)="signalTeamAssembled()">
+      <ion-fab-button size="small"
+                      crPreventDoubleClick
+                      (throttledClick)="signalTeamAssembled()">
         <ion-icon name="add"></ion-icon>
       </ion-fab-button>
     </ion-fab>
