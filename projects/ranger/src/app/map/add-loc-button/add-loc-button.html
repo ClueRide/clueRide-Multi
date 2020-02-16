@@ -1,5 +1,7 @@
 <ion-fab horizontal="end" vertical="bottom">
-  <ion-fab-button size="small" (click)="addLocationAction($event)">
+  <ion-fab-button size="small"
+                  crPreventDoubleClick
+                  (throttledClick)="addLocationAction($event)">
     <ion-icon name="add"></ion-icon>
   </ion-fab-button>
 </ion-fab>

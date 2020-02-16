@@ -1,33 +1,42 @@
 <ion-fab horizontal="end" vertical="top">
+  <!-- This button's 'click' event is automatically registered for the fab list; can't do crPreventDoubleClick. -->
   <ion-fab-button size="small" (click)="settingsFabAction($event)">
     <ion-icon name="settings"></ion-icon>
   </ion-fab-button>
-  <ion-fab-list>
 
+  <ion-fab-list>
     <div class="labeledFab">
       <ion-label>Toggle Lat/Lon</ion-label>
-      <ion-fab-button size="small" (click)="settingsToggleLatLon($event)">
+      <ion-fab-button size="small"
+                      crPreventDoubleClick
+                      (throttledClick)="settingsToggleLatLon($event)">
         <ion-icon name="checkmark"></ion-icon>
       </ion-fab-button>
     </div>
 
     <div class="labeledFab">
       <ion-label>Toggle Auto-center</ion-label>
-      <ion-fab-button size="small" (click)="settingsToggleAutoCenter($event)">
+      <ion-fab-button size="small"
+                      crPreventDoubleClick
+                      (throttledClick)="settingsToggleAutoCenter($event)">
         <ion-icon name="locate"></ion-icon>
       </ion-fab-button>
     </div>
 
     <div class="labeledFab">
       <ion-label>Refresh Map</ion-label>
-      <ion-fab-button size="small" (click)="refreshMap($event)">
+      <ion-fab-button size="small"
+                      crPreventDoubleClick
+                      (throttledClick)="refreshMap($event)">
         <ion-icon name="refresh"></ion-icon>
       </ion-fab-button>
     </div>
 
     <div class="labeledFab">
       <ion-label>Toggle Filter</ion-label>
-      <ion-fab-button size="small" (click)="toggleFilter($event)">
+      <ion-fab-button size="small"
+                      crPreventDoubleClick
+                      (throttledClick)="toggleFilter($event)">
         <ion-icon name="checkmark"></ion-icon>
       </ion-fab-button>
     </div>

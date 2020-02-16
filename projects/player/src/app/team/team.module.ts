@@ -9,6 +9,7 @@ import {
 import {IonicModule} from '@ionic/angular';
 import {
   ConnectionStateModule,
+  DoubleClickModule,
   MemberChipComponentModule
 } from 'cr-lib';
 
@@ -25,6 +26,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     ConnectionStateModule,
+    DoubleClickModule,
     FormsModule,
     IonicModule,
     MemberChipComponentModule,
