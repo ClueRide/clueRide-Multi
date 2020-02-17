@@ -1,0 +1,81 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      About Clue Ride
+    </ion-title>
+    <ion-buttons slot="end">
+      <cr-connection-state></cr-connection-state>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="banner-image">
+    <img src="https://clueride.com/wp-content/uploads/2018/09/clueRideBanner-350x80-withBackground.png"
+         alt="Clue Ride - Atlanta's Bicycle Scavenger Hunt" />
+  </div>
+
+  <ion-card class="cr-card">
+    <ion-card-header>
+      <ion-card-title>
+        Thank You
+      </ion-card-title>
+      <ion-card-subtitle>
+        for being part of the Clue Ride Community.
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <div>
+        You probably thought you're just playing a cool scavenger hunt game,
+        but you're actually contributing to something much bigger.
+        <p>Visit the <a href="https://clueride.com/">Clue Ride site</a> to learn more about how you can participate.
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="cr-card">
+    <ion-card-header>About You</ion-card-header>
+    <ion-card-content>
+      Yes, this really is all about you.<br>
+      <cr-profile-summary></cr-profile-summary>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="cr-card">
+    <ion-card-header>
+      <ion-card-title>
+        About this App
+      </ion-card-title>
+      <ion-card-subtitle>
+        Ionic v4 (Cordova) & Angular 8 (TypeScript)
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <div>
+        Support for open-source projects like this one
+        is provided by Jet Brains. We proudly use their IntelliJ IDEA.
+      </div>
+
+      <div *ngIf="platform.isNativeMode() && about">
+        <p>Version: {{about.version}}</p>
+      </div>
+
+      <div *ngIf="!platform.isNativeMode()">
+        <p>Running within Browser - version info not available</p>
+      </div>
+
+      <div>
+        <p>Git SHA: {{gitSha}}</p>
+      </div>
+
+      <div>
+        <p>Build Date: {{buildDate}}
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>
