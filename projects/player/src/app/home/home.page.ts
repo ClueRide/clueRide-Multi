@@ -1,8 +1,4 @@
-import {
-  AfterContentInit,
-  Component,
-  OnInit
-} from '@angular/core';
+import {Component} from '@angular/core';
 import {
   Member,
   ProfileService
@@ -14,8 +10,9 @@ import {LoadStateService} from '../state/load/load-state.service';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage implements OnInit, AfterContentInit {
+export class HomePage {
 
+  // TODO CI-145 - move into the component.
   member: Member | any = {};
 
   constructor(
@@ -23,17 +20,11 @@ export class HomePage implements OnInit, AfterContentInit {
     private loadStateService: LoadStateService,
   ) {}
 
-  ngOnInit(): void {
-  }
-
-  ngAfterContentInit(): void {
-  }
-
   ionViewDidEnter() {
     console.log('HomePage ViewDidEnter()');
     /* This may need to happen regardless of which page we come into. */
     this.loadStateService.loadOutingData();
-    /* Same with this, by the way. */
+    /* TODO: CI-145 Same with this, by the way. */
     this.profileService.loadMemberProfile()
       .subscribe(
         (member) => {

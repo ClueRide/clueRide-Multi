@@ -23,6 +23,7 @@
     "cordova-android": "8.1.0",
     "cordova-browser": "6.0.0",
     "cordova-ios": "5.1.0",
+    "cordova-plugin-app-version": "0.1.9",
     "cordova-plugin-customurlscheme": "5.0.0",
     "cordova-plugin-safariviewcontroller": "1.6.0",
     "core-js": "^2.5.4",
@@ -87,7 +88,8 @@
         "ANDROID_SCHEME": "com.clueride.player",
         "ANDROID_HOST": "clueride-shared.auth0.com",
         "ANDROID_PATHPREFIX": "/cordova/com.clueride.player/callback"
-      }
+      },
+      "cordova-plugin-app-version": {}
     },
     "platforms": [
       "android",

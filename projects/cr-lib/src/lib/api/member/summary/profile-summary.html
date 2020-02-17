@@ -1,0 +1,12 @@
+  <div *ngIf="profile">
+    <div class="profile-summary">
+      <ion-avatar class="user-image"
+                  *ngIf="profile.imageUrl">
+        <img [src]="profile.imageUrl">
+      </ion-avatar>
+      <div class="name">
+        {{profile.displayName}}<br>
+        <em>{{profile.emailAddress}}</em>
+      </div>
+    </div>
+  </div>

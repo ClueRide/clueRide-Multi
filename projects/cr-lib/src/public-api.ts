@@ -35,6 +35,7 @@ export * from './lib/api/location/location';
 export * from './lib/api/location/location.service';
 export * from './lib/api/member/member';
 export * from './lib/api/member/chip/member-chip.module';
+export * from './lib/api/member/summary/profile-summary.module';
 export * from './lib/api/outing/outing';
 export * from './lib/api/outing/outing.service';
 export * from './lib/api/path/path';
