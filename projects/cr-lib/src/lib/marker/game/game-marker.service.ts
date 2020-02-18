@@ -47,9 +47,9 @@ export class GameMarkerService {
   ) {
     this.currentAttractionIcon = L.AwesomeMarkers.icon(
       {
-        icon: 'play',
+        icon: 'map-pin',
         markerColor: 'green',
-        prefix: 'ion-md'
+        prefix: 'fa'
       }
     );
 
