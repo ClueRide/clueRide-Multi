@@ -11,6 +11,7 @@ import {
 } from 'cr-lib';
 import * as L from 'leaflet';
 import {Subscription} from 'rxjs';
+import {FilterService} from '../filter/filter.service';
 // TODO: CI-34: put this ViewLatLon component in the library
 // import {LatLonComponent} from '../lat-lon/lat-lon';
 import {MapDataService} from './data/map-data.service';
@@ -50,6 +51,7 @@ export class MapComponent {
   private layerIdPerAttraction: { [index: number]: number } = [];
 
   constructor(
+    private filterService: FilterService,
     private heading: HeadingComponent,
     private latLonService: LatLonService,
     private mapDragService: MapDragService,
