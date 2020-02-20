@@ -3,7 +3,11 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  build: {
+    gitSha: require('git-rev-sync').short(),
+    date: new Date()
+  }
 };
 
 /*
