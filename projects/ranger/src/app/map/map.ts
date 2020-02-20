@@ -11,7 +11,6 @@ import {
 } from 'cr-lib';
 import * as L from 'leaflet';
 import {Subscription} from 'rxjs';
-import {FilterService} from '../filter/filter.service';
 // TODO: CI-34: put this ViewLatLon component in the library
 // import {LatLonComponent} from '../lat-lon/lat-lon';
 import {MapDataService} from './data/map-data.service';
@@ -51,7 +50,6 @@ export class MapComponent {
   private layerIdPerAttraction: { [index: number]: number } = [];
 
   constructor(
-    private filterService: FilterService,
     private heading: HeadingComponent,
     private latLonService: LatLonService,
     private mapDragService: MapDragService,
@@ -152,7 +150,7 @@ export class MapComponent {
       return;
     }
 
-    // TODO: Have this guy subscribe to the MapDataService
+    // TODO CI-149: Have this guy subscribe to the MapDataService or other appropriate source.
     this.heading.updateLocation(geoPosition.coords);
 
     /* Move map so current location is centered. */
@@ -220,9 +218,13 @@ export class MapComponent {
     attraction: Attraction
   ): void => {
     console.log('MapComponent: Updating Attraction', attraction.id);
+
     /* TODO LE-76. */
     /* Remove existing Attraction from map. */
-    this.layerPerCategory[DEFAULT_CATEGORY].removeLayer(this.layerIdPerAttraction[attraction.id]);
+    const layer = this.layerPerCategory[DEFAULT_CATEGORY];
+    if (layer.hasLayer(this.layerIdPerAttraction[attraction.id])) {
+      layer.removeLayer(this.layerIdPerAttraction[attraction.id]);
+    }
 
     /* Now we can place the updated instance of the attraction. */
     this.addAttraction(attraction);

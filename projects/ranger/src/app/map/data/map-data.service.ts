@@ -16,6 +16,7 @@ import {
   Subscription
 } from 'rxjs';
 import {filter} from 'rxjs/operators';
+import {FilterService} from '../../filter/filter.service';
 
 /**
  * Maintains the life-cycle for all Map data -- leaflet and the
@@ -27,8 +28,8 @@ import {filter} from 'rxjs/operators';
 export class MapDataService {
 
   private attractionByIdCache = [];
-  private attractionToAdd$: Subject<Attraction> = new Subject<Attraction>();
-  private attractionToUpdate$: Subject<Attraction> = new Subject<Attraction>();
+  private attractionToAdd: Subject<Attraction> = new Subject<Attraction>();
+  private attractionToUpdate: Subject<Attraction> = new Subject<Attraction>();
   private currentPosition: Geoposition;
   private currentPositionSubject: Subject<Geoposition> = new ReplaySubject<Geoposition>();
 
@@ -39,6 +40,7 @@ export class MapDataService {
   readonly reportedPosition: BehaviorSubject<Geoposition>;
 
   constructor(
+    private filterService: FilterService,
     private latLonService: LatLonService,
     public locationService: LocationService,
     public locationTypeService: LocTypeService,
@@ -103,11 +105,17 @@ export class MapDataService {
    * @param addAttractionFunction accepts an Attraction.
    */
   public sendMeNewAttractions(addAttractionFunction): Subscription {
-    const subscription = this.attractionToAdd$.subscribe(
+    const subscription = this.attractionToAdd.subscribe(
       addAttractionFunction,
       this.logError
     );
-    this.resendAllLocations();
+
+    if (this.filterService.isFilterShown()) {
+      // TODO: Turn `true` into a real filter.
+      this.sendFilteredAttractions(true);
+    } else {
+      this.resendAllLocations();
+    }
     return subscription;
   }
 
@@ -118,7 +126,7 @@ export class MapDataService {
    * @param updateAttractionFunction accepts an Attraction.
    */
   public sendMeUpdatedAttractions(updateAttractionFunction): Subscription {
-    return this.attractionToUpdate$.subscribe((updateAttractionFunction));
+    return this.attractionToUpdate.subscribe((updateAttractionFunction));
   }
 
   /**
@@ -158,12 +166,12 @@ export class MapDataService {
 
   assembleAndAddAttraction = (attraction: Attraction) => {
     /* Push to attraction stream. */
-    this.attractionToAdd$.next(this.assembleAttraction(attraction));
+    this.attractionToAdd.next(this.assembleAttraction(attraction));
   }
 
   updateAttraction(updatedAttraction: Attraction) {
     console.log('MapDataService: updateAttraction', updatedAttraction.id);
-    this.attractionToUpdate$.next(this.assembleAttraction(updatedAttraction));
+    this.attractionToUpdate.next(this.assembleAttraction(updatedAttraction));
   }
 
   /** Given the Attraction ID, retrieve the cached copy of
@@ -186,7 +194,7 @@ export class MapDataService {
     from(this.attractionByIdCache).pipe(
       filter((item) => !!item)
     ).subscribe(
-      (attraction) => {this.attractionToAdd$.next(attraction); }
+      (attraction) => {this.attractionToAdd.next(attraction); }
     );
   }
 
@@ -226,18 +234,26 @@ export class MapDataService {
     }
 
     if (attractionFilter) {
-      this.locationService.getFilteredAttractions(attractionFilter).subscribe(
-        (attractions: Attraction[]) => {
-          from(attractions).subscribe(
-            (attraction: Attraction) => {
-              this.assembleAndAddAttraction(attraction);
-            }
-          );
-        }
-      );
+      this.sendFilteredAttractions(attractionFilter);
     } else {
       this.resendAllLocations();
     }
+  }
+
+  /**
+   * Given the filter, ask back-end for a list of matching attractions and send each one to the attraction subject.
+   * @param attractionFilter - TODO: Turn this into an actual filter.
+   */
+  private sendFilteredAttractions(attractionFilter) {
+    this.locationService.getFilteredAttractions(attractionFilter).subscribe(
+      (attractions: Attraction[]) => {
+        from(attractions).subscribe(
+          (attraction: Attraction) => {
+            this.assembleAndAddAttraction(attraction);
+          }
+        );
+      }
+    );
   }
 
   /**
