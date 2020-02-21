@@ -27,6 +27,11 @@ export class AppComponent {
       icon: 'list'
     },
     {
+      title: 'Filter',
+      url: '/filter',
+      icon: 'funnel'
+    },
+    {
       title: 'About',
       url: '/about',
       icon: 'information-circle'
