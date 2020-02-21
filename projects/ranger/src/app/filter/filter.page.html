@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Filter
+    </ion-title>
+    <ion-buttons slot="end">
+      <cr-connection-state></cr-connection-state>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card class="cr-card">
+    <ion-card-title>
+      by Course
+    </ion-card-title>
+    <ion-card-content>
+      <ion-label>Course Name</ion-label>
+      <ion-select ok-text="Okay" cancel-text="Nah">
+        <ion-select-option value="4">Breakfast 1</ion-select-option>
+        <ion-select-option value="5">Breakfast 2</ion-select-option>
+        <ion-select-option value="6">Breakfast 3</ion-select-option>
+        <ion-select-option value="7">Picnic 1</ion-select-option>
+        <ion-select-option value="8">Picnic 2</ion-select-option>
+        <ion-select-option value="9">Brewery 1</ion-select-option>
+        <ion-select-option value="3">Brewery 2</ion-select-option>
+      </ion-select>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="cr-card">
+    <ion-card-title>
+      by Category
+    </ion-card-title>
+    <ion-label>Category</ion-label>
+    <ion-select ok-text="Okay" cancel-text="Nah">
+      <ion-select-option value="dos">DOS</ion-select-option>
+      <ion-select-option value="lunix">Linux</ion-select-option>
+      <ion-select-option value="mac7">Mac OS 7</ion-select-option>
+      <ion-select-option value="mac8">Mac OS 8</ion-select-option>
+      <ion-select-option value="win3.1">Windows 3.1</ion-select-option>
+      <ion-select-option value="win95">Windows 95</ion-select-option>
+      <ion-select-option value="win98">Windows 98</ion-select-option>
+    </ion-select>
+
+  </ion-card>
+
+</ion-content>
