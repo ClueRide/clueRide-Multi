@@ -5,8 +5,8 @@
 export const environment = {
   production: false,
   build: {
-    gitSha: require('git-rev-sync').short(),
-    date: new Date()
+    gitSha: 'fffffff',
+    date: 'just now',
   }
 };
 
