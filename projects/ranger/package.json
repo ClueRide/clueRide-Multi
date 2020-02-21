@@ -10,7 +10,9 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "ionic:build:before": "node ./updateBuildInfo.js",
+    "ionic:serve:before": "node ./updateBuildInfo.js"
   },
   "private": true,
   "dependencies": {
@@ -29,6 +31,7 @@
     "@ionic/pro": "2.0.4",
     "cordova-android": "8.1.0",
     "cordova-ios": "5.1.1",
+    "cordova-plugin-app-version": "0.1.9",
     "cordova-plugin-camera": "^4.1.0",
     "cordova-plugin-customurlscheme": "5.0.0",
     "cordova-plugin-geolocation": "4.0.2",
@@ -76,6 +79,7 @@
   },
   "cordova": {
     "plugins": {
+      "cordova-plugin-app-version": {},
       "cordova-plugin-whitelist": {},
       "cordova-plugin-statusbar": {},
       "cordova-plugin-device": {},
