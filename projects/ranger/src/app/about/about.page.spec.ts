@@ -7,7 +7,7 @@ import {
 
 import {AboutPage} from './about.page';
 
-describe('AboutPage', () => {
+xdescribe('AboutPage', () => {
   let component: AboutPage;
   let fixture: ComponentFixture<AboutPage>;
 
