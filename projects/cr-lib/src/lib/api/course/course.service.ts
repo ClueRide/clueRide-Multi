@@ -1,8 +1,17 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
-import {map, share} from 'rxjs/operators';
-import {AuthHeaderService, BASE_URL} from '../../auth/header/auth-header.service';
+import {
+  Observable,
+  of
+} from 'rxjs';
+import {
+  map,
+  share
+} from 'rxjs/operators';
+import {
+  AuthHeaderService,
+  BASE_URL
+} from '../../auth/header/auth-header.service';
 import {Course} from './course';
 
 /**
@@ -53,6 +62,15 @@ export class CourseService {
       );
       return this.observable;
     }
+  }
+
+  public getAllCourses(): Observable<any> {
+    return this.http.get(
+      BASE_URL + 'course',
+      {
+        headers: this.httpService.getAuthHeaders()
+      }
+    );
   }
 
 }
