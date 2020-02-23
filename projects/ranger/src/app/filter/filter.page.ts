@@ -2,6 +2,12 @@ import {
   Component,
   OnInit
 } from '@angular/core';
+import {
+  Category,
+  CategoryService,
+  Course,
+  CourseService
+} from 'cr-lib';
 
 @Component({
   selector: 'app-filter',
@@ -10,9 +16,27 @@ import {
 })
 export class FilterPage implements OnInit {
 
-  constructor() { }
+  public courses: Course[];
+  public categories: Category[];
+
+  constructor(
+    private courseService: CourseService,
+    private categoryService: CategoryService,
+  ) {
+    this.categories = [];
+  }
 
   ngOnInit() {
+    this.courseService.getAllCourses().subscribe(
+      (courses) => {
+        this.courses = courses;
+      }
+    );
+    this.categoryService.getAllCategories().subscribe(
+      (category) => {
+        this.categories.push(category);
+      }
+    );
   }
 
 }
