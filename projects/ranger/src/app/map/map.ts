@@ -1,10 +1,8 @@
 import {isDefined} from '@angular/compiler/src/util';
 import {Component} from '@angular/core';
-import {Router} from '@angular/router';
 import {Geoposition} from '@ionic-native/geolocation';
 import {
   Attraction,
-  ClickableMarker,
   HeadingComponent,
   LatLonService,
   PoolMarkerService
@@ -55,25 +53,8 @@ export class MapComponent {
     private mapDragService: MapDragService,
     private mapDataService: MapDataService,
     private poolMarkerService: PoolMarkerService,
-    private router: Router
   ) {
     console.log('Map Component: constructor()');
-  }
-
-  /**
-   * Reads the Location's readiness level to determine which tab to show.
-   * @param attraction instance carrying a readinessLevel.
-   * @returns number representing an offset from Draft.
-   */
-  private static getTabIdForLocation(attraction: Attraction): string {
-    switch (attraction.readinessLevel) {
-      case 'ATTRACTION':
-        return 'puzzle';
-      case 'PLACE':
-        return 'place';
-      default:
-        return 'draft';
-    }
   }
 
   /**
@@ -182,7 +163,7 @@ export class MapComponent {
 
   /**
    * Given an Attraction, place it on the map using a Clickable Pool Marker.
-   * Also sets up the mouse-click event to open the editing page for that attraction.
+   * Pool Service sets up the mouse-click event to open the editing page for that attraction.
    *
    * Anonymous function so it maintains `this` when called from separate scope.
    * @param attraction to be added.
@@ -190,21 +171,12 @@ export class MapComponent {
   addAttraction = (
     attraction: Attraction
   ): void => {
-    const iconName = attraction.locationTypeIconName;
     /* `any` -> unable to tell that ClickableMarker extends Marker? */
     const poolMarker: any = this.poolMarkerService.getAttractionMarker(
-      attraction,
-      iconName
+      attraction
     );
-    // console.log('Adding ' + attraction.name + ' to the map');
-    /* TODO: Setting up the event can happen inside the service. Or can it? We have different destinations
-     *  for different apps. */
-    poolMarker.on('click', (mouseEvent) => {
-        this.openLocEditPageForMarkerClick(mouseEvent);
-      });
 
     /* TODO: Place within category-based layer/group (LE-76). */
-    // poolMarker.addTo(this.map);
     poolMarker.addTo(this.layerPerCategory[DEFAULT_CATEGORY]);
     this.layerIdPerAttraction[attraction.id] = this.layerPerCategory[DEFAULT_CATEGORY].getLayerId(poolMarker);
   }
@@ -228,27 +200,6 @@ export class MapComponent {
 
     /* Now we can place the updated instance of the attraction. */
     this.addAttraction(attraction);
-  }
-
-  /**
-   * Given the click event for a location's marker, which contains the location ID,
-   * open the Location Edit page with that Location.
-   * @param mouseEvent carrying location of the click.
-   */
-  private openLocEditPageForMarkerClick(
-    mouseEvent
-  ): void {
-    const crMarker: ClickableMarker = mouseEvent.target;
-    console.log('Marker Click for attraction ID: ' + crMarker.attractionId);
-    const selectedAttraction = this.mapDataService.getAttractionById(crMarker.attractionId);
-
-    this.router.navigate(
-      ['edit', selectedAttraction.id, MapComponent.getTabIdForLocation(selectedAttraction)]
-    ).then(() => {
-      console.log('Successful launch of edit page');
-    }).catch( (error) => {
-      console.log('Failed to launch edit page: ', error);
-    });
   }
 
   /**

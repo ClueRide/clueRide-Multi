@@ -4,8 +4,9 @@ import {OutingService} from '../outing/outing.service';
 import {AttractionService} from './attraction.service';
 
 const authHeaderSpy = jasmine.createSpyObj('AuthHeaderService', ['get']);
-const outingSpy = jasmine.createSpyObj('OutingService', ['get']);
 const httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
+const outingSpy = jasmine.createSpyObj('OutingService', ['get']);
+const locationSpy = jasmine.createSpyObj('LocationService', ['get']);
 
 describe('attraction-service', () => {
   let toTest: AttractionService;
@@ -14,7 +15,8 @@ describe('attraction-service', () => {
     toTest = new AttractionService(
       httpClientSpy,
       authHeaderSpy,
-      outingSpy
+      outingSpy,
+      locationSpy
     );
   });
 
@@ -22,14 +24,14 @@ describe('attraction-service', () => {
     expect(toTest).toBeTruthy();
   });
 
-  describe('getVisibleAttractions', () => {
+  describe('getOutingVisibleAttractions', () => {
 
   });
 
-  describe('classifyVisibleAttractions', () => {
+  describe('classifyOutingVisibleAttractions', () => {
 
     it('should exist', () => {
-      expect(toTest.classifyVisibleAttractions).toBeTruthy();
+      expect(toTest.classifyOutingVisibleAttractions).toBeTruthy();
     });
 
   });

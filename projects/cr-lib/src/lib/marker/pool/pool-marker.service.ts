@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
 import * as L from 'leaflet';
 import {Attraction} from '../../api/attraction/attraction';
+import {AttractionService} from '../../api/attraction/attraction.service';
 import {ClickableMarker} from '../clickableMarker';
 import {PoolIconService} from './pool-icon.service';
 import MarkerOptions = L.MarkerOptions;
@@ -18,27 +20,44 @@ import MarkerOptions = L.MarkerOptions;
 export class PoolMarkerService {
 
   constructor(
-    private iconService: PoolIconService
+    private iconService: PoolIconService,
+    private attractionService: AttractionService,
+    private router: Router
   ) {
+  }
+
+  /**
+   * Reads the Location's readiness level to determine which tab to show.
+   * @param attraction instance carrying a readinessLevel.
+   * @returns number representing an offset from Draft.
+   */
+  private static getTabIdForLocation(attraction: Attraction): string {
+    switch (attraction.readinessLevel) {
+      case 'ATTRACTION':
+        return 'puzzle';
+      case 'PLACE':
+        return 'place';
+      default:
+        return 'draft';
+    }
   }
 
   /**
    * Builds a ClickableMarker carrying the Attraction's ID with the color and
    * image on the marker appropriate to the readiness level of the Attraction,
-   * and the supplied name of the Icon.
+   * and the attraction-supplied name of the Icon.
    *
    * @param attraction containing ID and readiness level as well as Name for labeling.
-   * @param iconName Font Awesome's name for the icon image to use.
    */
   public getAttractionMarker(
-    attraction: Attraction,
-    iconName: string
+    attraction: Attraction
   ): ClickableMarker {
     /* Icon comes from the IconService. */
     const poolIcon: L.AwesomeMarkers.Icon = this.iconService.getPoolMarkerIcon(
       attraction.readinessLevel,
-      iconName
+      attraction.locationTypeIconName
     );
+
     /* Options assembled from icon and the attraction. */
     const markerOptions: MarkerOptions = {
       icon: poolIcon,
@@ -46,10 +65,39 @@ export class PoolMarkerService {
       title: attraction.name + ' : ' + attraction.id
     };
 
-    return new ClickableMarker(
+    const poolMarker: any = new ClickableMarker(
       attraction,
       markerOptions
     );
+
+    poolMarker.on('click', (mouseEvent) => {
+      this.openLocEditPageForMarkerClick(mouseEvent);
+    });
+
+    return poolMarker;
   }
+
+  /**
+   * Given the click event for a location's marker, which contains the location ID,
+   * open the Location Edit page with that Location.
+   * @param mouseEvent carrying location of the click.
+   */
+  private openLocEditPageForMarkerClick(
+    mouseEvent
+  ): void {
+    const crMarker: ClickableMarker = mouseEvent.target;
+    console.log('Marker Click for attraction ID: ' + crMarker.attractionId);
+    const selectedAttraction = this.attractionService.getAttraction(crMarker.attractionId);
+
+    this.router.navigate(
+      ['edit', selectedAttraction.id, PoolMarkerService.getTabIdForLocation(selectedAttraction)]
+    ).then(() => {
+      console.log('Successful launch of edit page');
+    }).catch( (error) => {
+      console.log('Failed to launch edit page: ', error);
+    });
+  }
+
+
 
 }

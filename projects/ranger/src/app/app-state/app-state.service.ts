@@ -5,6 +5,7 @@ import {
   Platform
 } from '@ionic/angular';
 import {
+  AttractionService,
   GeoLocService,
   PlatformStateService,
   ProfileService,
@@ -34,6 +35,7 @@ export class AppStateService {
   constructor(
     private platform: Platform,
     private nav: NavController,
+    private attractionService: AttractionService,
     private geoLoc: GeoLocService,
     private mapDataService: MapDataService,
     public platformStateService: PlatformStateService,
@@ -111,6 +113,9 @@ export class AppStateService {
         console.log('We do get something out');
         this.nav.navigateRoot('home').then(
           () => {
+            this.attractionService.loadAllAttractions().subscribe(
+              () => console.log('Attractions are loaded')
+            );
             return this.mapDataService.postInitialPosition(
               initialPosition
             );
