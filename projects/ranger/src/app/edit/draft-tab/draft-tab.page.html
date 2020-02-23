@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Editing: {{attraction.name}}</ion-title>
+    <ion-title>Editing: {{attraction && attraction.name}}</ion-title>
 
     <ion-buttons slot="end">
       <ion-button (click)="save()">
@@ -12,7 +12,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content *ngIf="attraction">
   <ion-list>
 
     <!-- Name -->
@@ -25,6 +25,7 @@
         </ion-input>
     </ion-item>
 
+    <!-- Category -->
     <ion-item>
       <ion-label position="floating">
         Category
@@ -52,11 +53,11 @@
         <ion-select class="value-field"
                     interface="popover"
                     [compareWith]="compareLocType"
-                    [selectedText]="attraction.locationType && attraction.locationType.name"
-                    [(ngModel)]="attraction.locationType">
+                    [selectedText]="locTypeSelectedText()"
+                    [(ngModel)]="attraction.locationTypeId">
           <ion-select-option
-            *ngFor="let locType of locTypes"
-            [value]="locType"
+            *ngFor="let locType of offeredLocTypes"
+            [value]="locType.id"
           >
             {{locType.name}}
           </ion-select-option>

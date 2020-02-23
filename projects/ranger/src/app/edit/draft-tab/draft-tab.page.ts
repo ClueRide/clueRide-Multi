@@ -11,6 +11,7 @@ import {
   Category,
   CategoryService,
   LocationService,
+  LocationType,
   LocTypeService
 } from 'cr-lib';
 import {Subscription} from 'rxjs';
@@ -36,10 +37,11 @@ export class DraftTabPage implements OnInit {
 
   /* Exposed for the view. */
   public attraction: Attraction;
-  public locTypes = [];
+  public locTypes: LocationType[] = [];
+  public offeredLocTypes: LocationType[];
   public attractionId: number;
   public selectedCategory: Category;
-  public categories = [];
+  public categories: Category[] = [];
 
   private subscription: Subscription;
 
@@ -52,6 +54,7 @@ export class DraftTabPage implements OnInit {
     private mapDataService: MapDataService,
     private router: Router,
   ) {
+    this.offeredLocTypes = [];
   }
 
   ngOnInit() {
@@ -60,8 +63,11 @@ export class DraftTabPage implements OnInit {
         this.attractionId = parseInt(this.activatedRoute.snapshot.paramMap.get('id'), 10);
         this.attraction = this.mapDataService.getAttractionById(this.attractionId);
         this.activeAttractionService.setActiveAttractionId(this.attractionId);
-        if (this.attraction.locationType && this.attraction.locationType.category) {
-          this.selectedCategory = this.attraction.locationType.category;
+
+        /* Populate our Category if we have a Location Type defined. */
+        if (this.attraction.locationTypeId && this.attraction.locationTypeId !== 0) {
+          this.selectedCategory = this.locationTypeService.getById(this.attraction.locationTypeId).category;
+          this.offeredLocTypes = this.locationTypeService.getByCategoryId(this.selectedCategory.id);
         }
 
         // TODO: SVR-50 Move to the server
@@ -100,8 +106,12 @@ export class DraftTabPage implements OnInit {
     this.router.navigate(['home']);
   }
 
+  /**
+   * Function for comparing to Location Types. It's just the ID we handle here,
+   * so this is fairly straightforward.
+   */
   compareLocType = (o1, o2) => {
-    return o1 && o2 ? o1.id === o2.id : o1 === o2;
+    return o1 && o2 && o1 === o2;
   }
 
   compareCategory = (o1, o2) => {
@@ -109,13 +119,34 @@ export class DraftTabPage implements OnInit {
   }
 
   categoryHasChanged = (event) => {
-    this.attraction.locationType = null;
-    this.locTypes = this.locationTypeService.getByCategoryId(this.selectedCategory.id);
+    /* When Category is changed, the Location Type becomes undefined. */
+    this.attraction.locationTypeId = 0;
+    this.offeredLocTypes = this.locationTypeService.getByCategoryId(this.selectedCategory.id);
+  }
+
+  locTypeSelectedText(): string {
+    let locationTypeId = 0;
+
+    if (this.attraction && this.attraction) {
+      locationTypeId = this.attraction.locationTypeId;
+    }
+
+    if (locationTypeId === 0) {
+      return null;
+    } else {
+      if (this.locTypes && this.locTypes[locationTypeId]) {
+        return this.locTypes[locationTypeId].name;
+      } else {
+        return null;
+      }
+    }
   }
 
   /** Make sure we've got a currently ordered list of Loc Types. */
   reloadLocTypes() {
+    /* Clear what we're presenting. */
     this.locTypes = [];
+    this.offeredLocTypes = [];
     this.locationTypeService.allLocationTypes().forEach(
       (locationType) => {
         this.locTypes.push(
@@ -123,6 +154,12 @@ export class DraftTabPage implements OnInit {
         );
       }
     );
+
+    /* If we know our category, we can offer a subset of Location Types. */
+    if (this.selectedCategory) {
+      this.offeredLocTypes = this.locationTypeService.getByCategoryId(this.selectedCategory.id);
+    }
+
   }
 
 }
