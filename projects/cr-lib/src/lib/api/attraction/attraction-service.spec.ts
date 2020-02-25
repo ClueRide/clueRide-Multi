@@ -24,14 +24,10 @@ describe('attraction-service', () => {
     expect(toTest).toBeTruthy();
   });
 
-  describe('getOutingVisibleAttractions', () => {
+  describe('buildAttractionMap', () => {
 
-  });
-
-  describe('classifyOutingVisibleAttractions', () => {
-
-    it('should exist', () => {
-      expect(toTest.classifyOutingVisibleAttractions).toBeTruthy();
+    it('should be defined', () => {
+      expect(toTest.buildAttractionMap).toBeDefined();
     });
 
   });

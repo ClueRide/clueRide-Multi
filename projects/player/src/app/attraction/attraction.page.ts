@@ -5,7 +5,7 @@ import {
 import {ActivatedRoute} from '@angular/router';
 import {
   Attraction,
-  AttractionService,
+  CourseAttractionService,
   LocLink
 } from 'cr-lib';
 import {Subscription} from 'rxjs';
@@ -23,7 +23,7 @@ export class AttractionPage implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private attractionService: AttractionService,
+    private courseAttractionService: CourseAttractionService,
   ) {
     console.log('AttractionPage is constructing');
   }
@@ -33,7 +33,7 @@ export class AttractionPage implements OnInit {
       (params) => {
         const attractionId = parseInt(this.activatedRoute.snapshot.paramMap.get('id'), 10);
         console.log('AttractionPage.ngOnInit; attractionId = ', attractionId);
-        this.attraction = this.attractionService.getAttraction(
+        this.attraction = this.courseAttractionService.getAttraction(
           attractionId
         );
       });

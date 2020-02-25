@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {
-  AttractionService,
+  CourseAttractionService,
   CourseService,
   Outing,
   OutingService,
@@ -29,7 +29,7 @@ export class LoadStateService {
   private readonly loadStateObservable: Observable<boolean>;
 
   constructor(
-    private attractionService: AttractionService,
+    private courseAttractionService: CourseAttractionService,
     private courseService: CourseService,
     private gameStateService: GameStateService,
     private outingService: OutingService,
@@ -104,7 +104,7 @@ export class LoadStateService {
   }
 
   private loadLocationData() {
-    this.attractionService.loadSessionAttractions()
+    this.courseAttractionService.loadCourseAttractions()
       .pipe(
         takeUntil(this.loadStateObservable)
       ).subscribe(

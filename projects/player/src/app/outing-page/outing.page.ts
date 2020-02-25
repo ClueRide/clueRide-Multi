@@ -6,7 +6,7 @@ import {Title} from '@angular/platform-browser';
 import {Router} from '@angular/router';
 import {
   Attraction,
-  AttractionService,
+  CourseAttractionService,
   Outing,
   OutingService
 } from 'cr-lib';
@@ -30,7 +30,7 @@ export class OutingPage implements OnDestroy {
   constructor(
     private titleService: Title,
     private outingService: OutingService,
-    private attractionService: AttractionService,
+    private courseAttractionService: CourseAttractionService,
     private router: Router,
   ) {
     this.startingAttractionSubject = new ReplaySubject<Attraction>(1);
@@ -45,7 +45,7 @@ export class OutingPage implements OnDestroy {
 
         /* With the outing, we can load the starting location. */
         this.startingAttractionSubject.next(
-          this.attractionService.getAttraction(
+          this.courseAttractionService.getAttraction(
             this.outing.startingLocationId
           )
         );
