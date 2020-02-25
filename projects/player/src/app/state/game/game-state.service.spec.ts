@@ -16,7 +16,6 @@ import {GameStateMock} from './game-state.mock';
 import {GameStateService} from './game-state.service';
 
 const authHeaderSpy = jasmine.createSpyObj('AuthHeaderService', ['getAuthHeaders']);
-// const httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
 const sseSpy = jasmine.createSpyObj('ServerEventsService', ['getGameStateEventObservable']);
 
 let getGameStateObservableSpy;

@@ -5,7 +5,7 @@ import {
   TestBed
 } from '@angular/core/testing';
 import {ActivatedRoute} from '@angular/router';
-import {AttractionService} from 'cr-lib';
+import {CourseAttractionService} from 'cr-lib';
 import {of} from 'rxjs';
 
 import {AttractionPage} from './attraction.page';
@@ -26,7 +26,7 @@ describe('AttractionPage', () => {
   let fixture: ComponentFixture<AttractionPage>;
 
   const activatedRouteSpy = jasmine.createSpyObj('ActivatedRoute', ['get']);
-  const attractionSpy = jasmine.createSpyObj('AttractionService', ['getAttraction']);
+  const attractionSpy = jasmine.createSpyObj('CourseAttractionService', ['getAttraction']);
 
   beforeEach(async(() => {
     activatedRouteSpy.queryParams = of(true);
@@ -38,7 +38,7 @@ describe('AttractionPage', () => {
       providers: [
         AttractionPage,
         {provide: ActivatedRoute, useValue: activatedRouteSpy},
-        {provide: AttractionService, useValue: attractionSpy},
+        {provide: CourseAttractionService, useValue: attractionSpy},
         // {provide: HttpClient, useValue: httpClientSpy},
       ]
     })

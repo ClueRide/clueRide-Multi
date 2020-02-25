@@ -7,7 +7,7 @@ import {
 } from '@angular/core/testing';
 import {Router} from '@angular/router';
 import {
-  AttractionService,
+  CourseAttractionService,
   GameMarkerService,
   OutingService,
   PathService
@@ -23,7 +23,7 @@ describe('RollingPage', () => {
   let component: RollingPage;
   let fixture: ComponentFixture<RollingPage>;
 
-  const attractionSpy = jasmine.createSpyObj('AttractionService', ['isRolling']);
+  const attractionSpy = jasmine.createSpyObj('CourseAttractionService', ['isRolling']);
   const gameStateSpy = jasmine.createSpyObj('GameStateService', ['isRolling', 'requestGameState']);
   const guideEventSpy = jasmine.createSpyObj('GuideEventService', {
     isCurrentMemberGuide: jasmine.createSpy()
@@ -43,7 +43,7 @@ describe('RollingPage', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         RollingPage,
-        {provide: AttractionService, useValue: attractionSpy},
+        {provide: CourseAttractionService, useValue: attractionSpy},
         {provide: GameStateService, useValue: gameStateSpy},
         {provide: GuideEventService, useValue: guideEventSpy},
         {provide: GameMarkerService, useValue: markerSpy},

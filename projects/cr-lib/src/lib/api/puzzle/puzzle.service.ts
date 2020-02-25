@@ -10,7 +10,7 @@ import {
   AuthHeaderService,
   BASE_URL
 } from '../../auth/header/auth-header.service';
-import {AttractionService} from '../attraction/attraction.service';
+import {CourseAttractionService} from '../attraction/course/course-attraction.service';
 import {Location} from '../location/location';
 import {Puzzle} from './puzzle';
 
@@ -50,7 +50,7 @@ export class PuzzleService {
   constructor(
     public http: HttpClient,
     private httpService: AuthHeaderService,
-    private attractionService: AttractionService,
+    private courseAttractionService: CourseAttractionService,
   ) {
     console.log('Hello PuzzleService');
     this.sessionLoaded = false;
@@ -118,7 +118,7 @@ export class PuzzleService {
     /* Not yet loaded; bring in a set from the back-end. */
     this.puzzleSubject = new Subject();
     this.loadRequested = true;
-    const attractions = this.attractionService.getAttractions();
+    const attractions = this.courseAttractionService.getAllCourseAttractions();
     this.expectedAttractionCount = attractions.length;
     for (const attraction of attractions) {
       const attractionId: number = attraction.id;

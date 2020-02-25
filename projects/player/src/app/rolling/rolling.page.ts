@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {
   Attraction,
-  AttractionService,
+  CourseAttractionService,
   GameMarkerService,
   LatLonService,
   Path,
@@ -55,7 +55,7 @@ export class RollingPage {
   public gameState: GameState;
 
   constructor(
-    private attractionService: AttractionService,
+    private courseAttractionService: CourseAttractionService,
     private gameMarkerService: GameMarkerService,
     private gameStateService: GameStateService,
     private guideEventService: GuideEventService,
@@ -110,7 +110,7 @@ export class RollingPage {
     RollingPage.map = L.map('rolling-map');
     RollingPage.pathGroup = L.geoJSON().addTo(RollingPage.map);
     RollingPage.markerGroup = L.layerGroup().addTo(RollingPage.map);
-    RollingPage.startingAttraction = this.attractionService.getVisibleAttractions(0)[0];
+    RollingPage.startingAttraction = this.courseAttractionService.getOutingPresentableSubset(0)[0];
 
     /* Just get the map in the ball-park of the track I've pulled in. */
     RollingPage.map.setView(
@@ -168,9 +168,9 @@ export class RollingPage {
       .subscribe();
 
     /* Add Attractions to the Map. */
-    from(this.attractionService.getVisibleAttractions(gameState.pathIndex))
+    from(this.courseAttractionService.getOutingPresentableSubset(gameState.pathIndex))
       .pipe(
-        tap(attraction => this.addMarkerForAttraction(attraction))
+        tap((attraction: Attraction) => this.addMarkerForAttraction(attraction))
       )
       .subscribe();
 

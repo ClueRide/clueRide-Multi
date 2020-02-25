@@ -5,18 +5,12 @@ import {
   Observable,
   Subject
 } from 'rxjs';
-import {
-  AuthHeaderService,
-  BASE_URL
-} from '../../auth/header/auth-header.service';
+import {AuthHeaderService} from '../../auth/header/auth-header.service';
 import {LatLon} from '../../domain/lat-lon/lat-lon';
 import {LocationService} from '../location/location.service';
 import {OutingService} from '../outing/outing.service';
 import {Attraction} from './attraction';
-
-interface AttractionMap {
-  [index: number]: Attraction;
-}
+import {AttractionMap} from './attraction-map';
 
 /**
  * This provides for the Attractions which can be sequenced into a Course.
@@ -69,34 +63,6 @@ export class AttractionService {
   }
 
   /**
-   * Retrieves the list of fully-populated attractions for the
-   * session. This includes both GeoJSON and form data.
-   */
-  public loadSessionAttractions(): Observable<boolean> {
-    /* Perhaps questionable: coupling with the timing of the OutingService. */
-    this.currentAttractionId = this.outingService.getStartingLocationId();
-    this.http.get(
-      BASE_URL + 'location/active',
-      {headers: this.httpService.getAuthHeaders()}
-    ).subscribe(
-      (response) => {
-        this.cachedSessionAttractions = response as Attraction[];
-        this.loadSessionAttractionMap();
-        this.attractionSubject.next(true);
-      }
-    );
-    return this.attractionSubject.asObservable();
-  }
-
-  private loadSessionAttractionMap(): any {
-    for (const cachedAttraction of this.cachedSessionAttractions) {
-      const attraction = cachedAttraction;
-      const id = attraction.id;
-      this.attractionMap[id] = attraction;
-    }
-  }
-
-  /**
    * Retrieves entire list of fully-populated Attractions.
    *
    * This may become cumbersome at some point in the future, and we need to drop back to geographically narrowing
@@ -143,7 +109,7 @@ export class AttractionService {
 
   }
 
-  public classifyOutingVisibleAttractions(visibleAttractions: Attraction[]): Attraction[] {
+  private classifyOutingVisibleAttractions(visibleAttractions: Attraction[]): Attraction[] {
     const lastAttractionIndex: number = visibleAttractions.length;
     from(visibleAttractions)
       .subscribe(
@@ -181,6 +147,16 @@ export class AttractionService {
 
   getAttraction(id: number) {
     return this.attractionMap[id];
+  }
+
+  buildAttractionMap(attractionsToMap: Attraction[]): AttractionMap {
+    const attractionMap: AttractionMap = {};
+    from(attractionsToMap).subscribe(
+      (attraction) => {
+        attractionMap[attraction.id] = attraction;
+      }
+    );
+    return attractionMap;
   }
 
 }
