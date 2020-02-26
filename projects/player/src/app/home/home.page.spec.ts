@@ -1,4 +1,3 @@
-import {HttpClient} from '@angular/common/http';
 import {Component} from '@angular/core';
 import {
   async,
@@ -7,6 +6,7 @@ import {
 } from '@angular/core/testing';
 import {IonicModule} from '@ionic/angular';
 import {
+  ConnectionStateModule,
   MemberChipComponentModule,
   ProfileService
 } from 'cr-lib';
@@ -27,10 +27,10 @@ describe('HomePage', () => {
 
   let loadMemberProfileSpy;
 
+  const loadStateSpy = jasmine.createSpyObj('LoadStateService', ['loadOutingData']);
+  const profileSpy = jasmine.createSpyObj('ProfileService', ['loadMemberProfile']);
+
   beforeEach(async(() => {
-    const httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
-    const loadStateSpy = jasmine.createSpyObj('LoadStateService', ['loadOutingData']);
-    const profileSpy = jasmine.createSpyObj('ProfileService', ['loadMemberProfile']);
     loadMemberProfileSpy = profileSpy.loadMemberProfile.and.returnValue(of ({}));
 
     TestBed.configureTestingModule({
@@ -41,11 +41,11 @@ describe('HomePage', () => {
       ],
       imports: [
         IonicModule.forRoot(),
+        ConnectionStateModule,
         MemberChipComponentModule,
       ],
       providers: [
         HomePage,
-        {provide: HttpClient, useValue: httpClientSpy},
         {provide: LoadStateService, useValue: loadStateSpy},
         {provide: ProfileService, useValue: profileSpy},
       ]
