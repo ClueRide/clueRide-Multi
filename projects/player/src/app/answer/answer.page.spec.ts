@@ -33,15 +33,15 @@ describe('AnswerPage', () => {
   const mockAnswerSummary = new AnswerSummary();
 
   const activatedRouteSpy = jasmine.createSpyObj('ActivatedRoute', ['snapshot']);
-  const answerSummarySpy = jasmine.createSpyObj('AnswerSummaryService', ['getPuzzle', 'openAnswerSummaryChannel']);
+  const answerSummarySpy = jasmine.createSpyObj('AnswerSummaryService', ['getAnswerSummaryChannel']);
   const puzzleSpy = jasmine.createSpyObj('PuzzleService', ['getPuzzle']);
 
   beforeEach(async(() => {
     activatedRouteSpy.queryParams = of(true);
     activatedRouteSpy.snapshot = new MockParamMap();
     activatedRouteSpy.snapshot.paramMap.get = jasmine.createSpy('get').and.returnValue('160');
-    answerSummarySpy.openAnswerSummaryChannel = jasmine.createSpy(
-      'openAnswerSummaryChannel'
+    answerSummarySpy.getAnswerSummaryChannel = jasmine.createSpy(
+      'getAnswerSummaryChannel'
     ).and.returnValue(
       of(mockAnswerSummary)
     );
@@ -68,4 +68,5 @@ describe('AnswerPage', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
 });

@@ -12,7 +12,8 @@ export class ShowGameComponent {
   constructor(
     /* Exposed for the view. */
     public gameStateService: GameStateService,
-    private showGameService: ShowGameService,
+    /* Exposed for testing. */
+    public showGameService: ShowGameService,
   ) { }
 
   /**

@@ -43,8 +43,6 @@ export class AttractionService {
   private allCachedAttractions: Attraction[];
 
   private attractionMap: AttractionMap = {};
-  /* Session specific. */
-  private currentAttractionId = -1;
 
   constructor(
     public http: HttpClient,
@@ -93,43 +91,6 @@ export class AttractionService {
   }
 
   /**
-   * Return a list of the Attractions we have unlocked or are about to arrive at next.
-   *
-   * This also sets flags on the attractions that indicate which is the current attraction
-   * and which is the next attraction.
-   */
-  public getOutingVisibleAttractions(lastAttractionIndex: number): Attraction[] {
-    const currentIndex = lastAttractionIndex + 1;
-    this.currentAttractionId = this.cachedSessionAttractions[currentIndex].id;
-
-    return this.classifyOutingVisibleAttractions(
-      /* 2 is added to a) adjust to one-based index and b) show the end of the path, not just the start. */
-      this.cachedSessionAttractions.slice(0, lastAttractionIndex + 2)
-    );
-
-  }
-
-  private classifyOutingVisibleAttractions(visibleAttractions: Attraction[]): Attraction[] {
-    const lastAttractionIndex: number = visibleAttractions.length;
-    from(visibleAttractions)
-      .subscribe(
-        (attraction: Attraction) => {
-          attraction.isCurrent = false;
-          attraction.isLast = false;
-        }
-      );
-
-    if (lastAttractionIndex === 1) {
-      visibleAttractions[0].isCurrent = true;
-    } else {
-      visibleAttractions[lastAttractionIndex - 1].isLast = true;
-      visibleAttractions[lastAttractionIndex - 2].isCurrent = true;
-    }
-
-    return visibleAttractions;
-  }
-
-  /**
    * All Attractions for the session's Course.
    * These attractions are cached at the beginning of the session.
    */
@@ -137,18 +98,15 @@ export class AttractionService {
     return this.cachedSessionAttractions;
   }
 
-  /**
-   * This knows where we are based on the requests for the Visible Attractions.
-   * TODO: Consider making this more independent.
-   */
-  getCurrentAttractionId(): number {
-    return this.currentAttractionId;
-  }
-
   getAttraction(id: number) {
     return this.attractionMap[id];
   }
 
+  /**
+   * Shared function that turns an array of Attractions into an indexed map.
+   *
+   * @param attractionsToMap the list of Attractions we want to map.
+   */
   buildAttractionMap(attractionsToMap: Attraction[]): AttractionMap {
     const attractionMap: AttractionMap = {};
     from(attractionsToMap).subscribe(

@@ -5,12 +5,24 @@ import {
   TestBed
 } from '@angular/core/testing';
 import {Router} from '@angular/router';
+import {of} from 'rxjs';
+import {GameState} from '../state/game/game-state';
 import {GameStateService} from '../state/game/game-state.service';
 
 import {ShowGameComponent} from './show-game.component';
 
+const mockGameState: GameState = {
+  rolling: true,
+  teamAssembled: true,
+  nextLocationName: null,
+  outingState: null,
+  pathIndex: 1,
+  locationId: 0,
+  puzzleId: 4
+};
+
 describe('ShowGameComponent', () => {
-  let component: ShowGameComponent;
+  let toTest: ShowGameComponent;
   let fixture: ComponentFixture<ShowGameComponent>;
 
   const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
@@ -34,18 +46,26 @@ describe('ShowGameComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ShowGameComponent);
-    component = fixture.componentInstance;
+    toTest = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(toTest).toBeTruthy();
   });
 
   describe('routeBasedOnGameState', () => {
 
     beforeEach(() => {
       routerSpy.navigate.calls.reset();
+
+      spyOn(gameStateSpy, 'requestGameState').and.returnValue(
+        of(mockGameState)
+      );
+    });
+
+    it('should be defined', () => {
+      expect(toTest.showGameService).toBeDefined();
     });
 
     it('should route to Rolling if we are indeed rolling', () => {
@@ -53,7 +73,7 @@ describe('ShowGameComponent', () => {
       routerSpy.navigate.and.returnValue(Promise.resolve());
 
       /* make call */
-      component.routeBasedOnGameState({rolling: true, teamAssembled: true});
+      toTest.showGameService.routeBasedOnGameState({rolling: true, teamAssembled: true});
 
       /* verify results */
       expect(routerSpy.navigate).toHaveBeenCalledWith(['rolling']);
@@ -64,7 +84,7 @@ describe('ShowGameComponent', () => {
       routerSpy.navigate.and.returnValue(Promise.resolve());
 
       /* make call */
-      component.routeBasedOnGameState({rolling: false, teamAssembled: false});
+      toTest.showGameService.routeBasedOnGameState({rolling: false, teamAssembled: false});
 
       /* verify results */
       expect(routerSpy.navigate).toHaveBeenCalledWith(['rolling']);
@@ -75,7 +95,7 @@ describe('ShowGameComponent', () => {
       routerSpy.navigate.and.returnValue(Promise.resolve());
 
       /* make call */
-      component.routeBasedOnGameState({rolling: false, teamAssembled: true, puzzleId: 42});
+      toTest.showGameService.routeBasedOnGameState({rolling: false, teamAssembled: true, puzzleId: 42});
 
       /* verify results */
       expect(routerSpy.navigate).toHaveBeenCalledWith(['puzzle', 42]);
