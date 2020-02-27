@@ -1,4 +1,3 @@
-import {HttpClient} from '@angular/common/http';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {
   async,
@@ -17,7 +16,10 @@ import {
 import {of} from 'rxjs';
 
 import {AppComponent} from './app.component';
+import {ShowGameService} from './show-game/show-game.service';
 import {AppStateService} from './state/app/app-state.service';
+import {GameRoutingService} from './state/game-routing.service';
+import {GameStateService} from './state/game/game-state.service';
 import {LoadStateService} from './state/load/load-state.service';
 
 class MockBackButton {
@@ -38,22 +40,36 @@ describe('AppComponent', () => {
     getRegistrationActiveObservableSpy,
     loadMemberProfileSpy;
 
+// private appStateService: AppStateService,
+//     private authClient: AwaitRegistrationService,
+//     private gameRoutingService: GameRoutingService,
+//     private gameStateService: GameStateService,
+//     private loadStateService: LoadStateService,
+//     private platform: Platform,
+//     private platformStateService: PlatformStateService,
+//     private profileService: ProfileService,
+//     private showGameService: ShowGameService,
+//     private splashScreen: SplashScreen,
+//     private statusBar: StatusBar
+
   const appStateSpy = jasmine.createSpyObj('AppStateService', ['checkInviteIsAccepted']);
   const authClient = jasmine.createSpyObj('AwaitRegistrationService', {
     getRegistrationActiveObservable: () => of(true)
   });
+  const gameRoutingSpy = jasmine.createSpyObj('GameRoutingService', ['setupSubscriptions']);
+  const gameStateSpy = jasmine.createSpyObj('GameStateService', ['setupSseEventSubscription']);
   const loadStateSpy = jasmine.createSpyObj('LoadStateService', [
     'loadOutingData',
     'getLoadStateObservable'
   ]);
-  const httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
-  const statusBarSpy = jasmine.createSpyObj('StatusBar', ['styleDefault']);
-  const splashScreenSpy = jasmine.createSpyObj('SplashScreen', ['hide']);
   const platformReadySpy = jasmine.createSpy().and.returnValue(Promise.resolve());
   const platformStateSpy = jasmine.createSpyObj('PlatformStateService', {
     isNativeMode: () => true
   });
   const profileSpy = jasmine.createSpyObj('ProfileService', ['loadMemberProfile']);
+  const showGameSpy = jasmine.createSpyObj('ShowGameService', ['showGame']);
+  const statusBarSpy = jasmine.createSpyObj('StatusBar', ['styleDefault']);
+  const splashScreenSpy = jasmine.createSpyObj('SplashScreen', ['hide']);
 
   beforeEach(async(() => {
     mockBackButton = new MockBackButton();
@@ -66,6 +82,7 @@ describe('AppComponent', () => {
     loadMemberProfileSpy = profileSpy.loadMemberProfile.and.returnValue(of({}));
     checkInviteIsAcceptedSpy = appStateSpy.checkInviteIsAccepted.and.returnValue(Promise.resolve());
     getLoadStateObservableSpy = loadStateSpy.getLoadStateObservable.and.returnValue(of(true));
+    // spyOn(gameStateSpy, 'setupSseEventSubscription').and.returnValue(of({}));
 
     TestBed.configureTestingModule({
       declarations: [AppComponent],
@@ -73,11 +90,13 @@ describe('AppComponent', () => {
       providers: [
         { provide: AppStateService, useValue: appStateSpy },
         { provide: AwaitRegistrationService, useValue: authClient },
+        { provide: GameRoutingService, useValue: gameRoutingSpy },
+        { provide: GameStateService, useValue: gameStateSpy },
         { provide: LoadStateService, useValue: loadStateSpy },
         { provide: Platform, useValue: mockPlatform },
         { provide: PlatformStateService, useValue: platformStateSpy },
         { provide: ProfileService, useValue: profileSpy },
-        { provide: HttpClient, useValue: httpClientSpy },
+        { provide: ShowGameService, useValue: showGameSpy },
         { provide: StatusBar, useValue: statusBarSpy },
         { provide: SplashScreen, useValue: splashScreenSpy },
       ],
