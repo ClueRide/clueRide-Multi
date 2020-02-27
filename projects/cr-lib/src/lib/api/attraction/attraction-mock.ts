@@ -9,7 +9,11 @@ export class AttractionMock {
       id: inputId,
       name: 'Attraction-' + inputId,
       locationTypeId: 1,
-      latLon: null,
+      latLon: {
+        id: 0,
+        lat: 34.56,
+        lon: -81.72
+      },
       nodeId: 1,
       featuredImage: null,
       readinessLevel: 'DRAFT',

@@ -1,12 +1,46 @@
 import {TestBed} from '@angular/core/testing';
+import {AttractionService} from '../attraction.service';
 
 import {CategoryAttractionService} from './category-attraction.service';
 
+const attractionSpy = jasmine.createSpyObj('AttractionService', ['get']);
+
 describe('CategoryAttractionService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  let toTest: CategoryAttractionService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule( {});
+    toTest = new CategoryAttractionService(
+      attractionSpy
+    );
+  });
 
   it('should be created', () => {
-    const service: CategoryAttractionService = TestBed.get(CategoryAttractionService);
-    expect(service).toBeTruthy();
+    expect(toTest).toBeTruthy();
   });
+
+  describe('loadAllAttractions', () => {
+
+    it('should be defined', () => {
+      expect(toTest.loadAllAttractions).toBeDefined();
+    });
+
+  });
+
+  describe('getAttraction', () => {
+
+    it('should be defined', () => {
+      expect(toTest.getAttraction).toBeDefined();
+    });
+
+  });
+
+  describe('getAttractionsByCategory', () => {
+
+    it('should be defined', () => {
+      expect(toTest.getAttractionsByCategory).toBeDefined();
+    });
+
+  });
+
 });
