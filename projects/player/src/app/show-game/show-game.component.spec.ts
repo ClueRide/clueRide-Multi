@@ -5,7 +5,6 @@ import {
   TestBed
 } from '@angular/core/testing';
 import {Router} from '@angular/router';
-import {of} from 'rxjs';
 import {GameState} from '../state/game/game-state';
 import {GameStateService} from '../state/game/game-state.service';
 
@@ -58,10 +57,6 @@ describe('ShowGameComponent', () => {
 
     beforeEach(() => {
       routerSpy.navigate.calls.reset();
-
-      spyOn(gameStateSpy, 'requestGameState').and.returnValue(
-        of(mockGameState)
-      );
     });
 
     it('should be defined', () => {
