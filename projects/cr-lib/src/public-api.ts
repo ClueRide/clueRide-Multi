@@ -6,6 +6,7 @@ export * from './lib/alert/alert.module';
 export * from './lib/alert/http-error.interceptor';
 export * from './lib/api/attraction/attraction';
 export * from './lib/api/attraction/attraction-map';
+export * from './lib/api/attraction/attraction-mock';
 export * from './lib/api/attraction/attraction.service';
 export * from './lib/api/attraction/course/course-attraction.service';
 export * from './lib/api/attraction/category/category-attraction.service';

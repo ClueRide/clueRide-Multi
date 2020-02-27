@@ -6,6 +6,7 @@ import {
 } from '@angular/core/testing';
 import {Router} from '@angular/router';
 import {
+  AttractionMock,
   GameMarkerService,
   LatLonService
 } from 'cr-lib';
@@ -36,19 +37,9 @@ describe('PinnedMapComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PinnedMapComponent);
     component = fixture.componentInstance;
-    component.startingLocationObservable = of({
-      id: 123,
-      name: 'Test Name',
-      nodeId: 234,
-      readinessLevel: 'DRAFT',
-      latLon: {
-        id: 1,
-        lat: 0.0,
-        lon: 0.0
-      },
-      locationTypeId: 4,
-      featuredImage: null
-    });
+    component.startingLocationObservable = of(
+      AttractionMock.createAttractionMock(123)
+    );
     fixture.detectChanges();
   });
 
