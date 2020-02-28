@@ -2,13 +2,11 @@ import {Attraction} from './attraction';
 
 export class AttractionMock {
 
-  constructor() {}
-
   static createAttractionMock(inputId): Attraction {
     return {
       id: inputId,
       name: 'Attraction-' + inputId,
-      locationTypeId: 1,
+      locationTypeId: inputId + 10,
       latLon: {
         id: 0,
         lat: 34.56,
