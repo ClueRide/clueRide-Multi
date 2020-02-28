@@ -68,6 +68,10 @@ describe('CourseAttractionService', () => {
       const actual = toTest.getAllCourseAttractions();
       expect(actual).toEqual(attractionsForCourse);
       expect(toTest.getAttraction(1)).toEqual(attraction1);
+      expect(toTest.getAttraction(2)).toEqual(attraction2);
+      expect(toTest.getAttraction(3)).toEqual(attraction3);
+      expect(toTest.getAttraction(4)).toEqual(attraction4);
+      expect(toTest.getAttraction(5)).toEqual(attraction5);
     });
 
   });
