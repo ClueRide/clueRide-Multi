@@ -10,6 +10,8 @@ import {
 } from '@angular/router';
 import {AlertController} from '@ionic/angular';
 import {
+  AttractionMock,
+  CategoryAttractionService,
   ImageService,
   LocationService
 } from 'cr-lib';
@@ -38,6 +40,7 @@ describe('PlaceTabPage', () => {
   const activatedRouteSpy = jasmine.createSpyObj('ActivatedRoute', ['get']);
   const alertSpy = jasmine.createSpyObj('AlertController', ['get']);
   const attractionSpy = jasmine.createSpyObj('LocationService', ['get']);
+  const categoryAttractionSpy = jasmine.createSpyObj('CategoryAttractionService', ['getAttraction']);
   const imageSpy = jasmine.createSpyObj('ImageService', ['get']);
   const mapDataSpy = jasmine.createSpyObj('MapDataService', ['getAttractionById']);
   const routerSpy = jasmine.createSpyObj('Router', ['get']);
@@ -47,15 +50,9 @@ describe('PlaceTabPage', () => {
     activatedRouteSpy.snapshot = new MockParamMap();
     activatedRouteSpy.snapshot.paramMap.get = jasmine.createSpy('get').and.returnValue('42');
 
-    mapDataSpy.getAttractionById = jasmine.createSpy('getAttractionById').and.returnValue({
-      id: 123,
-      name: 'Test Name',
-      nodeId: 234,
-      readinessLevel: 'DRAFT',
-      latLon: null,
-      locationTypeId: 4,
-      featuredImage: null
-    });
+    categoryAttractionSpy.getAttraction = jasmine.createSpy('getAttraction').and.returnValue(
+      AttractionMock.createAttractionMock(123)
+    );
 
     TestBed.configureTestingModule({
       declarations: [ PlaceTabPage ],
@@ -65,6 +62,7 @@ describe('PlaceTabPage', () => {
         {provide: ActiveAttractionService, useValue: activeAttractionSpy},
         {provide: ActivatedRoute, useValue: activatedRouteSpy},
         {provide: AlertController, useValue: alertSpy},
+        {provide: CategoryAttractionService, useValue: categoryAttractionSpy},
         {provide: ImageService, useValue: imageSpy},
         {provide: LocationService, useValue: attractionSpy},
         {provide: MapDataService, useValue: mapDataSpy},
@@ -92,4 +90,9 @@ describe('PlaceTabPage', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should call getAttraction to retrieve the instance to be edited', () => {
+    expect(categoryAttractionSpy.getAttraction).toHaveBeenCalled();
+  });
+
 });

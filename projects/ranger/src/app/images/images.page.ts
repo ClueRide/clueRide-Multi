@@ -6,12 +6,12 @@ import {
 import {Router} from '@angular/router';
 import {
   Attraction,
+  CategoryAttractionService,
   Image,
   ImageService
 } from 'cr-lib';
 import {Subscription} from 'rxjs';
 import {ActiveAttractionService} from '../edit/active-attraction.service';
-import {MapDataService} from '../map/data/map-data.service';
 
 /**
  * Presents all images associated with a Location.
@@ -32,7 +32,7 @@ export class ImagesPage implements OnInit, OnDestroy {
   constructor(
     private imageService: ImageService,
     private activeAttractionService: ActiveAttractionService,
-    private mapDataService: MapDataService,
+    private categoryAttractionService: CategoryAttractionService,
     private router: Router,
   ) {
     console.log('Hello, Image Page');
@@ -43,7 +43,7 @@ export class ImagesPage implements OnInit, OnDestroy {
     this.subscription = this.activeAttractionService.getActiveAttractionId()
       .subscribe(
         (id) => {
-          this.attraction = this.mapDataService.getAttractionById(id);
+          this.attraction = this.categoryAttractionService.getAttraction(id);
           console.log('Image Page receiving attractionId', this.attraction.id);
 
           this.imageService.getAllImagesForLocation(this.attraction.id)

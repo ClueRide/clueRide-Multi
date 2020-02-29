@@ -9,6 +9,7 @@ import {
 } from '@angular/router';
 import {
   Attraction,
+  CategoryAttractionService,
   LocationService
 } from 'cr-lib';
 import {Subscription} from 'rxjs';
@@ -30,6 +31,7 @@ export class PuzzleTabPage implements OnInit, OnDestroy {
   constructor(
     private activeAttractionService: ActiveAttractionService,
     private activatedRoute: ActivatedRoute,
+    private categoryAttractionService: CategoryAttractionService,
     private locationService: LocationService,
     private mapDataService: MapDataService,
     private router: Router,
@@ -40,7 +42,7 @@ export class PuzzleTabPage implements OnInit, OnDestroy {
     this.subscription = this.activatedRoute.queryParams.subscribe(
       (params) => {
         const attractionId = parseInt(this.activatedRoute.snapshot.paramMap.get('id'), 10);
-        this.attraction = this.mapDataService.getAttractionById(attractionId);
+        this.attraction = this.categoryAttractionService.getAttraction(attractionId);
         console.log('Active Attraction', this.attraction.name);
         this.activeAttractionService.setActiveAttractionId(attractionId);
 

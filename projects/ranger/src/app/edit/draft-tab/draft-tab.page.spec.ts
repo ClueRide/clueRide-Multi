@@ -11,6 +11,7 @@ import {
 import {
   Attraction,
   Category,
+  CategoryAttractionService,
   CategoryService,
   LocationService,
   LocationType,
@@ -84,6 +85,7 @@ describe('DraftTabPage', () => {
   const activeAttractionSpy = jasmine.createSpyObj('ActiveAttractionService', ['setActiveAttractionId']);
   const activatedRouteSpy = jasmine.createSpyObj('ActivatedRoute', ['get']);
   const categorySpy = jasmine.createSpyObj('CategoryService', ['get']);
+  const categoryAttractionSpy = jasmine.createSpyObj('CategoryAttractionService', ['getAttraction']);
   const attractionSpy = jasmine.createSpyObj('LocationService', ['get']);
   const locationTypeSpy = jasmine.createSpyObj('LocTypeService', [
     'getById',
@@ -98,7 +100,7 @@ describe('DraftTabPage', () => {
     activatedRouteSpy.snapshot = new MockParamMap();
     activatedRouteSpy.snapshot.paramMap.get = jasmine.createSpy('get').and.returnValue('42');
 
-    mapDataSpy.getAttractionById = jasmine.createSpy('getAttractionById').and.returnValue(
+    categoryAttractionSpy.getAttraction = jasmine.createSpy('getAttraction').and.returnValue(
       createAttraction(123)
     );
 
@@ -114,6 +116,7 @@ describe('DraftTabPage', () => {
         {provide: ActiveAttractionService, useValue: activeAttractionSpy},
         {provide: ActivatedRoute, useValue: activatedRouteSpy},
         {provide: CategoryService, useValue: categorySpy},
+        {provide: CategoryAttractionService, useValue: categoryAttractionSpy},
         {provide: LocationService, useValue: attractionSpy},
         {provide: LocTypeService, useValue: locationTypeSpy},
         {provide: MapDataService, useValue: mapDataSpy},
@@ -135,7 +138,11 @@ describe('DraftTabPage', () => {
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(toTest).toBeTruthy();
+  });
+
+  it('should call getAttraction to retrieve the instance to be edited', () => {
+    expect(categoryAttractionSpy.getAttraction).toHaveBeenCalled();
   });
 
   describe('locTypeSelectedText', () => {

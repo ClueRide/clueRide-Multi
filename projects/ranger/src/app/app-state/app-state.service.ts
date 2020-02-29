@@ -6,6 +6,7 @@ import {
 } from '@ionic/angular';
 import {
   AttractionService,
+  CategoryAttractionService,
   GeoLocService,
   PlatformStateService,
   ProfileService,
@@ -36,6 +37,7 @@ export class AppStateService {
     private platform: Platform,
     private nav: NavController,
     private attractionService: AttractionService,
+    private categoryAttractionService: CategoryAttractionService,
     private geoLoc: GeoLocService,
     private mapDataService: MapDataService,
     public platformStateService: PlatformStateService,
@@ -92,9 +94,10 @@ export class AppStateService {
 
     console.log('About to initialize caches');
     this.appState.cacheState = 'empty';
-    const cacheInit$ = this.mapDataService.initializeCaches();
+    // TODO: when MapDataComes out, it won't need to initialize Caches anymore.
+    this.mapDataService.initializeCaches();
 
-    cacheInit$.subscribe(
+    this.categoryAttractionService.loadAllAttractions().subscribe(
       () => {
         this.appState.cacheState = 'filled';
       }
