@@ -5,7 +5,11 @@ import {
   TestBed
 } from '@angular/core/testing';
 import {Router} from '@angular/router';
-import {ImageService} from 'cr-lib';
+import {
+  AttractionMock,
+  CategoryAttractionService,
+  ImageService
+} from 'cr-lib';
 import {of} from 'rxjs';
 import {ActiveAttractionService} from '../edit/active-attraction.service';
 import {MapDataService} from '../map/data/map-data.service';
@@ -13,6 +17,7 @@ import {MapDataService} from '../map/data/map-data.service';
 import {ImagesPage} from './images.page';
 
 const activeAttractionSpy = jasmine.createSpyObj('ActiveAttractionService', ['getActiveAttractionId']);
+const categoryAttractionSpy = jasmine.createSpyObj('CategoryAttractionService', ['getAttraction']);
 const imageSpy = jasmine.createSpyObj('ImageService', ['getAllImagesForLocation']);
 const mapDataSpy = jasmine.createSpyObj('MapDataService', ['getAttractionById']);
 const routerSpy = jasmine.createSpyObj('Router', ['get']);
@@ -25,17 +30,10 @@ describe('ImagesPage', () => {
     'getActiveAttractionId'
   ).and.returnValue(of(123));
 
-  mapDataSpy.getAttractionById = jasmine.createSpy(
-    'getAttractionById').and.returnValue(
-    {
-      id: 123,
-      name: 'Test Name',
-      nodeId: 234,
-      readinessLevel: 'DRAFT',
-      latLon: null,
-      locationTypeId: 4,
-      featuredImage: undefined
-    });
+  categoryAttractionSpy.getAttraction = jasmine.createSpy(
+    'getAttraction').and.returnValue(
+    AttractionMock.createAttractionMock(123)
+  );
 
   imageSpy.getAllImagesForLocation = jasmine.createSpy(
     'getAllImagesForLocation'
@@ -48,6 +46,7 @@ describe('ImagesPage', () => {
       providers: [
         ImagesPage,
         {provide: ActiveAttractionService, useValue: activeAttractionSpy},
+        {provide: CategoryAttractionService, useValue: categoryAttractionSpy},
         {provide: ImageService, useValue: imageSpy},
         {provide: MapDataService, useValue: mapDataSpy},
         {provide: Router, useValue: routerSpy},
@@ -65,4 +64,9 @@ describe('ImagesPage', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should call getAttraction to retrieve the instance to be edited', () => {
+    expect(categoryAttractionSpy.getAttraction).toHaveBeenCalled();
+  });
+
 });

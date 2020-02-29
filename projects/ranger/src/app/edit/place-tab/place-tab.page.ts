@@ -10,6 +10,7 @@ import {
 import {AlertController} from '@ionic/angular';
 import {
   Attraction,
+  CategoryAttractionService,
   ImageService,
   LocationService
 } from 'cr-lib';
@@ -35,6 +36,7 @@ export class PlaceTabPage implements OnInit, OnDestroy {
     private activeAttractionService: ActiveAttractionService,
     private activatedRoute: ActivatedRoute,
     private alertController: AlertController,
+    private categoryAttractionService: CategoryAttractionService,
     private imageService: ImageService,
     private locationService: LocationService,
     private mapDataService: MapDataService,
@@ -45,7 +47,7 @@ export class PlaceTabPage implements OnInit, OnDestroy {
     this.subscription = this.activatedRoute.queryParams.subscribe(
       (params) => {
         this.attractionId = parseInt(this.activatedRoute.snapshot.paramMap.get('id'), 10);
-        this.attraction = this.mapDataService.getAttractionById(this.attractionId);
+        this.attraction = this.categoryAttractionService.getAttraction(this.attractionId);
         console.log('Active Attraction', this.attraction.name);
         this.activeAttractionService.setActiveAttractionId(this.attractionId);
 

@@ -185,4 +185,52 @@ describe('CategoryAttractionService', () => {
 
   });
 
+  describe('buildCategoryMap', () => {
+
+    it('should be defined', () => {
+      expect(toTest.buildCategoryMap).toBeDefined();
+    });
+
+    it('should treat empty LocType as Category 0 (Uncategorized)', () => {
+      /* setup data */
+      const attractionId = 123;
+      const attractionWithoutLocType = AttractionMock.createAttractionMock(attractionId);
+      const attractions = [
+        attractionWithoutLocType
+      ];
+
+      /* make call */
+      toTest.buildCategoryMap(attractions);
+
+      /* verify results */
+      expect(toTest.getAttractionsByCategory(0).length).toEqual(1);
+
+    });
+
+    it('should treat LocType with no Category as Category 0 (Uncategorized)', () => {
+      /* setup data */
+      const attractionId = 123;
+      const attractionWithoutCategory = AttractionMock.createAttractionMock(attractionId);
+      attractionWithoutCategory.locationType = {
+        id: 1,
+        name: 'Test Loc Type',
+        description: 'No Category defined',
+        category: undefined,
+        icon: 'test'
+      };
+
+      const attractions = [
+        attractionWithoutCategory
+      ];
+
+      /* make call */
+      toTest.buildCategoryMap(attractions);
+
+      /* verify results */
+      expect(toTest.getAttractionsByCategory(0).length).toEqual(1);
+
+    });
+
+  });
+
 });

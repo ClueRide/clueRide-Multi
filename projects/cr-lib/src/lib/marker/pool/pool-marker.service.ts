@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import * as L from 'leaflet';
 import {Attraction} from '../../api/attraction/attraction';
-import {CourseAttractionService} from '../../api/attraction/course/course-attraction.service';
+import {CategoryAttractionService} from '../../api/attraction/category/category-attraction.service';
 import {ClickableMarker} from '../clickableMarker';
 import {PoolIconService} from './pool-icon.service';
 import MarkerOptions = L.MarkerOptions;
@@ -21,7 +21,7 @@ export class PoolMarkerService {
 
   constructor(
     private iconService: PoolIconService,
-    private courseAttractionService: CourseAttractionService,
+    private categoryAttractionService: CategoryAttractionService,
     private router: Router
   ) {
   }
@@ -87,7 +87,7 @@ export class PoolMarkerService {
   ): void {
     const crMarker: ClickableMarker = mouseEvent.target;
     console.log('Marker Click for attraction ID: ' + crMarker.attractionId);
-    const selectedAttraction = this.courseAttractionService.getAttraction(crMarker.attractionId);
+    const selectedAttraction = this.categoryAttractionService.getAttraction(crMarker.attractionId);
 
     this.router.navigate(
       ['edit', selectedAttraction.id, PoolMarkerService.getTabIdForLocation(selectedAttraction)]

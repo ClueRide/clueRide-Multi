@@ -61,7 +61,12 @@ export class CategoryAttractionService {
     from(allAttractions).subscribe(
       (attraction) => {
         attraction.locationType = this.locTypeService.getById((attraction.locationTypeId));
-        const categoryId = attraction.locationType.category.id;
+
+        /* Account for the possibility that our Attraction hasn't been assigned to a location type or category. */
+        const categoryId = attraction.locationType &&
+          attraction.locationType.category &&
+          attraction.locationType.category.id || 0;
+
         /* define empty array if we haven't seen this category yet. */
         if (isUndefined(this.attractionsPerCategory[categoryId])) {
           this.attractionsPerCategory[categoryId] = [];
@@ -82,4 +87,8 @@ export class CategoryAttractionService {
     return this.attractionsPerCategory[categoryId];
   }
 
+  // TODO: Comes from MapDataService; will propagate through Layer stuff soon.
+  updateAttraction(updatedAttraction: Attraction) {
+
+  }
 }

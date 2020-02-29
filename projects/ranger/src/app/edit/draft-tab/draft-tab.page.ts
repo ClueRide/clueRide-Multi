@@ -9,6 +9,7 @@ import {
 import {
   Attraction,
   Category,
+  CategoryAttractionService,
   CategoryService,
   LocationService,
   LocationType,
@@ -48,6 +49,7 @@ export class DraftTabPage implements OnInit {
   constructor(
     private activeAttractionService: ActiveAttractionService,
     private activatedRoute: ActivatedRoute,
+    private categoryAttractionService: CategoryAttractionService,
     private categoryService: CategoryService,
     private locationService: LocationService,
     private locationTypeService: LocTypeService,
@@ -61,7 +63,7 @@ export class DraftTabPage implements OnInit {
     this.subscription = this.activatedRoute.queryParams.subscribe(
       (params) => {
         this.attractionId = parseInt(this.activatedRoute.snapshot.paramMap.get('id'), 10);
-        this.attraction = this.mapDataService.getAttractionById(this.attractionId);
+        this.attraction = this.categoryAttractionService.getAttraction(this.attractionId);
         this.activeAttractionService.setActiveAttractionId(this.attractionId);
 
         /* Populate our Category if we have a Location Type defined. */
@@ -100,6 +102,7 @@ export class DraftTabPage implements OnInit {
     this.locationService.update(this.attraction).subscribe(
       (updatedAttraction: Attraction) => {
         this.mapDataService.updateAttraction(updatedAttraction);
+        this.categoryAttractionService.updateAttraction(updatedAttraction);
       }
     );
     // TODO: This should wait for a good response from the save.
