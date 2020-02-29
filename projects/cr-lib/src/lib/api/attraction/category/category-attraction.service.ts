@@ -28,7 +28,7 @@ export class CategoryAttractionService {
   private attractionMap: AttractionMap = {};
 
   constructor(
-    private attractionService: AttractionService,
+    private commonAttractionService: AttractionService,
     private locationService: LocationService,
     private locTypeService: LocTypeService,
   ) {
@@ -49,7 +49,7 @@ export class CategoryAttractionService {
 
     this.locationService.nearest(latLon).subscribe(
       (allAttractions: Attraction[]) => {
-        this.attractionMap = this.attractionService.buildAttractionMap(allAttractions);
+        this.attractionMap = this.commonAttractionService.buildAttractionMap(allAttractions);
         this.buildCategoryMap(allAttractions);
         this.attractionSubject.next(true);
       }

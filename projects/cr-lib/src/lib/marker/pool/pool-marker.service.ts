@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import * as L from 'leaflet';
 import {Attraction} from '../../api/attraction/attraction';
-import {AttractionService} from '../../api/attraction/attraction.service';
+import {CourseAttractionService} from '../../api/attraction/course/course-attraction.service';
 import {ClickableMarker} from '../clickableMarker';
 import {PoolIconService} from './pool-icon.service';
 import MarkerOptions = L.MarkerOptions;
@@ -21,7 +21,7 @@ export class PoolMarkerService {
 
   constructor(
     private iconService: PoolIconService,
-    private attractionService: AttractionService,
+    private courseAttractionService: CourseAttractionService,
     private router: Router
   ) {
   }
@@ -87,7 +87,7 @@ export class PoolMarkerService {
   ): void {
     const crMarker: ClickableMarker = mouseEvent.target;
     console.log('Marker Click for attraction ID: ' + crMarker.attractionId);
-    const selectedAttraction = this.attractionService.getAttraction(crMarker.attractionId);
+    const selectedAttraction = this.courseAttractionService.getAttraction(crMarker.attractionId);
 
     this.router.navigate(
       ['edit', selectedAttraction.id, PoolMarkerService.getTabIdForLocation(selectedAttraction)]
@@ -97,7 +97,5 @@ export class PoolMarkerService {
       console.log('Failed to launch edit page: ', error);
     });
   }
-
-
 
 }

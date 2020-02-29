@@ -17,6 +17,10 @@ import {
 
 /**
  * Orients players having accepted an invite by presenting an overview of the Outing.
+ *
+ * - It uses OutingService to retrieve the session Outing.
+ * - It uses the CourseAttractionService to retrieve the starting location's Attraction.
+ * - The Router is used for navigation to the Team page.
  */
 @Component({
   selector: 'page-outing',

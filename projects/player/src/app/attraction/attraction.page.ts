@@ -10,6 +10,15 @@ import {
 } from 'cr-lib';
 import {Subscription} from 'rxjs';
 
+/**
+ * AttractionPage presents an Attraction to a Seeker.
+ *
+ * It uses the ActivatedRoute to pickup the query params that
+ * tell us what Attraction to present.
+ *
+ * It uses the CourseAttractionService to retrieve the data
+ * that we expose for the view.
+ */
 @Component({
   selector: 'app-attraction',
   templateUrl: './attraction.page.html',
