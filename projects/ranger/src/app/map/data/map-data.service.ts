@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Geoposition} from '@ionic-native/geolocation';
 import {
   Attraction,
+  FilterService,
   GeoLocService,
   LatLonService,
   LocationService,
@@ -16,7 +17,6 @@ import {
   Subscription
 } from 'rxjs';
 import {filter} from 'rxjs/operators';
-import {FilterService} from '../../filter/filter.service';
 
 /**
  * Maintains the life-cycle for all Map data -- leaflet and the

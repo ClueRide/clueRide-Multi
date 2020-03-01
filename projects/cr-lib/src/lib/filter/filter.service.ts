@@ -1,5 +1,9 @@
 import {Injectable} from '@angular/core';
 
+/**
+ * Associated with the on/off button style of filter used as a POC;
+ * that button has been rendered obsolete by the FilterPage.
+ */
 @Injectable({
   providedIn: 'root'
 })

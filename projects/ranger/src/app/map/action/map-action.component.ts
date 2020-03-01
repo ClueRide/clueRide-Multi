@@ -2,7 +2,7 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import {FilterService} from '../../filter/filter.service';
+import {FilterService} from 'cr-lib';
 import {MapDataService} from '../data/map-data.service';
 import {MapDragService} from '../drag/map-drag.service';
 import {MapStateService} from '../state/map-state.service';
