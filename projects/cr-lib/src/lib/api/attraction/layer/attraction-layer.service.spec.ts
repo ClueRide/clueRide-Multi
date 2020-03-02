@@ -48,6 +48,8 @@ describe('AttractionLayerService', () => {
       /* train mocks */
       categoryAttractionSpy.getAttractionMap = jasmine.createSpy('getAttractionMap')
         .and.returnValue(attractionsByCategory);
+      // TODO: Need to return something that can play nice with the `addTo()` function.
+      markerSpy.getAttractionMarker = jasmine.createSpy('getAttractionMarker').and.returnValue({});
 
       /* make call */
       const loadObservable: Observable<boolean> = toTest.loadAttractionLayers(map);
@@ -78,6 +80,8 @@ describe('AttractionLayerService', () => {
       /* train mocks */
       categoryAttractionSpy.getAttractionMap = jasmine.createSpy('getAttractionMap')
         .and.returnValue(attractionsByCategory);
+      // TODO: Need to return something that can play nice with the `addTo()` function.
+      markerSpy.getAttractionMarker = jasmine.createSpy('getAttractionMarker').and.returnValue({});
       /* Trigger initialization. */
       const loadObservable: Observable<boolean> = toTest.loadAttractionLayers(map);
 
