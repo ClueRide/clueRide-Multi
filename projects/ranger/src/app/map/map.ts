@@ -102,7 +102,7 @@ export class MapComponent {
     }).addTo(this.map);
 
     /* Create the Category Layers. */
-    /* TODO: LE-76 for all Categories. */
+    /* TODO: LE-76 & CI-159 for all Categories. */
     this.layerPerCategory[DEFAULT_CATEGORY] = L.layerGroup().addTo(this.map);
 
     /* Add a "here I am" marker. */

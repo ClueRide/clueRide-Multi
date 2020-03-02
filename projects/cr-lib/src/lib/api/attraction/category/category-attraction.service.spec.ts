@@ -14,43 +14,11 @@ import {AttractionService} from '../attraction.service';
 
 import {CategoryAttractionService} from './category-attraction.service';
 
-/* Static data instances. */
-const attraction1 = AttractionMock.createAttractionMock(1);
-const attraction2 = AttractionMock.createAttractionMock(2);
-const attraction3 = AttractionMock.createAttractionMock(3);
-const attraction4 = AttractionMock.createAttractionMock(4);
-const attraction5 = AttractionMock.createAttractionMock(5);
-
-const locType1 = LocTypeMock.createLocType(attraction1.locationTypeId, 1);
-const locType2 = LocTypeMock.createLocType(attraction2.locationTypeId, 1);
-const locType3 = LocTypeMock.createLocType(attraction3.locationTypeId, 1);
-const locType4 = LocTypeMock.createLocType(attraction4.locationTypeId, 2);
-const locType5 = LocTypeMock.createLocType(attraction5.locationTypeId, 3);
-
-attraction1.locationType = locType1;
-attraction2.locationType = locType2;
-attraction3.locationType = locType3;
-attraction4.locationType = locType4;
-attraction5.locationType = locType5;
-
-const allLocTypes = [
-  locType1,
-  locType2,
-  locType3,
-  locType4,
-  locType5
-];
-
-const allAttractions = [
-  attraction1,
-  attraction2,
-  attraction3,
-  attraction4,
-  attraction5
-];
+/* Data instances. */
+const allAttractions = AttractionMock.createAttractionMockSet();
+const allLocTypes = LocTypeMock.createLocTypeSet();
 
 /* Mocked Services. */
-const attractionSpy = jasmine.createSpyObj('AttractionService', ['buildAttractionMap']);
 const locationSpy = jasmine.createSpyObj('LocationService', ['nearest']);
 const locTypeSpy = jasmine.createSpyObj('LocTypeService', ['getById']);
 
@@ -109,11 +77,11 @@ describe('CategoryAttractionService', () => {
           expect(result).toBeTruthy();
           expect(attractionService.buildAttractionMap).toHaveBeenCalled();
 
-          expect(toTest.getAttraction(1)).toEqual(attraction1);
-          expect(toTest.getAttraction(2)).toEqual(attraction2);
-          expect(toTest.getAttraction(3)).toEqual(attraction3);
-          expect(toTest.getAttraction(4)).toEqual(attraction4);
-          expect(toTest.getAttraction(5)).toEqual(attraction5);
+          expect(toTest.getAttraction(1)).toEqual(allAttractions[0]);
+          expect(toTest.getAttraction(2)).toEqual(allAttractions[1]);
+          expect(toTest.getAttraction(3)).toEqual(allAttractions[2]);
+          expect(toTest.getAttraction(4)).toEqual(allAttractions[3]);
+          expect(toTest.getAttraction(5)).toEqual(allAttractions[4]);
 
           done();
         }
@@ -145,7 +113,7 @@ describe('CategoryAttractionService', () => {
       locationSpy.nearest = jasmine.createSpy('nearest').and.returnValue(nearestSubject);
       locTypeSpy.getById = jasmine.createSpy('getById').and.callFake(
         (id) => {
-          return allLocTypes[id - 11];
+          return allLocTypes[id - 1];
         }
       );
 
@@ -159,19 +127,19 @@ describe('CategoryAttractionService', () => {
 
           expect(toTest.getAttractionsByCategory(1)).toEqual(
             [
-              attraction1,
-              attraction2,
-              attraction3
+              allAttractions[0],
+              allAttractions[1],
+              allAttractions[2]
             ]
           );
           expect(toTest.getAttractionsByCategory(2)).toEqual(
             [
-              attraction4
+              allAttractions[3]
             ]
           );
           expect(toTest.getAttractionsByCategory(3)).toEqual(
             [
-              attraction5
+              allAttractions[4]
             ]
           );
 

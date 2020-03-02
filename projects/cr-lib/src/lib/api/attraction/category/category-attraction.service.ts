@@ -11,13 +11,7 @@ import {LocationService} from '../../location/location.service';
 import {Attraction} from '../attraction';
 import {AttractionMap} from '../attraction-map';
 import {AttractionService} from '../attraction.service';
-
-/**
- * Maps Category ID to a list of Attractions that fall within that Category.
- */
-interface AttractionsByCategory {
-  [index: number]: Attraction[];
-}
+import {AttractionsByCategory} from './attractions-by-category';
 
 @Injectable({
   providedIn: 'root'
@@ -85,6 +79,13 @@ export class CategoryAttractionService {
 
   getAttractionsByCategory(categoryId: number): Attraction[] {
     return this.attractionsPerCategory[categoryId];
+  }
+
+  /**
+   * Provides the entire map of Attractions by Category.
+   */
+  getAttractionMap(): AttractionsByCategory {
+    return this.attractionsPerCategory;
   }
 
   // TODO: Comes from MapDataService; will propagate through Layer stuff soon.
