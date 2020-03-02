@@ -55,6 +55,16 @@ export class AttractionLayerService {
         const attractionsList = attractionsByCategory[categoryId];
         console.log('Category ' + categoryId + ' has ' + attractionsList.length + ' entries');
         this.layerPerCategory[categoryId] = L.layerGroup().addTo(this.mapWithLayers);
+
+        // TODO CI-160
+        /* This creates editable markers; want a different set for display-only. */
+        attractionsList.forEach(
+          (attraction) => {
+            const marker: any = this.poolMarkerService.getAttractionMarker(attraction);
+            marker.addTo(this.layerPerCategory[categoryId]);
+          }
+        );
+
       }
     }
 
@@ -80,7 +90,9 @@ export class AttractionLayerService {
         const filterTurnedOn = filter.categoriesToIncludeById.includes(category.id);
         if (layerTurnedOn != filterTurnedOn) {
           if (filterTurnedOn) {
-            // TODO
+            this.layerPerCategory[category.id].addTo(this.mapWithLayers);
+          } else {
+            this.mapWithLayers.removeLayer(this.layerPerCategory[category.id]);
           }
         }
       }
