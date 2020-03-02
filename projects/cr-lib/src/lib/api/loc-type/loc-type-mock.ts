@@ -24,4 +24,14 @@ export class LocTypeMock {
     };
   }
 
+  static createLocTypeSet(): LocationType[] {
+    return [
+      LocTypeMock.createLocType(1, 1),
+      LocTypeMock.createLocType(2, 1),
+      LocTypeMock.createLocType(3, 1),
+      LocTypeMock.createLocType(4, 2),
+      LocTypeMock.createLocType(5, 3)
+    ];
+  }
+
 }

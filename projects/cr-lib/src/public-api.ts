@@ -10,6 +10,7 @@ export * from './lib/api/attraction/attraction-mock';
 export * from './lib/api/attraction/attraction.service';
 export * from './lib/api/attraction/course/course-attraction.service';
 export * from './lib/api/attraction/category/category-attraction.service';
+export * from './lib/api/attraction/layer/attraction-layer.service';
 export * from './lib/api/badge/badge';
 export * from './lib/api/badge/badge.service';
 export * from './lib/api/badge/page/badges.module';

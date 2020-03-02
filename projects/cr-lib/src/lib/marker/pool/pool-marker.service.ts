@@ -8,6 +8,7 @@ import {PoolIconService} from './pool-icon.service';
 import MarkerOptions = L.MarkerOptions;
 
 /**
+ * TODO: CI-160 - display-only markers from the pool (categories).
  * Pool Markers are the Markers used while developing the
  * pool of available Attractions for adding to Courses.
  *
@@ -70,6 +71,7 @@ export class PoolMarkerService {
       markerOptions
     );
 
+    // TODO: CI-160 - click response for display-only Attractions
     poolMarker.on('click', (mouseEvent) => {
       this.openLocEditPageForMarkerClick(mouseEvent);
     });
@@ -89,6 +91,7 @@ export class PoolMarkerService {
     console.log('Marker Click for attraction ID: ' + crMarker.attractionId);
     const selectedAttraction = this.categoryAttractionService.getAttraction(crMarker.attractionId);
 
+    /* Note the subtle coupling here between modules: the client app must provide a route for `edit`. */
     this.router.navigate(
       ['edit', selectedAttraction.id, PoolMarkerService.getTabIdForLocation(selectedAttraction)]
     ).then(() => {
