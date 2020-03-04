@@ -66,7 +66,7 @@ export * from './lib/filter/filter';
 export * from './lib/filter/filter.service';
 export * from './lib/geo/device-geo-loc/device-geo-loc.service';
 export * from './lib/geo/geo-loc/geo-loc';
-export * from './lib/heading/heading';
+export * from './lib/heading/heading.component';
 export * from './lib/heading/heading.module';
 export * from './lib/loader/loader.module';
 export * from './lib/marker/clickableMarker';

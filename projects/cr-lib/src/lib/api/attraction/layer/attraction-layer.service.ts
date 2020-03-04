@@ -6,6 +6,7 @@ import {
   Subject
 } from 'rxjs';
 import {Filter} from '../../../filter/filter';
+import {ClickableMarker} from '../../../marker/clickableMarker';
 import {PoolMarkerService} from '../../../marker/pool/pool-marker.service';
 import {CategoryService} from '../../category/category.service';
 import {AttractionsByCategory} from '../category/attractions-by-category';
@@ -46,6 +47,7 @@ export class AttractionLayerService {
       return this.attractionLayerSubject.asObservable();
     }
     this.mapWithLayers = map;
+    this.mapWithLayers.clearLayers();
 
     /* Map itself is in place; now pickup the Attractions. */
     const attractionsByCategory: AttractionsByCategory = this.categoryAttractionService.getAttractionMap();
@@ -60,8 +62,8 @@ export class AttractionLayerService {
         /* This creates editable markers; want a different set for display-only. */
         attractionsList.forEach(
           (attraction) => {
-            const marker: any = this.poolMarkerService.getAttractionMarker(attraction);
-            marker.addTo(this.layerPerCategory[categoryId]);
+            const marker: ClickableMarker = this.poolMarkerService.getAttractionMarker(attraction);
+            this.layerPerCategory[categoryId].addLayer(marker);
           }
         );
 
@@ -82,17 +84,27 @@ export class AttractionLayerService {
    * @param filter
    */
   showFilteredAttractions(filter: Filter): void {
+    if (!this.mapWithLayers) {
+      throw new Error(
+        'Map not yet provided; call `loadAttractionLayers()` first'
+      )
+    }
+
     const existingLayers = this.mapWithLayers.getLayers();
     this.categoryService.getAllCategories().forEach(
       (category) => {
         console.log('Checking category ID ' + category.id);
-        const layerTurnedOn = existingLayers.includes(this.layerPerCategory[category.id]);
-        const filterTurnedOn = filter.categoriesToIncludeById.includes(category.id);
-        if (layerTurnedOn != filterTurnedOn) {
-          if (filterTurnedOn) {
-            this.layerPerCategory[category.id].addTo(this.mapWithLayers);
-          } else {
-            this.mapWithLayers.removeLayer(this.layerPerCategory[category.id]);
+
+        /* Only toggle the layer if we have markers for the category. */
+        if (this.layerPerCategory[category.id]) {
+          const layerTurnedOn = existingLayers.includes(this.layerPerCategory[category.id]);
+          const filterTurnedOn = filter.categoriesToIncludeById.includes(category.id);
+          if (layerTurnedOn != filterTurnedOn) {
+            if (filterTurnedOn) {
+              this.mapWithLayers.addLayer(this.layerPerCategory[category.id]);
+            } else {
+              this.mapWithLayers.removeLayer(this.layerPerCategory[category.id]);
+            }
           }
         }
       }

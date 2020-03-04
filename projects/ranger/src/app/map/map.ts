@@ -3,6 +3,7 @@ import {Component} from '@angular/core';
 import {Geoposition} from '@ionic-native/geolocation';
 import {
   Attraction,
+  AttractionLayerService,
   HeadingComponent,
   LatLonService,
   PoolMarkerService
@@ -48,6 +49,7 @@ export class MapComponent {
   private layerIdPerAttraction: { [index: number]: number } = [];
 
   constructor(
+    private attractionLayerService: AttractionLayerService,
     private heading: HeadingComponent,
     private latLonService: LatLonService,
     private mapDragService: MapDragService,
@@ -104,6 +106,7 @@ export class MapComponent {
     /* Create the Category Layers. */
     /* TODO: LE-76 & CI-159 for all Categories. */
     this.layerPerCategory[DEFAULT_CATEGORY] = L.layerGroup().addTo(this.map);
+    this.attractionLayerService.loadAttractionLayers(this.layerPerCategory[DEFAULT_CATEGORY]);
 
     /* Add a "here I am" marker. */
     this.heading.getHeadingMarker().addTo(this.map);
@@ -117,10 +120,10 @@ export class MapComponent {
     this.mapDataService.setWatch(this.setNewCenterForMap);
 
     /* Begin paying attention to Attraction changes. */
-    console.log('Map Component: subscribing to Attraction changes');
-    this.mapDataService.onMapClear(this.clearMap);
-    this.subscription = this.mapDataService.sendMeNewAttractions(this.addAttraction);
-    this.subscription.add(this.mapDataService.sendMeUpdatedAttractions(this.updateAttraction));
+    // console.log('Map Component: subscribing to Attraction changes');
+    // this.mapDataService.onMapClear(this.clearMap);
+    // this.subscription = this.mapDataService.sendMeNewAttractions(this.addAttraction);
+    // this.subscription.add(this.mapDataService.sendMeUpdatedAttractions(this.updateAttraction));
   }
 
   setNewCenterForMap = (
@@ -154,7 +157,7 @@ export class MapComponent {
 
   ngOnDestroy(): void {
     console.log('Close Map -- turn off watches');
-    this.subscription.unsubscribe();
+    // this.subscription.unsubscribe();
     if (isDefined(this.map) && this.map !== null) {
       this.mapDataService.releaseWatch();
     }

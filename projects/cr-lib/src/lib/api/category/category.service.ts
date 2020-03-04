@@ -1,10 +1,6 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {
-  from,
-  Observable
-} from 'rxjs';
-import {
   AuthHeaderService,
   BASE_URL
 } from '../../auth/header/auth-header.service';
@@ -45,8 +41,8 @@ export class CategoryService {
    *
    * This list is cached because it changes slowly.
    */
-  public getAllCategories(): Observable<Category> {
-    return from(this.categories);
+  public getAllCategories(): Category[] {
+    return this.categories;
   }
 
   /**

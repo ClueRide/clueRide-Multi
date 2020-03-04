@@ -1,7 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {IonicModule} from '@ionic/angular';
-import {HeadingComponent} from './heading';
+import {HeadingComponent} from './heading.component';
 
 @NgModule({
   declarations: [

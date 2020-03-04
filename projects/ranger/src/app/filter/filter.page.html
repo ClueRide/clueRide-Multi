@@ -19,7 +19,8 @@
       by Course
     </ion-card-title>
     <ion-card-content>
-      <ion-select multiple="true"
+      <ion-select
+                  multiple="true"
                   okText="Okay"
                   cancelText="Nah">
         <ion-select-option *ngFor="let course of courses">
@@ -34,10 +35,12 @@
       by Category
     </ion-card-title>
     <ion-card-content>
-      <ion-select multiple="true"
-                  okTest="Okay"
+      <ion-select (ionChange)="categoryHasChanged($event)"
+                  multiple="true"
+                  okText="Okay"
                   cancelText="Nah">
-        <ion-select-option *ngFor="let category of categories">
+        <ion-select-option *ngFor="let category of categories"
+                           [value]="category.id">
           {{category.name}}
         </ion-select-option>
       </ion-select>
