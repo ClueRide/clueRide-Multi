@@ -3,10 +3,12 @@ import {
   OnInit
 } from '@angular/core';
 import {
+  AttractionLayerService,
   Category,
   CategoryService,
   Course,
-  CourseService
+  CourseService,
+  Filter
 } from 'cr-lib';
 
 @Component({
@@ -19,11 +21,15 @@ export class FilterPage implements OnInit {
   public courses: Course[];
   public categories: Category[];
 
+  private filter: Filter;
+
   constructor(
     private courseService: CourseService,
     private categoryService: CategoryService,
+    private attractionLayerService: AttractionLayerService,
   ) {
     this.categories = [];
+    this.filter = new Filter();
   }
 
   ngOnInit() {
@@ -32,11 +38,14 @@ export class FilterPage implements OnInit {
         this.courses = courses;
       }
     );
-    this.categoryService.getAllCategories().subscribe(
-      (category) => {
-        this.categories.push(category);
-      }
-    );
+
+    this.categories = this.categoryService.getAllCategories();
+  }
+
+  categoryHasChanged(event: CustomEvent) {
+    console.log(event);
+    this.filter.categoriesToIncludeById = event.detail.value;
+    this.attractionLayerService.showFilteredAttractions(this.filter);
   }
 
 }

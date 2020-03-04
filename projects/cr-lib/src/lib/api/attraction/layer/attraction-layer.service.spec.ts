@@ -11,6 +11,8 @@ import {AttractionLayerService} from './attraction-layer.service';
 
 /* AttractionsByCategory map for testing. */
 const attractionsByCategory: AttractionsByCategory = AttractionsByCategoryMock.createAttractionsByCategoryMock();
+/* Where we will be adding all our layers. */
+const map = L.layerGroup();
 
 /* Spies for Services. */
 const categorySpy = jasmine.createSpyObj('CategoryService', ['getAllCategories']);
@@ -29,6 +31,16 @@ describe('AttractionLayerService', () => {
       markerSpy
     );
 
+    /* Common spy setup. */
+    categoryAttractionSpy.getAttractionMap = jasmine.createSpy('getAttractionMap')
+      .and.returnValue(attractionsByCategory);
+    markerSpy.getAttractionMarker = jasmine.createSpy('getAttractionMarker').and.returnValue({});
+    categorySpy.getAllCategories = jasmine.createSpy('getAllCategories').and.returnValue([
+      {id: 1},
+      {id: 2},
+      {id: 3}
+    ]);
+
   });
 
   it('should be created', () => {
@@ -43,13 +55,6 @@ describe('AttractionLayerService', () => {
 
     it('should add a layer per Category to the map', (done) => {
       /* Setup data */
-      const map = L.layerGroup();
-
-      /* train mocks */
-      categoryAttractionSpy.getAttractionMap = jasmine.createSpy('getAttractionMap')
-        .and.returnValue(attractionsByCategory);
-      // TODO: Need to return something that can play nice with the `addTo()` function.
-      markerSpy.getAttractionMarker = jasmine.createSpy('getAttractionMarker').and.returnValue({});
 
       /* make call */
       const loadObservable: Observable<boolean> = toTest.loadAttractionLayers(map);
@@ -72,16 +77,10 @@ describe('AttractionLayerService', () => {
       expect(toTest.showFilteredAttractions).toBeDefined();
     });
 
-    it('should set map layers to match selected categories', (done) => {
+    it('should clear map if filter is all off', (done) => {
       /* setup data */
-      const map = L.layerGroup();
       const filterAllOff = new Filter();
 
-      /* train mocks */
-      categoryAttractionSpy.getAttractionMap = jasmine.createSpy('getAttractionMap')
-        .and.returnValue(attractionsByCategory);
-      // TODO: Need to return something that can play nice with the `addTo()` function.
-      markerSpy.getAttractionMarker = jasmine.createSpy('getAttractionMarker').and.returnValue({});
       /* Trigger initialization. */
       const loadObservable: Observable<boolean> = toTest.loadAttractionLayers(map);
 
@@ -95,8 +94,31 @@ describe('AttractionLayerService', () => {
 
           /* verify results */
           expect(map.getLayers().length).toEqual(0);
+          done();
         });
 
+    });
+
+    it('should set single category if filter requests one category', (done) => {
+      /* setup data */
+      const filterSelectCategory2 = new Filter();
+      filterSelectCategory2.categoriesToIncludeById.push(2);
+
+      /* Trigger initialization. */
+      const loadObservable: Observable<boolean> = toTest.loadAttractionLayers(map);
+
+      /* Await initialization. */
+      loadObservable.subscribe(
+        (result) => {
+          expect(result).toBeTruthy();
+
+          /* make call */
+          toTest.showFilteredAttractions(filterSelectCategory2);
+
+          /* verify results */
+          expect(map.getLayers().length).toEqual(1);
+          done();
+        });
 
     });
 

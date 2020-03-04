@@ -87,11 +87,7 @@ export class DraftTabPage implements OnInit {
   ionViewWillEnter() {
     this.reloadLocTypes();
     console.log('populating categories');
-    this.categoryService.getAllCategories().subscribe(
-      (category) => {
-        this.categories.push(category);
-      }
-    );
+    this.categories = this.categoryService.getAllCategories();
   }
 
   /**
