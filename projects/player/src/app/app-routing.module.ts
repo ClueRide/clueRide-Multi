@@ -24,7 +24,8 @@ const routes: Routes = [
   { path: 'team', loadChildren: './team/team.module#TeamPageModule' },
   { path: 'answer', loadChildren: './answer/answer.module#AnswerPageModule' },
   { path: 'attraction', loadChildren: './attraction/attraction.module#AttractionPageModule' },
-  { path: 'about', loadChildren: './about/about.module#AboutPageModule' }
+  { path: 'about', loadChildren: './about/about.module#AboutPageModule' },
+  { path: 'game-complete', loadChildren: './game-complete/game-complete.module#GameCompletePageModule' }
 ];
 
 @NgModule({

@@ -43,6 +43,12 @@ export class GameRoutingService implements OnDestroy {
           (gameState) => this.goToRolling()
         )
     );
+    this.subscription.add(
+      this.gameStateService.gameCompleteEvents()
+        .subscribe(
+          () => this.goToGameComplete()
+        )
+    )
   }
 
   goToPuzzle(puzzleId: number): void {
@@ -60,6 +66,14 @@ export class GameRoutingService implements OnDestroy {
     /* Ready to show our position on the map. */
     this.navController.navigateBack(
       ['rolling']
+    );
+  }
+
+  goToGameComplete(): void {
+    console.log('Game Complete Event: badges for everyone');
+
+    this.navController.navigateRoot(
+      ['game-complete']
     );
   }
 

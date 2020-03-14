@@ -1,0 +1,74 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Game Complete
+    </ion-title>
+    <ion-buttons slot="end">
+      <cr-connection-state></cr-connection-state>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card class="cr-card">
+    <ion-card-header>
+      <ion-card-title>
+        You've Finished {{outing.courseName}}
+      </ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-grid>
+
+        <ion-row>
+          <ion-col size="8">
+            Mileage Covered
+          </ion-col>
+          <ion-col size="2">
+            {{courseSummary.distance}}
+          </ion-col>
+          <ion-col size="2">
+            Miles
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="8">
+            Puzzles Solved
+          </ion-col>
+          <ion-col size="2">
+            {{courseSummary.puzzleCount}}
+          </ion-col>
+          <ion-col size="2">
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="8">
+            Attractions Visited
+          </ion-col>
+          <ion-col size="2">
+            {{courseSummary.attractionCount}}
+          </ion-col>
+          <ion-col size="2">
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="12">
+            <ion-button (click)="celebrate()">
+              Celebrate
+            </ion-button>
+          </ion-col>
+        </ion-row>
+
+      </ion-grid>
+
+    </ion-card-content>
+</ion-card>
+
+</ion-content>
