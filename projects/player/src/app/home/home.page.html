@@ -19,10 +19,15 @@
 
   <outing-summary></outing-summary>
 
-  <ion-label>Registered As</ion-label>
-  <cr-member-chip [member]="member"></cr-member-chip>
-
-<!--  <cr-badge-summary></cr-badge-summary> -->
+  <ion-card class="cr-card">
+    <ion-card-header>
+      <ion-card-subtitle>
+        Registered As
+        <cr-member-chip [member]="member"></cr-member-chip>
+        <!-- <cr-badge-summary></cr-badge-summary> -->
+      </ion-card-subtitle>
+    </ion-card-header>
+  </ion-card>
 
   <app-show-game></app-show-game>
 

@@ -1,36 +1,41 @@
-<div [ngSwitch]="gameStateService.getOutingState()" class="begin-game">
+<ion-card class="cr-card">
 
-  <ng-template [ngSwitchCase]= "'PENDING_ARRIVAL'">
-    <div class="section-heading">
-      Awaiting Start
+  <ion-card-header>
+    <div [ngSwitch]="gameStateService.getOutingState()" class="begin-game">
+
+      <ng-template [ngSwitchCase]= "'PENDING_ARRIVAL'">
+        <ion-card-subtitle>
+          Awaiting Start
+        <ion-button (click) = "showGame()">
+          <span class="button-inner">View Start</span>
+        </ion-button>
+        </ion-card-subtitle>
+      </ng-template>
+
+      <ng-template [ngSwitchCase]= "'IN_PROGRESS'">
+        <ion-card-subtitle>
+          Back to Game
+        <ion-button (click) = "showGame()">
+          <span class="button-inner">Resume</span>
+        </ion-button>
+        </ion-card-subtitle>
+      </ng-template>
+
+      <ng-template [ngSwitchCase]= "'COMPLETE'">
+        <ion-card-subtitle>
+          Course Completed
+        <ion-button (click) = "showGame()">
+          <span class="button-inner">Review Course</span>
+        </ion-button>
+        </ion-card-subtitle>
+      </ng-template>
+
+      <ng-template [ngSwitchCase]="'NO_ACTIVE_OUTING'">
+        <ion-card-subtitle>
+          No Active Game
+        </ion-card-subtitle>
+      </ng-template>
+
     </div>
-    <ion-button (click) = "showGame()">
-      <span class="button-inner">View Start</span>
-    </ion-button>
-  </ng-template>
-
-  <ng-template [ngSwitchCase]= "'IN_PROGRESS'">
-    <div class="section-heading">
-      Back to Game
-    </div>
-    <ion-button (click) = "showGame()">
-      <span class="button-inner">Resume</span>
-    </ion-button>
-  </ng-template>
-
-  <ng-template [ngSwitchCase]= "'COMPLETE'">
-    <div class="section-heading">
-      Course Completed
-    </div>
-    <ion-button (click) = "showGame()">
-      <span class="button-inner">Review Course</span>
-    </ion-button>
-  </ng-template>
-
-  <ng-template [ngSwitchCase]="'NO_ACTIVE_OUTING'">
-    <div class="section-heading">
-      No Active Game
-    </div>
-  </ng-template>
-
-</div>
+  </ion-card-header>
+</ion-card>
