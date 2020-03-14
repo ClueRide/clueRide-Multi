@@ -24,6 +24,7 @@ export class GameStateService {
   readonly gameStateObservable: Observable<GameState>;
   readonly puzzleEvent$: Subject<GameState>;
   readonly rollingEvent$: Subject<GameState>;
+  readonly gameCompleteEvent$: Subject<boolean>;
 
   private sseSubscription: Subscription;
 
@@ -44,6 +45,7 @@ export class GameStateService {
 
     this.puzzleEvent$ = new Subject<GameState>();
     this.rollingEvent$ = new Subject<GameState>();
+    this.gameCompleteEvent$ = new Subject<boolean>();
 
     /* Not making direct calls to the back-end until we're asked to do so, and we're going to only do it once. */
     this.gameStateAlreadyRequested = false;
@@ -91,18 +93,24 @@ export class GameStateService {
     const eventType = gameStateEvent.event;
     this.cachedGameState = gameState;
 
-    /* Feed one of the two channels based on the event type. */
-    switch (eventType) {
-      case 'Team Assembled':
-      case 'Arrival':
-        this.puzzleEvent$.next(gameState);
-        break;
-      case 'Departure':
-        this.rollingEvent$.next(gameState);
-        break;
-      default:
-        console.log('Unrecognized Event: ' + eventType);
-        break;
+    if (gameState.outingState === 'COMPLETE') {
+      this.gameCompleteEvent$.next(true);
+    } else {
+      console.log('>' + gameState.outingState + '<');
+
+      /* Feed one of the two channels based on the event type. */
+      switch (eventType) {
+        case 'Team Assembled':
+        case 'Arrival':
+          this.puzzleEvent$.next(gameState);
+          break;
+        case 'Departure':
+          this.rollingEvent$.next(gameState);
+          break;
+        default:
+          console.log('Unrecognized Event: ' + eventType);
+          break;
+      }
     }
 
     /* Generic notification of new Game State. */
@@ -115,6 +123,10 @@ export class GameStateService {
 
   rollingEvents(): Observable<GameState> {
     return this.rollingEvent$;
+  }
+
+  gameCompleteEvents(): Observable<boolean> {
+    return this.gameCompleteEvent$;
   }
 
   /**
