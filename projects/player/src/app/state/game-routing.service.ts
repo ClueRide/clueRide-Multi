@@ -2,9 +2,9 @@ import {
   Injectable,
   OnDestroy
 } from '@angular/core';
-import {Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {GameStateService} from './game/game-state.service';
+import {NavController} from "@ionic/angular";
 
 /**
  * Responds to GameState changes to navigate from Rolling to Puzzle and back.
@@ -20,7 +20,7 @@ export class GameRoutingService implements OnDestroy {
 
   constructor(
     private gameStateService: GameStateService,
-    private router: Router,
+    private navController: NavController
   ) {
     console.log('GameRoutingService: constructing');
     this.subscription = new Subscription();
@@ -49,7 +49,7 @@ export class GameRoutingService implements OnDestroy {
     console.log('Arrival Event: Puzzle time');
 
     /* Case where we send out a Puzzle to be solved. */
-    this.router.navigate(
+    this.navController.navigateForward(
       ['puzzle', puzzleId]
     );
   }
@@ -58,7 +58,7 @@ export class GameRoutingService implements OnDestroy {
     console.log('Depart Event: Rolling');
 
     /* Ready to show our position on the map. */
-    this.router.navigate(
+    this.navController.navigateBack(
       ['rolling']
     );
   }
