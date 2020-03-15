@@ -1,0 +1,28 @@
+<ion-card class="cr-card">
+
+  <ion-card-header>
+    <ion-card-title>
+      You've Earned a New Badge
+    </ion-card-title>
+    <ion-card-subtitle>
+      {{badge.displayName}}
+    </ion-card-subtitle>
+  </ion-card-header>
+
+  <ion-card-content>
+    <div class="badge-image">
+      <a [attr.href]="badge.criteriaUrl"
+         target="_blank">
+        <img src="{{badge.imageUrl}}"
+             alt="Oh no! There's a badge without an image."
+        />
+      </a>
+    </div>
+    <div style="text-align: center">
+      <ion-button (click)="dismiss()">
+        Done
+      </ion-button>
+    </div>
+  </ion-card-content>
+
+</ion-card>

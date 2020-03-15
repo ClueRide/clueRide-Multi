@@ -7,9 +7,13 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 
-import {Platform} from '@ionic/angular';
+import {
+  Platform,
+  PopoverController
+} from '@ionic/angular';
 import {
   AwaitRegistrationService,
+  BadgeAwardService,
   PlatformStateService,
   ProfileService
 } from 'cr-lib';
@@ -40,22 +44,11 @@ describe('AppComponent', () => {
     getRegistrationActiveObservableSpy,
     loadMemberProfileSpy;
 
-// private appStateService: AppStateService,
-//     private authClient: AwaitRegistrationService,
-//     private gameRoutingService: GameRoutingService,
-//     private gameStateService: GameStateService,
-//     private loadStateService: LoadStateService,
-//     private platform: Platform,
-//     private platformStateService: PlatformStateService,
-//     private profileService: ProfileService,
-//     private showGameService: ShowGameService,
-//     private splashScreen: SplashScreen,
-//     private statusBar: StatusBar
-
   const appStateSpy = jasmine.createSpyObj('AppStateService', ['checkInviteIsAccepted']);
   const authClient = jasmine.createSpyObj('AwaitRegistrationService', {
     getRegistrationActiveObservable: () => of(true)
   });
+  const badgeAwardSpy = jasmine.createSpyObj('BadgeAwardService', ['initializeSubscription']);
   const gameRoutingSpy = jasmine.createSpyObj('GameRoutingService', ['setupSubscriptions']);
   const gameStateSpy = jasmine.createSpyObj('GameStateService', ['setupSseEventSubscription']);
   const loadStateSpy = jasmine.createSpyObj('LoadStateService', [
@@ -66,6 +59,7 @@ describe('AppComponent', () => {
   const platformStateSpy = jasmine.createSpyObj('PlatformStateService', {
     isNativeMode: () => true
   });
+  const popoverControllerSpy = jasmine.createSpyObj('PopoverController', ['dismiss']);
   const profileSpy = jasmine.createSpyObj('ProfileService', ['loadMemberProfile']);
   const showGameSpy = jasmine.createSpyObj('ShowGameService', ['showGame']);
   const statusBarSpy = jasmine.createSpyObj('StatusBar', ['styleDefault']);
@@ -82,7 +76,6 @@ describe('AppComponent', () => {
     loadMemberProfileSpy = profileSpy.loadMemberProfile.and.returnValue(of({}));
     checkInviteIsAcceptedSpy = appStateSpy.checkInviteIsAccepted.and.returnValue(Promise.resolve());
     getLoadStateObservableSpy = loadStateSpy.getLoadStateObservable.and.returnValue(of(true));
-    // spyOn(gameStateSpy, 'setupSseEventSubscription').and.returnValue(of({}));
 
     TestBed.configureTestingModule({
       declarations: [AppComponent],
@@ -90,11 +83,13 @@ describe('AppComponent', () => {
       providers: [
         { provide: AppStateService, useValue: appStateSpy },
         { provide: AwaitRegistrationService, useValue: authClient },
+        { provide: BadgeAwardService, useValue: badgeAwardSpy },
         { provide: GameRoutingService, useValue: gameRoutingSpy },
         { provide: GameStateService, useValue: gameStateSpy },
         { provide: LoadStateService, useValue: loadStateSpy },
         { provide: Platform, useValue: mockPlatform },
         { provide: PlatformStateService, useValue: platformStateSpy },
+        { provide: PopoverController, useValue: popoverControllerSpy },
         { provide: ProfileService, useValue: profileSpy },
         { provide: ShowGameService, useValue: showGameSpy },
         { provide: StatusBar, useValue: statusBarSpy },

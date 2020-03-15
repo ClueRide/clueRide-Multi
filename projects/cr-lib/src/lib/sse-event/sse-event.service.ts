@@ -186,6 +186,9 @@ export class ServerEventsService {
     return this.answerSummary$.asObservable();
   }
 
+  /**
+   * Observable that streams Badge Award events.
+   */
   public getBadgeEventObservable(): Observable<BadgeEvent> {
     return this.badgeEvent$.pipe(
       filter(
@@ -206,6 +209,7 @@ export class ServerEventsService {
    * Used to manually change the state of the connection -- primarily for testing.
    */
   toggleConnection() {
+    // TODO: CI-117 disable this shutdown under mobile platform.
     if (this.eventSource) {
       console.log('Manual request to close SSE Connection');
       this.eventSource.close();

@@ -5,6 +5,7 @@ import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {Platform} from '@ionic/angular';
 import {
   AwaitRegistrationService,
+  BadgeAwardService,
   PlatformStateService,
   ProfileService
 } from 'cr-lib';
@@ -41,6 +42,7 @@ export class AppComponent {
   constructor(
     private appStateService: AppStateService,
     private authClient: AwaitRegistrationService,
+    private badgeAwardService: BadgeAwardService,
     private gameRoutingService: GameRoutingService,
     private gameStateService: GameStateService,
     private loadStateService: LoadStateService,
@@ -79,6 +81,7 @@ export class AppComponent {
                       this.gameStateService.setupSseEventSubscription();
                       this.gameRoutingService.setupSubscriptions();
                       this.showGameService.showGame();
+                      this.badgeAwardService.initializeSubscription();
                     }
                   }
                 );

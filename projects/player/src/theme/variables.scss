@@ -83,3 +83,8 @@ ion-content {
 .cr-card {
   --background: white;
 }
+
+ion-popover.badge-popover {
+  --width: 300px;
+  --ion-background-color-rgb: 240, 248, 255;  /* aliceblue */
+}
