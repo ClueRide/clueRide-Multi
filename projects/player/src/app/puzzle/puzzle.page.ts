@@ -7,7 +7,6 @@ import {
   Router
 } from '@angular/router';
 import {
-  Answer,
   AnswerKey,
   AnswerSummaryService,
   Puzzle,
@@ -32,12 +31,7 @@ export class PuzzlePage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private answerSummaryService: AnswerSummaryService,
     private router: Router,
-  ) {
-    /* Blank puzzle to avoid exceptions being thrown by template. */
-    this.puzzle = new Puzzle();
-    this.puzzle.answers = [];
-    this.puzzle.answers.push(new Answer());
-  }
+  ) {}
 
   ngOnInit() {
     this.subscription = this.activatedRoute.queryParams.subscribe(

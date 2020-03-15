@@ -15,7 +15,7 @@ export class GameCompletePage implements OnInit {
     courseName: 'Testing'
   };
   public courseSummary = {
-    distance: 3.1,
+    distance: 10.1,
     puzzleCount: 5,
     attractionCount: 5
   };

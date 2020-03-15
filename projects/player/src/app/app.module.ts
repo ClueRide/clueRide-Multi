@@ -11,7 +11,9 @@ import {
 } from '@ionic/angular';
 import {
   AlertToastModule,
-  AuthModule
+  AuthModule,
+  BadgeAwardComponent,
+  BadgeAwardModule
 } from 'cr-lib';
 import {AppRoutingModule} from './app-routing.module';
 
@@ -21,13 +23,16 @@ import {OutingSummaryModule} from './outing-summary/outing-summary.module';
 
 @NgModule({
   declarations: [AppComponent],
-  entryComponents: [],
+  entryComponents: [
+    BadgeAwardComponent
+  ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
     AlertToastModule,
     AppRoutingModule,
     AuthModule,
+    BadgeAwardModule,
     HttpClientModule,
     OutingPageModule,
     OutingSummaryModule,

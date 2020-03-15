@@ -9,7 +9,7 @@ import {
 import {IonicModule} from '@ionic/angular';
 
 import {GameCompletePage} from './game-complete.page';
-import {ConnectionStateModule} from "cr-lib";
+import {ConnectionStateModule} from 'cr-lib';
 
 const routes: Routes = [
   {

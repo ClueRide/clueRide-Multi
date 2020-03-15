@@ -27,19 +27,27 @@ class MockParamMap {
   }
 }
 
+const puzzleSpy = jasmine.createSpyObj('PuzzleService', ['getPuzzle']);
+const activatedRouteSpy = jasmine.createSpyObj('ActivatedRoute', ['snapshot']);
+const answerSummaryService = jasmine.createSpyObj('AnswerSummaryService', ['getPuzzle']);
+const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+
 describe('PuzzlePage', () => {
   let component: PuzzlePage;
   let fixture: ComponentFixture<PuzzlePage>;
-
-  const puzzleSpy = jasmine.createSpyObj('PuzzleService', ['getPuzzle']);
-  const activatedRouteSpy = jasmine.createSpyObj('ActivatedRoute', ['snapshot']);
-  const answerSummaryService = jasmine.createSpyObj('AnswerSummaryService', ['getPuzzle']);
-  const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
   beforeEach(async(() => {
     activatedRouteSpy.queryParams = of(true);
     activatedRouteSpy.snapshot = new MockParamMap();
     activatedRouteSpy.snapshot.paramMap.get = jasmine.createSpy('get').and.returnValue('160');
+
+    puzzleSpy.getPuzzle = jasmine.createSpy('getPuzzle').and.returnValue(
+      {
+        name: 'Test Puzzle',
+        answers: []
+      }
+    );
+
     TestBed.configureTestingModule({
       declarations: [ PuzzlePage ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
