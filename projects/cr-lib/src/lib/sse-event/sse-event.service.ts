@@ -14,6 +14,7 @@ import {ProfileService} from '../api/profile/profile.service';
 import {AuthHeaderService} from '../auth/header/auth-header.service';
 import {AnswerSummary} from './answer-summary/answer-summary';
 import {BadgeEvent} from './badge-event';
+import {PlatformStateService} from "../state/platform/platform-state.service";
 
 const gameStateUrl = 'http://sse.clueride.com/sse-channel';
 
@@ -40,6 +41,7 @@ export class ServerEventsService {
     private authHeaderService: AuthHeaderService,
     private profileService: ProfileService,
     private platform: Platform,
+    private platformStateService: PlatformStateService,
   ) {
     this.answerSummary$ = new ReplaySubject<AnswerSummary>(1);
     this.badgeEvent$ = new Subject<BadgeEvent>();
@@ -209,7 +211,11 @@ export class ServerEventsService {
    * Used to manually change the state of the connection -- primarily for testing.
    */
   toggleConnection() {
-    // TODO: CI-117 disable this shutdown under mobile platform.
+    /* Do nothing if we're running on a mobile device; we won't be testing the disconnection there. */
+    if (this.platformStateService.isNativeMode()) {
+      return;
+    }
+
     if (this.eventSource) {
       console.log('Manual request to close SSE Connection');
       this.eventSource.close();
