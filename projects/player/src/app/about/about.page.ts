@@ -7,6 +7,7 @@ import {
   PlatformStateService,
   ProfileService
 } from 'cr-lib';
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-about',
@@ -17,15 +18,16 @@ export class AboutPage implements OnInit {
 
   /* Public members. */
   readonly about: {version: string} = {version: ''};
-  /* Values here are replaced at build time by cordova's `before_prepare` script. */
-  readonly buildDate: string = 'BUILD_DATE';
-  readonly gitSha: string = 'GIT_VERSION_STRING';
+  readonly buildDate: string;
+  readonly gitSha: string;
 
   constructor(
     private readonly appVersion: AppVersion,
     public readonly platform: PlatformStateService,
     public readonly memberService: ProfileService,
   ) {
+    this.gitSha = environment.build.gitSha;
+    this.buildDate = environment.build.date;
   }
 
   ngOnInit(): void {
