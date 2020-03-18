@@ -83,3 +83,8 @@ ion-content {
 .cr-card {
   --background: white;
 }
+
+/* Allows all of the choices to be viewed at once. */
+.category-alert .alert-checkbox-group {
+  max-height: none;
+}
