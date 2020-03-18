@@ -21,7 +21,12 @@ export class FilterPage implements OnInit {
   public courses: Course[];
   public categories: Category[];
 
-  private filter: Filter;
+  /* Passing CSS to the popover. */
+  public categoryAlertOptions: any = {
+    cssClass: "category-alert"
+  };
+
+  private readonly filter: Filter;
 
   constructor(
     private courseService: CourseService,

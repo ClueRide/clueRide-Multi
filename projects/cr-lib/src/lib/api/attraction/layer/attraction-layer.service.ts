@@ -85,9 +85,10 @@ export class AttractionLayerService {
    */
   showFilteredAttractions(filter: Filter): void {
     if (!this.mapWithLayers) {
-      throw new Error(
+      console.log(
         'Map not yet provided; call `loadAttractionLayers()` first'
       )
+      return;
     }
 
     const existingLayers = this.mapWithLayers.getLayers();

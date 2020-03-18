@@ -19,7 +19,8 @@
       by Course
     </ion-card-title>
     <ion-card-content>
-      <ion-select
+      <ion-select placeholder="No Courses included"
+                  interface="alert"
                   multiple="true"
                   okText="Okay"
                   cancelText="Nah">
@@ -36,6 +37,9 @@
     </ion-card-title>
     <ion-card-content>
       <ion-select (ionChange)="categoryHasChanged($event)"
+                  placeholder="No Categories included"
+                  interface="alert"
+                  [interfaceOptions]="categoryAlertOptions"
                   multiple="true"
                   okText="Okay"
                   cancelText="Nah">
