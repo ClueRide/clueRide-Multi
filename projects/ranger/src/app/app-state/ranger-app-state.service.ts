@@ -5,6 +5,7 @@ import {
   Platform
 } from '@ionic/angular';
 import {
+  AttractionLayerService,
   AttractionService,
   CategoryAttractionService,
   GeoLocService,
@@ -19,7 +20,8 @@ import {
   tap
 } from 'rxjs/operators';
 import {MapDataService} from '../map/data/map-data.service';
-import {AppState} from './app-state';
+import {RangerAppState} from './ranger-app-state';
+import {MapPositionService} from '../map/position/map-position.service';
 
 /**
  * Tracks the progression of tests and checks that are performed as the app
@@ -28,24 +30,26 @@ import {AppState} from './app-state';
 @Injectable({
   providedIn: 'root'
 })
-export class AppStateService {
+export class RangerAppStateService {
 
-  private appState: AppState = new AppState();
+  private appState: RangerAppState = new RangerAppState();
   private platformReady$: Observable<any>;
 
   constructor(
     private platform: Platform,
     private nav: NavController,
     private attractionService: AttractionService,
+    private attractionLayerService: AttractionLayerService,
     private categoryAttractionService: CategoryAttractionService,
     private geoLoc: GeoLocService,
     private mapDataService: MapDataService,
+    private mapPositionService: MapPositionService,
     public platformStateService: PlatformStateService,
     private profileService: ProfileService,
     public splashScreen: SplashScreen,
     private sseService: ServerEventsService,
   ) {
-    console.log('Hello AppStateService Provider');
+    console.log('Hello RangerAppStateService Provider');
     this.appState.isRunningBrowser = !this.platformStateService.isNativeMode();
     this.initPlatformReadyObservable();
 
@@ -94,14 +98,6 @@ export class AppStateService {
 
     console.log('About to initialize caches');
     this.appState.cacheState = 'empty';
-    // TODO: when MapDataComes out, it won't need to initialize Caches anymore.
-    this.mapDataService.initializeCaches();
-
-    this.categoryAttractionService.loadAllAttractions().subscribe(
-      () => {
-        this.appState.cacheState = 'filled';
-      }
-    );
 
     /* When we have the member profile, we can establish the SSE Session. */
     this.profileService.loadMemberProfile().subscribe(
@@ -111,16 +107,19 @@ export class AppStateService {
       }
     );
 
+    console.log('RangerAppStateService: Awaiting Initial Position');
     this.geoLoc.notifyWhenReady().subscribe(
       (initialPosition) => {
-        console.log('We do get something out');
-        this.nav.navigateRoot('home').then(
+        console.log('RangerAppStateService: Initial Position is obtained');
+
+        /* Load all the data before transitioning to the Home/Map page. */
+        this.mapDataService.initializeCaches().subscribe(
           () => {
-            this.attractionService.loadAllAttractions().subscribe(
-              () => console.log('Attractions are loaded')
-            );
-            return this.mapDataService.postInitialPosition(
-              initialPosition
+            console.log('RangerAppStateService: Attraction Layers are loaded');
+            this.appState.readyToOpen = true;
+            this.appState.cacheState = 'filled';
+            this.nav.navigateRoot('home').then(
+              () => {}
             );
           }
         );
@@ -130,8 +129,15 @@ export class AppStateService {
   }
 
   /** Exposes a summary of the Application State to clients of this service. */
-  public getAppState(): AppState {
+  public getAppState(): RangerAppState {
     return this.appState;
+  }
+
+  /**
+   * Starts out false, and turns true once we're ready to open the map.
+   */
+  public isAppReadyToOpen(): boolean {
+    return this.appState.readyToOpen;
   }
 
 }

@@ -5,7 +5,7 @@ import {
   LatLonService
 } from 'cr-lib';
 import {Subject} from 'rxjs';
-import {MapDataService} from '../data/map-data.service';
+import {MapPositionService} from '../position/map-position.service';
 
 /**
  * This responds to map drag events and is a source of new position info which is pushed
@@ -24,9 +24,9 @@ export class MapDragService {
 
   constructor(
     private latLonService: LatLonService,
-    private mapDataService: MapDataService
+    private mapPositionService: MapPositionService
   ) {
-    this.centerSubject = mapDataService.getReportedPositionSubject();
+    this.centerSubject = mapPositionService.getReportedPositionSubject();
   }
 
   public isAutoCenter(): boolean {

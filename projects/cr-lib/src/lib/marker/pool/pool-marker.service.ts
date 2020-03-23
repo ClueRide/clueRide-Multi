@@ -56,7 +56,7 @@ export class PoolMarkerService {
     /* Icon comes from the IconService. */
     const poolIcon: L.AwesomeMarkers.Icon = this.iconService.getPoolMarkerIcon(
       attraction.readinessLevel,
-      attraction.locationTypeIconName
+      attraction.locationType.icon
     );
 
     /* Options assembled from icon and the attraction. */

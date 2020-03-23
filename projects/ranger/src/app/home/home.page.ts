@@ -3,6 +3,8 @@ import {
   ViewChild
 } from '@angular/core';
 import {MapComponent} from '../map/map';
+import {MapPositionService} from '../map/position/map-position.service';
+import {Geoposition} from '@ionic-native/geolocation';
 
 @Component({
   selector: 'app-home',
@@ -14,6 +16,7 @@ export class HomePage {
   @ViewChild(MapComponent, {static: true}) map: MapComponent;
 
   constructor(
+    private mapPositionService: MapPositionService
   ) {
   }
 
@@ -28,7 +31,13 @@ export class HomePage {
    */
   ionViewWillEnter() {
     console.log('Map/Home Page: Will Enter');
-    this.map.openMap();
+    /* Tell MapPositionService to begin watching device position. */
+    this.mapPositionService.findOurPosition();
+
+    /* Once a position is determined, we can use it to open the map. */
+    this.mapPositionService.getCurrentPositionSubject().subscribe(
+      (geoPosition: Geoposition) => this.map.openMapAtPosition(geoPosition)
+    );
   }
 
 }

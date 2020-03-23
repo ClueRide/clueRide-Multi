@@ -14,6 +14,7 @@ import {Subscription} from 'rxjs';
 // import {LatLonComponent} from '../lat-lon/lat-lon';
 import {MapDataService} from './data/map-data.service';
 import {MapDragService} from './drag/map-drag.service';
+import {MapPositionService} from './position/map-position.service';
 
 /** Defines reasonable Zoom Level for initially opening the map. */
 const DEFAULT_ZOOM_LEVEL = 14;
@@ -54,6 +55,7 @@ export class MapComponent {
     private latLonService: LatLonService,
     private mapDragService: MapDragService,
     private mapDataService: MapDataService,
+    private mapPositionService: MapPositionService,
     private poolMarkerService: PoolMarkerService,
   ) {
     console.log('Map Component: constructor()');
@@ -63,22 +65,11 @@ export class MapComponent {
    * Prepares the Leaflet map to be shown, initializing leaflet if not already initialized.
    * Source of position info should be settled prior to calling this function.
    */
-  public openMap(
-  ) {
-    console.log('Map Component: openMap()');
-    const positionSubject = this.mapDataService.getCurrentPositionSubject();
-    positionSubject.asObservable().subscribe(
-      (position) => {
-        console.log('Got a position for loading the map initially');
-        this.openMapAtPosition(position);
-      }
-    );
-  }
-
-  private openMapAtPosition(
+  public openMapAtPosition(
     position: Geoposition
   ) {
 
+    console.log('Map Component: openMapAtPosition()');
     /* If map is already initialized, no need to re-initialize. */
     if (!this.map) {
       console.log('MapComponent Initializing');
@@ -103,11 +94,6 @@ export class MapComponent {
         '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
     }).addTo(this.map);
 
-    /* Create the Category Layers. */
-    /* TODO: LE-76 & CI-159 for all Categories. */
-    this.layerPerCategory[DEFAULT_CATEGORY] = L.layerGroup().addTo(this.map);
-    this.attractionLayerService.loadAttractionLayers(this.layerPerCategory[DEFAULT_CATEGORY]);
-
     /* Add a "here I am" marker. */
     this.heading.getHeadingMarker().addTo(this.map);
 
@@ -117,13 +103,12 @@ export class MapComponent {
     });
 
     /* Begin paying attention to position changes. */
-    this.mapDataService.setWatch(this.setNewCenterForMap);
+    this.mapPositionService.setWatch(this.setNewCenterForMap);
 
-    /* Begin paying attention to Attraction changes. */
-    // console.log('Map Component: subscribing to Attraction changes');
-    // this.mapDataService.onMapClear(this.clearMap);
-    // this.subscription = this.mapDataService.sendMeNewAttractions(this.addAttraction);
-    // this.subscription.add(this.mapDataService.sendMeUpdatedAttractions(this.updateAttraction));
+    /* Register to be updated with the Category Layers. */
+    // TODO-CA-447: don't need an array here.
+    this.layerPerCategory[DEFAULT_CATEGORY] = L.layerGroup().addTo(this.map);
+    this.mapDataService.registerMap(this.layerPerCategory[DEFAULT_CATEGORY]);
   }
 
   setNewCenterForMap = (
@@ -159,7 +144,7 @@ export class MapComponent {
     console.log('Close Map -- turn off watches');
     // this.subscription.unsubscribe();
     if (isDefined(this.map) && this.map !== null) {
-      this.mapDataService.releaseWatch();
+      this.mapPositionService.releaseWatch();
     }
     this.heading.releaseHeadingMarker();
   }

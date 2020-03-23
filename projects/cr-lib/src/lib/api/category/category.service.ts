@@ -22,16 +22,20 @@ export class CategoryService {
     private authHeaderService: AuthHeaderService
   ) {
     console.log('Hello CategoryService');
-    this.http.get<Category[]>(
+    this.loadSync();
+  }
+
+  public async loadSync() {
+    await this.http.get<Category[]>(
       BASE_URL + 'category',
       {headers: this.authHeaderService.getAuthHeaders()}
     ).subscribe(
-      (response) =>  {
+      (response) => {
         response.forEach(category => {
           this.categories.push(category);
           this.categoriesById[category.id] = category;
         });
-        console.log('Loc Type Cache filled. total: ' + this.categories.length);
+        console.log('Category Cache filled. total: ' + this.categories.length);
       }
     );
   }

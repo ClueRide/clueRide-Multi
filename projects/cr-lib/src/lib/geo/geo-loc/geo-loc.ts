@@ -1,6 +1,10 @@
 import {Injectable} from '@angular/core';
 import {Geoposition} from '@ionic-native/geolocation';
-import {Observable, Subject} from 'rxjs';
+import {
+  Observable,
+  ReplaySubject,
+  Subject
+} from 'rxjs';
 import {DeviceGeoLocService} from '../device-geo-loc/device-geo-loc.service';
 
 @Injectable({
@@ -8,10 +12,10 @@ import {DeviceGeoLocService} from '../device-geo-loc/device-geo-loc.service';
 })
 export class GeoLocService {
 
-  static DEFAULT_GEOPOSITION: Geoposition = {
+  public static readonly ATLANTA_GEOPOSITION: Geoposition = {
     coords: {
-      latitude: 33.76,
-      longitude: -84.38,
+      latitude: 33.753,
+      longitude: -84.390,
       accuracy: 0.0,
       altitude: null,
       altitudeAccuracy: null,
@@ -43,7 +47,7 @@ export class GeoLocService {
    * will provide an async response once the checks are completed and
    * this service is ready for use.
    *
-   * @returns ObservableGeoposition which represents our position whether
+   * @returns Observable of Geoposition which represents our position whether
    * it comes from this device's GPS or from a Tethered position (or another source).
    */
   public notifyWhenReady(): Observable<Geoposition> {
@@ -53,11 +57,11 @@ export class GeoLocService {
         if (response) {
           serviceReady.next(response);
         } else {
-          serviceReady.next(GeoLocService.DEFAULT_GEOPOSITION);
+          serviceReady.next(GeoLocService.ATLANTA_GEOPOSITION);
         }
       },
       () => {
-        serviceReady.next(GeoLocService.DEFAULT_GEOPOSITION);
+        serviceReady.next(GeoLocService.ATLANTA_GEOPOSITION);
       }
     );
     return serviceReady.asObservable();
@@ -114,7 +118,7 @@ export class GeoLocService {
 
   private getTetheredPosition(): Observable<Geoposition> {
     if (!this.tetheredFlag) {
-      this.tetheredPosition = new Subject();
+      this.tetheredPosition = new ReplaySubject();
       this.keepScheduling = true;
       this.tetheredFlag = true;
       this.startMonitoringTether();
@@ -123,6 +127,9 @@ export class GeoLocService {
   }
 
   private startMonitoringTether(): void {
+    // Temporary until we get another position source.
+    this.tetheredPosition.next(GeoLocService.ATLANTA_GEOPOSITION);
+
     // TODO: FEC-47 Replace this with the SSE Tether service.
     // let monitorPromise = this.restangular.one("tether/dev").get().toPromise();
     // monitorPromise.then(

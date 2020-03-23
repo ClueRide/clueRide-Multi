@@ -20,6 +20,7 @@ export class TokenService {
 
   constructor(
   ) {
+    console.log('Hello TokenService');
     this.payload = JSON.parse(
       window.localStorage.getItem(STORAGE_KEYS.profile)
     );
