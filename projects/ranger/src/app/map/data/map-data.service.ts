@@ -1,26 +1,40 @@
 import {Injectable} from '@angular/core';
-import {Geoposition} from '@ionic-native/geolocation';
 import {
   Attraction,
+  AttractionLayerService,
+  CategoryAttractionService,
+  Filter,
   FilterService,
-  GeoLocService,
   LatLonService,
   LocationService,
   LocTypeService
 } from 'cr-lib';
 import {
-  BehaviorSubject,
   from,
   Observable,
-  ReplaySubject,
   Subject,
   Subscription
 } from 'rxjs';
+import * as L from 'leaflet';
 import {filter} from 'rxjs/operators';
 
 /**
- * Maintains the life-cycle for all Map data -- leaflet and the
- * Locations we place on the map.
+ * Maintains the life-cycle for Attraction-related Map data -- leaflet and the
+ * Attractions we place on the map.
+ *
+ * Responsible for
+ * <ul>
+ *   <li> Initializing data caches -- after initial location is known.
+ *   <li> Responding to Filter changes and invoking the Attraction Layer changes.
+ *   <li> Updates to individual Attractions are handled ??
+ * </ul>
+ *
+ * Collaborates with:
+ * <ul>
+ *   <li> MapPositionService - for position knowledge and responses.
+ *   <li> Map's Attraction Layer to turn on and off layers.
+ *   <li> Updates to individual Attractions are handled ??
+ * </ul>
  */
 @Injectable({
   providedIn: 'root'
@@ -30,72 +44,77 @@ export class MapDataService {
   private attractionByIdCache = [];
   private attractionToAdd: Subject<Attraction> = new Subject<Attraction>();
   private attractionToUpdate: Subject<Attraction> = new Subject<Attraction>();
-  private currentPosition: Geoposition;
-  private currentPositionSubject: Subject<Geoposition> = new ReplaySubject<Geoposition>();
 
   /* Function which responds to clear map events. */
   private respondToClearMap: any;
 
-  /* Our current Center of the map. */
-  readonly reportedPosition: BehaviorSubject<Geoposition>;
+  /* The map which we draw upon. */
+  // TODO: CA-447 Can we make this just a LayerGroup?
+  private map: L.Map;
 
   constructor(
+    private attractionLayerService: AttractionLayerService,
+    private categoryAttractionService: CategoryAttractionService,
     private filterService: FilterService,
     private latLonService: LatLonService,
     public locationService: LocationService,
     public locationTypeService: LocTypeService,
-    public geoLoc: GeoLocService,
   ) {
     console.log('Hello MapDataService Provider');
-
-    /* Set an Atlanta position if we don't have any other value yet. */
-    this.reportedPosition = new BehaviorSubject({
-      coords: {
-        latitude: 33.75,
-        longitude: -84.75,
-        accuracy: 0.0,
-        altitude: null,
-        altitudeAccuracy: null,
-        heading: null,
-        speed: null
-      },
-      timestamp: null
-    });
+    filterService.getFilterObservable().subscribe(
+      (filter: Filter) => {
+        if (this.map) {
+         this.attractionLayerService.showFilteredAttractions(filter, this.map);
+        } else {
+          console.log('Responding to Filter Change without a map to put it on');
+        }
+      }
+    );
   }
 
-  /** Subject published when center of map is moved. */
-  public getReportedPositionSubject(): BehaviorSubject<Geoposition> {
-    return this.reportedPosition;
-  }
-
-  /** Geoposition published when center of map is moved. */
-  public getReportedPosition(): Geoposition {
-    return this.reportedPosition.getValue();
-  }
-
-  public postInitialPosition(position: Geoposition): void {
-    console.log('4. Proceeding with Map initialization');
-    this.currentPosition = position;
-    this.currentPositionSubject.next(position);
-    this.loadNearestLocations(position);
-  }
-
-  public getCurrentPosition(): Geoposition {
-    return this.currentPosition;
-  }
-
-  public getCurrentPositionSubject(): Subject<Geoposition> {
-    return this.currentPositionSubject;
-  }
-
+  /**
+   * Sequences the population of the required caches, and then returns true when the
+   * loading is complete.
+   *
+   * This can be used to guard against working with Attractions prior to the data
+   * being ready.
+   */
   initializeCaches(): Observable<boolean> {
-    return this.locationTypeService.initializeCache();
-    /* Other caches here? */
+    const mapDataIsReady: Subject<boolean> = new Subject<boolean>();
+    /* We need Location Types before anything else. */
+    console.log("MapData.initializeCaches: About to load Location Types");
+    this.locationTypeService.initializeCache().subscribe(
+      () => {
+        console.log("MapData.initializeCaches: About to load Attractions Layers");
+        /* AttractionLayerService (sychronously) makes sure the Categories are populated. */
+        this.attractionLayerService.loadAttractionLayers().subscribe(
+          () => mapDataIsReady.next(true)
+        );
+      }
+    );
+
+    return mapDataIsReady.asObservable();
+  }
+
+  /**
+   * The map will register itself with us so we can put layers on it.
+   *
+   * FilterService provides the filter itself.
+   *
+   * @param map where to put the filtered layers.
+   */
+  registerMap(map: L.Map): void {
+    console.log('MapDataService.registerMap()');
+    this.map = map;
+    this.attractionLayerService.showFilteredAttractions(
+      this.filterService.getCurrentFilter(),
+      this.map
+    );
   }
 
   logError = (error: any): void => {
     console.log('Error while updating one of the attractions', error);
-  }
+  };
 
   /**
    * Allows a Map Data client to be told whenever there is a new Attraction
@@ -156,7 +175,6 @@ export class MapDataService {
    */
   assembleAttraction = (attraction: Attraction) => {
     const locationType = this.locationTypeService.getById(attraction.locationTypeId);
-    // console.log(attraction.id + ': ' + attraction.name);
     attraction.locationTypeIconName = locationType.icon;
 
     /* Both adds new and replaces existing attractions in the cache. */
@@ -197,29 +215,6 @@ export class MapDataService {
       (attraction) => {this.attractionToAdd.next(attraction); }
     );
   }
-
-  /**
-   * Pays attention to the GeoLoc service to provide new positions and passes them along to
-   * the function which handles that new position.
-   *
-   * @param setNewCenterForMap function which is expected to respond to a new position.
-   */
-  public setWatch(
-    setNewCenterForMap: (position: Geoposition) => void
-  ): Observable<Geoposition> {
-    const positionObservable = this.geoLoc.getPositionWatch();
-    positionObservable.subscribe(
-      (position) => {
-        setNewCenterForMap(position);
-      }
-    );
-    return positionObservable;
-  }
-
-  public releaseWatch(): void {
-    this.geoLoc.clearWatch();
-  }
-
   /**
    * Notification that we're ready to change to another filter for the Attractions.
    *

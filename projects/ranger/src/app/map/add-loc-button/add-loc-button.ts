@@ -6,6 +6,7 @@ import {
   LocationService
 } from 'cr-lib';
 import {MapDataService} from '../data/map-data.service';
+import {MapPositionService} from '../position/map-position.service';
 
 /**
  * Provides a button that upon clicking will query the map's current
@@ -22,13 +23,14 @@ export class AddLocButtonComponent {
     private latLonService: LatLonService,
     private locationService: LocationService,
     private mapDataService: MapDataService,
+    private mapPositionService: MapPositionService,
     private router: Router,
   ) {
     console.log('Hello AddLocButtonComponent Component');
   }
 
   addLocationAction(event: Event) {
-    const newGeoposition: Geoposition = this.mapDataService.getReportedPosition();
+    const newGeoposition: Geoposition = this.mapPositionService.getReportedPosition();
     alert(JSON.stringify(newGeoposition.coords));
 
     // TODO: CA-256 Turn this into AttractionService

@@ -1,7 +1,7 @@
 import {PositionSourceType} from 'cr-lib';
 
 /** Defines the items that show up on the Status Page. */
-export class AppState {
+export class RangerAppState {
   registeredAs = ' ... ';
   registrationState = '';
   isRunningBrowser = true;
@@ -9,5 +9,6 @@ export class AppState {
   cacheState = ' ... ';
   locationCount = 0;
   readyToEdit = false;
+  readyToOpen = false;
 }
 

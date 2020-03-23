@@ -7,6 +7,7 @@ import {ConnectionStateModule} from 'cr-lib';
 import {MapModule} from '../map/map.module';
 
 import {HomePage} from './home.page';
+import {HomeGuard} from './home.guard';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import {HomePage} from './home.page';
     RouterModule.forChild([
       {
         path: '',
-        component: HomePage
+        component: HomePage,
+        canActivate: [HomeGuard]
       }
     ])
   ],

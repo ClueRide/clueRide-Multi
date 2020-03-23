@@ -29,7 +29,7 @@ export class AppStateService {
   }
 
   /**
-   * Based on the inbound AppState, transition to the next state.
+   * Based on the inbound RangerAppState, transition to the next state.
    *
    * NOTE: This is similar to the approach taken for GameState, but
    * there may be existing routing and state code from Angular to

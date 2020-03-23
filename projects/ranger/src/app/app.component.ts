@@ -7,7 +7,7 @@ import {
   AwaitRegistrationService,
   PlatformStateService
 } from 'cr-lib';
-import {AppStateService} from './app-state/app-state.service';
+import {RangerAppStateService} from './app-state/ranger-app-state.service';
 
 @Component({
   selector: 'app-root',
@@ -40,7 +40,7 @@ export class AppComponent {
 
   constructor(
     private authClient: AwaitRegistrationService,
-    private appStateService: AppStateService,
+    private appStateService: RangerAppStateService,
     private platform: Platform,
     private platformStateService: PlatformStateService,
     private splashScreen: SplashScreen,

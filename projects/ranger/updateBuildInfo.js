@@ -1,3 +1,4 @@
+/* This script is used to add the git SHA and Build Date to the environment for inclusion on the About page. */
 const replace = require('replace-in-file');
 const git = require('git-rev-sync');
 const gitSha = git.short();

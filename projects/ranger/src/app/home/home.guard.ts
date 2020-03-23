@@ -5,8 +5,8 @@ import {
   RouterStateSnapshot,
   UrlTree
 } from '@angular/router';
-import {AwaitRegistrationService} from 'cr-lib';
 import {Observable} from 'rxjs';
+import {RangerAppStateService} from '../app-state/ranger-app-state.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,14 +14,14 @@ import {Observable} from 'rxjs';
 export class HomeGuard implements CanActivate {
 
   constructor(
-    private awaitRegistrationService: AwaitRegistrationService,
+    private rangerAppStateService: RangerAppStateService,
   ) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.awaitRegistrationService.getRegistrationActiveObservable('com.clueride.player');
+    return this.rangerAppStateService.isAppReadyToOpen();
   }
 
 }

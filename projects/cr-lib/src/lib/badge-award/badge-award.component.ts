@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit
+} from '@angular/core';
 import {
   NavParams,
   PopoverController
-} from "@ionic/angular";
+} from '@ionic/angular';
 
 @Component({
   selector: 'app-badge-award',
@@ -28,6 +31,5 @@ export class BadgeAwardComponent implements OnInit {
     this.popoverController.dismiss();
   }
 
-  // TODO: I may want a separate AppState that talks about shutting down the entire app
-  // and we would listen to that to know when to stop subscribing.
+  // TODO: Shutting down should pay attention to the Platform signals.
 }

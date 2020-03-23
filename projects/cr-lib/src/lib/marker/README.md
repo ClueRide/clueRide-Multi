@@ -14,7 +14,7 @@ the resources is part of the environment and project setup.)
 * The build tools assure the resources (images and CSS) are
 copied to the right locations.
 
-# Approach
+# Setup
 
 * The JavaScript files which support Leaflet are intended to be 
 used across a broad range of browser-based applications.

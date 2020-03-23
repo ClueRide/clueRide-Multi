@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {
-  from,
   Observable,
   Subject
 } from 'rxjs';
@@ -52,7 +51,8 @@ export class CategoryAttractionService {
   }
 
   buildCategoryMap(allAttractions: Attraction[]): void {
-    from(allAttractions).subscribe(
+    /* This should be synchronous to make sure we've built everything before returning. */
+    allAttractions.forEach(
       (attraction) => {
         attraction.locationType = this.locTypeService.getById((attraction.locationTypeId));
 

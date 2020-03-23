@@ -42,7 +42,7 @@ describe('Geo-Location', () => {
       /* setup data */
       let actual: Geoposition;
       const serviceReadySubject: Subject<Geoposition> = new Subject();
-      const expected = GeoLocService.DEFAULT_GEOPOSITION;
+      const expected = GeoLocService.ATLANTA_GEOPOSITION;
 
       /* train mocks */
       spyOn(deviceGeoLocService, 'checkGpsAvailability').and.returnValue(serviceReadySubject.asObservable());
@@ -221,7 +221,7 @@ describe('Geo-Location', () => {
     it('should return default position when GPS not available', () => {
       /* setup data */
       let actual: any;
-      const expected = GeoLocService.DEFAULT_GEOPOSITION;
+      const expected = GeoLocService.ATLANTA_GEOPOSITION;
       const positionSubject: Subject<any> = new Subject();
 
       /* train mocks */
@@ -246,7 +246,7 @@ describe('Geo-Location', () => {
     it('should return default position when device returns null', () => {
       /* setup data */
       let actual: any;
-      const expected = GeoLocService.DEFAULT_GEOPOSITION;
+      const expected = GeoLocService.ATLANTA_GEOPOSITION;
       const positionSubject: Subject<any> = new Subject();
 
       /* train mocks */

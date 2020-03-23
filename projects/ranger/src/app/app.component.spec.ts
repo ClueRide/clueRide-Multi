@@ -13,7 +13,7 @@ import {
   PlatformStateService
 } from 'cr-lib';
 import {of} from 'rxjs';
-import {AppStateService} from './app-state/app-state.service';
+import {RangerAppStateService} from './app-state/ranger-app-state.service';
 
 import {AppComponent} from './app.component';
 
@@ -39,7 +39,7 @@ describe('AppComponent', () => {
       declarations: [AppComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
-        { provide: AppStateService, useValue: appStateSpy },
+        { provide: RangerAppStateService, useValue: appStateSpy },
         { provide: AwaitRegistrationService, useValue: authClient },
         { provide: StatusBar, useValue: statusBarSpy },
         { provide: SplashScreen, useValue: splashScreenSpy },
