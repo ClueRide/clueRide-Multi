@@ -1,7 +1,10 @@
 import {TestBed} from '@angular/core/testing';
 
 import * as L from 'leaflet';
-import {Observable} from 'rxjs';
+import {
+  Observable,
+  of
+} from 'rxjs';
 import {Filter} from '../../../filter/filter';
 import {PoolMarkerService} from '../../../marker/pool/pool-marker.service';
 import {AttractionsByCategory} from '../category/attractions-by-category';
@@ -16,7 +19,10 @@ const map = L.layerGroup();
 
 /* Spies for Services. */
 const categorySpy = jasmine.createSpyObj('CategoryService', ['getAllCategories']);
-const categoryAttractionSpy = jasmine.createSpyObj('CategoryAttractionService', ['getAttractionMap']);
+const categoryAttractionSpy = jasmine.createSpyObj('CategoryAttractionService', [
+  'getAttractionMap',
+  'loadAllAttractions'
+]);
 const markerSpy = jasmine.createSpyObj('PoolMarkerService', ['getAttractionMarker']);
 
 describe('AttractionLayerService', () => {
@@ -32,15 +38,18 @@ describe('AttractionLayerService', () => {
     );
 
     /* Common spy setup. */
-    categoryAttractionSpy.getAttractionMap = jasmine.createSpy('getAttractionMap')
-      .and.returnValue(attractionsByCategory);
+    categorySpy.loadSync = jasmine.createSpy('loadSync');
+    categorySpy.getAllCategories = jasmine.createSpy('getAllCategories').and.returnValues(
+      [],
+      [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+      ]
+    );
+    categoryAttractionSpy.loadAllAttractions = jasmine.createSpy('loadAllAttractions').and.returnValue(of(true));
+    categoryAttractionSpy.getAttractionMap = jasmine.createSpy('getAttractionMap').and.returnValue(attractionsByCategory);
     markerSpy.getAttractionMarker = jasmine.createSpy('getAttractionMarker').and.returnValue({});
-    categorySpy.getAllCategories = jasmine.createSpy('getAllCategories').and.returnValue([
-      {id: 1},
-      {id: 2},
-      {id: 3}
-    ]);
-
   });
 
   it('should be created', () => {
@@ -53,16 +62,19 @@ describe('AttractionLayerService', () => {
       expect(toTest.loadAttractionLayers).toBeDefined();
     });
 
-    it('should add a layer per Category to the map', (done) => {
+    it('should wait for Categories to be populated', (done) => {
       /* Setup data */
 
+      /* Train mocks */
+
       /* make call */
-      const loadObservable: Observable<boolean> = toTest.loadAttractionLayers(map);
+      const loadObservable: Observable<boolean> = toTest.loadAttractionLayers();
 
       /* verify results */
       loadObservable.subscribe(
         (result) => {
           expect(result).toBeTruthy();
+          expect(categorySpy.loadSync).toHaveBeenCalled();
           expect(map.getLayers().length).toEqual(3);
           done();
         });
@@ -82,7 +94,7 @@ describe('AttractionLayerService', () => {
       const filterAllOff = new Filter();
 
       /* Trigger initialization. */
-      const loadObservable: Observable<boolean> = toTest.loadAttractionLayers(map);
+      const loadObservable: Observable<boolean> = toTest.loadAttractionLayers();
 
       /* Await initialization. */
       loadObservable.subscribe(
@@ -90,7 +102,10 @@ describe('AttractionLayerService', () => {
           expect(result).toBeTruthy();
 
           /* make call */
-          toTest.showFilteredAttractions(filterAllOff);
+          toTest.showFilteredAttractions(
+            filterAllOff,
+            L.layerGroup([])
+          );
 
           /* verify results */
           expect(map.getLayers().length).toEqual(0);
@@ -105,7 +120,7 @@ describe('AttractionLayerService', () => {
       filterSelectCategory2.categoriesToIncludeById.push(2);
 
       /* Trigger initialization. */
-      const loadObservable: Observable<boolean> = toTest.loadAttractionLayers(map);
+      const loadObservable: Observable<boolean> = toTest.loadAttractionLayers();
 
       /* Await initialization. */
       loadObservable.subscribe(
@@ -113,7 +128,10 @@ describe('AttractionLayerService', () => {
           expect(result).toBeTruthy();
 
           /* make call */
-          toTest.showFilteredAttractions(filterSelectCategory2);
+          toTest.showFilteredAttractions(
+            filterSelectCategory2,
+            L.layerGroup([])
+          );
 
           /* verify results */
           expect(map.getLayers().length).toEqual(1);

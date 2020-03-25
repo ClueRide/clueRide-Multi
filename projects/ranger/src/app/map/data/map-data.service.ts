@@ -2,7 +2,9 @@ import {Injectable} from '@angular/core';
 import {
   Attraction,
   AttractionLayerService,
+  Category,
   CategoryAttractionService,
+  CategoryService,
   Filter,
   FilterService,
   LatLonService,
@@ -16,11 +18,15 @@ import {
   Subscription
 } from 'rxjs';
 import * as L from 'leaflet';
-import {filter} from 'rxjs/operators';
+import {
+  filter,
+  flatMap,
+  tap
+} from 'rxjs/operators';
 
 /**
  * Maintains the life-cycle for Attraction-related Map data -- leaflet and the
- * Attractions we place on the map.
+ * Attractions we place on the attractionLayerGroup.
  *
  * Responsible for
  * <ul>
@@ -45,28 +51,32 @@ export class MapDataService {
   private attractionToAdd: Subject<Attraction> = new Subject<Attraction>();
   private attractionToUpdate: Subject<Attraction> = new Subject<Attraction>();
 
-  /* Function which responds to clear map events. */
-  private respondToClearMap: any;
-
-  /* The map which we draw upon. */
-  // TODO: CA-447 Can we make this just a LayerGroup?
-  private map: L.Map;
+  /* The attractionLayerGroup which we place Attraction Groups upon. */
+  private attractionLayerGroup: L.LayerGroup;
 
   constructor(
     private attractionLayerService: AttractionLayerService,
     private categoryAttractionService: CategoryAttractionService,
+    private categoryService: CategoryService,
     private filterService: FilterService,
     private latLonService: LatLonService,
     public locationService: LocationService,
     public locationTypeService: LocTypeService,
   ) {
     console.log('Hello MapDataService Provider');
-    filterService.getFilterObservable().subscribe(
+    this.subscribeToFilterChanges();
+  }
+
+  /**
+   * Begin paying attention to changes to the Filter.
+   */
+  private subscribeToFilterChanges() {
+    this.filterService.getFilterObservable().subscribe(
       (filter: Filter) => {
-        if (this.map) {
-         this.attractionLayerService.showFilteredAttractions(filter, this.map);
+        if (this.attractionLayerGroup) {
+          this.attractionLayerService.showFilteredAttractions(filter, this.attractionLayerGroup);
         } else {
-          console.log('Responding to Filter Change without a map to put it on');
+          console.log('Responding to Filter Change without a attractionLayerGroup to put it on');
         }
       }
     );
@@ -78,37 +88,39 @@ export class MapDataService {
    *
    * This can be used to guard against working with Attractions prior to the data
    * being ready.
+   *
+   * Each individual cache has a loadSync function which will assure the loads are
+   * performed in the proper sequence.
    */
   initializeCaches(): Observable<boolean> {
     const mapDataIsReady: Subject<boolean> = new Subject<boolean>();
-    /* We need Location Types before anything else. */
-    console.log("MapData.initializeCaches: About to load Location Types");
-    this.locationTypeService.initializeCache().subscribe(
-      () => {
-        console.log("MapData.initializeCaches: About to load Attractions Layers");
-        /* AttractionLayerService (sychronously) makes sure the Categories are populated. */
-        this.attractionLayerService.loadAttractionLayers().subscribe(
-          () => mapDataIsReady.next(true)
-        );
-      }
-    );
 
+    /* The sequence: */
+    this.categoryService.load().pipe(
+      tap(() => console.log('About to load Location Types')),
+      flatMap((categories: Category[]) => this.locationTypeService.load(categories)),
+      tap(() => console.log('About to load Category Attractions')),
+      flatMap(() => this.categoryAttractionService.loadAllAttractions()),
+      flatMap(() => this.attractionLayerService.loadAttractionLayers()),
+    ).subscribe(
+      () => mapDataIsReady.next(true)
+    );
     return mapDataIsReady.asObservable();
   }
 
   /**
-   * The map will register itself with us so we can put layers on it.
+   * The attractionLayerGroup will register itself with us so we can put layers on it.
    *
    * FilterService provides the filter itself.
    *
-   * @param map where to put the filtered layers.
+   * @param attractionLayerGroup where to put the filtered layers.
    */
   registerMap(map: L.Map): void {
     console.log('MapDataService.registerMap()');
-    this.map = map;
+    this.attractionLayerGroup = map;
     this.attractionLayerService.showFilteredAttractions(
       this.filterService.getCurrentFilter(),
-      this.map
+      this.attractionLayerGroup
     );
   }
 
@@ -118,11 +130,10 @@ export class MapDataService {
 
   /**
    * Allows a Map Data client to be told whenever there is a new Attraction
-   * to be added to the map. Since we've setup the subscription for a new client,
+   * to be added to the attractionLayerGroup. Since we've setup the subscription for a new client,
    * we can populate that client by resending all the locations.
    *
    * @param addAttractionFunction accepts an Attraction.
-   */
   public sendMeNewAttractions(addAttractionFunction): Subscription {
     const subscription = this.attractionToAdd.subscribe(
       addAttractionFunction,
@@ -137,10 +148,11 @@ export class MapDataService {
     }
     return subscription;
   }
+   */
 
   /**
    * Allows a Map Data client to be told whenever this is an updated Attraction
-   * to be added to the map.
+   * to be added to the attractionLayerGroup.
    *
    * @param updateAttractionFunction accepts an Attraction.
    */
@@ -151,7 +163,6 @@ export class MapDataService {
   /**
    * Given a position, retrieve the locations nearest that position.
    * @param position to center the search for Attractions.
-   */
   loadNearestLocations(position) {
     this.locationService.nearest(
       this.latLonService.toLatLon(position)
@@ -166,6 +177,7 @@ export class MapDataService {
       }
     );
   }
+   */
 
   /**
    * There are multiple pieces of data that build up a Attraction; this puts
@@ -220,12 +232,11 @@ export class MapDataService {
    *
    * @param attractionFilter currently just a boolean, but expect that there will be details
    * about the filter being applied so this service can retrieve the right set of records.
-   */
   public changeAttractionFilter(attractionFilter: any): void {
     if (this.respondToClearMap) {
       this.respondToClearMap();
     } else {
-      console.log('No response setup for clearing the map');
+      console.log('No response setup for clearing the attractionLayerGroup');
     }
 
     if (attractionFilter) {
@@ -234,11 +245,11 @@ export class MapDataService {
       this.resendAllLocations();
     }
   }
+   */
 
   /**
    * Given the filter, ask back-end for a list of matching attractions and send each one to the attraction subject.
    * @param attractionFilter - TODO: Turn this into an actual filter.
-   */
   private sendFilteredAttractions(attractionFilter) {
     this.locationService.getFilteredAttractions(attractionFilter).subscribe(
       (attractions: Attraction[]) => {
@@ -250,14 +261,15 @@ export class MapDataService {
       }
     );
   }
+   */
 
   /**
-   * Assigns the function to call when the map needs to be cleared.
+   * Assigns the function to call when the attractionLayerGroup needs to be cleared.
    *
-   * @param clearMap function supplied by caller to perform the map clearing.
-   */
+   * @param clearMap function supplied by caller to perform the attractionLayerGroup clearing.
   onMapClear(clearMap: any) {
     this.respondToClearMap = clearMap;
   }
+   */
 
 }
