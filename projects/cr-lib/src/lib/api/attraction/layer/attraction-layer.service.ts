@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import * as L from 'leaflet';
 import {
   Observable,
+  of,
   ReplaySubject,
   Subject
 } from 'rxjs';
@@ -47,48 +48,31 @@ export class AttractionLayerService {
    * Trigger for when we can load the cache for Attraction Layers.
    */
   loadAttractionLayers(): Observable<boolean> {
-    if (this.layerPerCategory) {
-      console.log('Layers have already been initialized');
-    } else {
-      console.log('AttractionLayerService.loadAttractionLayers()');
+    console.log('AttractionLayerService.loadAttractionLayers()');
 
-      this.layerPerCategory = {};
+    this.layerPerCategory = {};
 
-      /* Populate the Categories, if needed. */
-      if (this.categoryService.getAllCategories().length == 0) {
-        this.categoryService.loadSync();
+    /* AttractionLayers don't make any sense until we've got the Categories. */
+    this.categoryService.getAllCategories().forEach(
+      (category: Category) => {
+        console.log('AttractionLayerService.loadAttractionLayers()', category.name);
+        this.layerPerCategory[category.id] = new L.LayerGroup();
       }
+    );
 
-      this.categoryService.getAllCategories().forEach(
-        (category: Category) => {
-          console.log('AttractionLayerService.constructor()', category.name);
-          this.layerPerCategory[category.id] = new L.LayerGroup();
-        }
-      );
+    const attractionsByCategory: AttractionsByCategory = this.categoryAttractionService.getAttractionMap();
 
-      /* AttractionLayers don't make any sense until we've got the Categories. */
-      this.categoryAttractionService.loadAllAttractions().subscribe(
-        () => {
-          const attractionsByCategory: AttractionsByCategory = this.categoryAttractionService.getAttractionMap();
+    for (const categoryId in attractionsByCategory) {
+      if (attractionsByCategory.hasOwnProperty(categoryId)) {
+        const attractionsList = attractionsByCategory[categoryId];
+        console.log('Category ' + categoryId + ' has ' + attractionsList.length + ' entries');
 
-          for (const categoryId in attractionsByCategory) {
-            if (attractionsByCategory.hasOwnProperty(categoryId)) {
-              const attractionsList = attractionsByCategory[categoryId];
-              console.log('Category ' + categoryId + ' has ' + attractionsList.length + ' entries');
-
-              attractionsList.forEach(
-                (attraction) => {
-                  this.addAttractionToLayer(attraction, categoryId);
-                }
-              );
-            }
-          }
-          this.attractionLayerSubject.next(true);
-        }
-      );
-
+        attractionsList.forEach(
+          (attraction) => this.addAttractionToLayer(attraction, categoryId)
+        );
+      }
     }
-    return this.attractionLayerSubject.asObservable();
+    return of(true);
   }
 
   private addAttractionToLayer(attraction: Attraction, categoryId: string) {
@@ -109,14 +93,14 @@ export class AttractionLayerService {
    * if a change needs to be made to that Category, either turning it on or turning it off.
    *
    * @param filter tells us what Categories and Courses should be included.
-   * @param map is where we're putting the layers.
+   * @param layerGroup is where we're putting the layers.
    */
   showFilteredAttractions(
     filter: Filter,
-    map: L.Map
+    layerGroup: L.LayerGroup
   ): void {
     /* Problem if we call this without providing the map. */
-    if (!map) {
+    if (!layerGroup) {
       console.log('Map not provided');
       return;
     }
@@ -125,15 +109,14 @@ export class AttractionLayerService {
 
     if (filter.isEmpty) {
       /* Place all categories on the map. */
-      map.clearLayers();
+      layerGroup.clearLayers();
       this.categoryService.getAllCategories().forEach(
         (category: Category) => {
-          map.addLayer(this.layerPerCategory[category.id]);
+          layerGroup.addLayer(this.layerPerCategory[category.id]);
         }
       );
     } else {
-
-      const existingLayers = map.getLayers();
+      const existingLayers = layerGroup.getLayers();
       this.categoryService.getAllCategories().forEach(
         (category) => {
           console.log('Checking category ID ' + category.id);
@@ -145,10 +128,10 @@ export class AttractionLayerService {
             if (layerTurnedOn !== filterTurnedOn) {
               if (filterTurnedOn) {
                 console.log('Including category', category.name);
-                map.addLayer(this.layerPerCategory[category.id]);
+                layerGroup.addLayer(this.layerPerCategory[category.id]);
               } else {
                 console.log('Removing category', category.name);
-                map.removeLayer(this.layerPerCategory[category.id]);
+                layerGroup.removeLayer(this.layerPerCategory[category.id]);
               }
             }
           } else {
@@ -156,8 +139,8 @@ export class AttractionLayerService {
           }
         }
       );
-
     }
+
   }
 
 }

@@ -5,6 +5,8 @@ import {
   BASE_URL
 } from '../../auth/header/auth-header.service';
 import {Category} from './category';
+import {Observable} from 'rxjs';
+import {tap} from 'rxjs/operators';
 
 /**
  * Service support for Category instances.
@@ -22,21 +24,26 @@ export class CategoryService {
     private authHeaderService: AuthHeaderService
   ) {
     console.log('Hello CategoryService');
-    this.loadSync();
   }
 
-  public async loadSync() {
-    await this.http.get<Category[]>(
+  /**
+   * Populates the cached copy of the Categories as well as returning the same as an Observable
+   * so we know when it completes.
+   */
+  // public load(): Observable<Category[]> {
+  public load(): Observable<Category[]> {
+    console.log('CategoryService.load()');
+    return this.http.get<Category[]>(
       BASE_URL + 'category',
       {headers: this.authHeaderService.getAuthHeaders()}
-    ).subscribe(
-      (response) => {
+    ).pipe(
+      tap (response => {
         response.forEach(category => {
           this.categories.push(category);
           this.categoriesById[category.id] = category;
         });
         console.log('Category Cache filled. total: ' + this.categories.length);
-      }
+      })
     );
   }
 
