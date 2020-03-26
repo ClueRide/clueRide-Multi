@@ -74,7 +74,7 @@ export class MapActionComponent implements OnInit {
   toggleFilter(event: Event) {
     this.attractionsFilterFlag = this.filterService.toggleFilterShown();
     console.log('Filter Attractions', this.attractionsFilterFlag);
-    this.mapDataService.changeAttractionFilter(this.attractionsFilterFlag);
+    // this.mapDataService.changeAttractionFilter(this.attractionsFilterFlag);
   }
 
 }

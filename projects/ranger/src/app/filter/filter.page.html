@@ -36,7 +36,8 @@
       by Category
     </ion-card-title>
     <ion-card-content>
-      <ion-select (ionChange)="categoryHasChanged($event)"
+      <ion-select [(ngModel)]="filter.categoriesToIncludeById"
+                  (ionChange)="categoryHasChanged($event)"
                   placeholder="No Categories included"
                   interface="alert"
                   [interfaceOptions]="categoryAlertOptions"
