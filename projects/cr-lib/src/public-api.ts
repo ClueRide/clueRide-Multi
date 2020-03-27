@@ -67,6 +67,9 @@ export * from './lib/doubleclick/prevent-double-click.directive';
 // slot for email
 export * from './lib/filter/filter';
 export * from './lib/filter/filter.service';
+export * from './lib/filter/popover/popover.component';
+export * from './lib/filter/popover/filter-popover.service';
+export * from './lib/filter/popover/filter-popover.module';
 export * from './lib/geo/device-geo-loc/device-geo-loc.service';
 export * from './lib/geo/geo-loc/geo-loc';
 export * from './lib/heading/heading.component';

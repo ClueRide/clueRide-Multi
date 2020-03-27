@@ -1,0 +1,13 @@
+    <ion-select [(ngModel)]="filter.categoriesToIncludeById"
+                (ionChange)="categoryHasChanged($event)"
+                placeholder="No Categories included"
+                [interfaceOptions]="categoryAlertOptions"
+                multiple="true"
+                okText="Okay"
+                cancelText="Nah">
+
+      <ion-select-option *ngFor="let category of categories"
+                         [value]="category.id">
+        {{category.name}}
+      </ion-select-option>
+    </ion-select>

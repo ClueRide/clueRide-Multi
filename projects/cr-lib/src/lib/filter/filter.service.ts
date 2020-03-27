@@ -31,21 +31,6 @@ export class FilterService {
     };
   }
 
-  /**
-   * Returns current state of whether the filter is turned on or not.
-   */
-  public isFilterShown(): boolean {
-    return this.filterShown;
-  }
-
-  /**
-   * Toggles the current state of the filter without changing the particular filter itself.
-   */
-  public toggleFilterShown(): boolean {
-    this.filterShown = !this.filterShown;
-    return  this.filterShown;
-  }
-
   public changeFilter(filter: Filter) {
     this.currentFilter = filter;
     this.filterSubject.next(filter);

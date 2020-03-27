@@ -33,11 +33,10 @@
     </div>
 
     <div class="labeledFab">
-      <ion-label>Toggle Filter</ion-label>
-      <ion-fab-button size="small"
-                      crPreventDoubleClick
-                      (throttledClick)="toggleFilter($event)">
-        <ion-icon name="checkmark"></ion-icon>
+      <ion-label>Filter</ion-label>
+      <ion-fab-button class="filter-fab">
+        <ion-icon name="funnel"></ion-icon>
+        <app-filter-popover></app-filter-popover>
       </ion-fab-button>
     </div>
 
