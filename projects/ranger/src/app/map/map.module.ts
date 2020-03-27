@@ -3,6 +3,8 @@ import {NgModule} from '@angular/core';
 import {IonicModule} from '@ionic/angular';
 import {
   DoubleClickModule,
+  FilterPopoverComponent,
+  FilterPopoverModule,
   HeadingModule
 } from 'cr-lib';
 import {MapActionComponent} from './action/map-action.component';
@@ -18,14 +20,19 @@ import {MapComponent} from './map';
   imports: [
     CommonModule,
     DoubleClickModule,
+    FilterPopoverModule,
     IonicModule,
     HeadingModule,
   ],
   exports: [
-    MapComponent
+    MapComponent,
+  ],
+  entryComponents: [
+    FilterPopoverComponent
   ],
   providers: [
     MapComponent
   ]
+
 })
 export class MapModule {}

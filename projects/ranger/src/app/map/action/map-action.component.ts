@@ -2,10 +2,10 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import {FilterService} from 'cr-lib';
 import {MapDataService} from '../data/map-data.service';
 import {MapDragService} from '../drag/map-drag.service';
 import {MapStateService} from '../state/map-state.service';
+import {FilterPopoverService} from 'cr-lib';
 
 @Component({
   selector: 'app-map-action',
@@ -14,15 +14,12 @@ import {MapStateService} from '../state/map-state.service';
 })
 export class MapActionComponent implements OnInit {
 
-  private attractionsFilterFlag: boolean;
-
   constructor(
     private mapDataService: MapDataService,
     private mapStateService: MapStateService,
     private mapDragService: MapDragService,
-    private filterService: FilterService,
+    private filterPopoverService: FilterPopoverService,
   ) {
-    this.attractionsFilterFlag = this.filterService.isFilterShown();
   }
 
   ngOnInit() {}
@@ -71,10 +68,10 @@ export class MapActionComponent implements OnInit {
     this.mapDataService.resendAllLocations();
   }
 
-  toggleFilter(event: Event) {
-    this.attractionsFilterFlag = this.filterService.toggleFilterShown();
-    console.log('Filter Attractions', this.attractionsFilterFlag);
-    // this.mapDataService.changeAttractionFilter(this.attractionsFilterFlag);
+  showFilter(event: Event) {
+    return this.filterPopoverService.showFilter(event);
   }
+
+
 
 }

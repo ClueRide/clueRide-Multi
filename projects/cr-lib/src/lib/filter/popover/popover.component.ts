@@ -2,23 +2,19 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import {
-  Category,
-  CategoryService,
-  Course,
-  CourseService,
-  Filter,
-  FilterService
-} from 'cr-lib';
+import {Filter} from '../filter';
+import {Category} from '../../api/category/category';
+import {FilterService} from '../filter.service';
+import {CategoryService} from '../../api/category/category.service';
 
 @Component({
-  selector: 'app-filter',
-  templateUrl: './filter.page.html',
-  styleUrls: ['./filter.page.scss'],
+  selector: 'app-filter-popover',
+  templateUrl: './popover.component.html',
+  styleUrls: ['./popover.component.scss'],
 })
-export class FilterPage implements OnInit {
+export class FilterPopoverComponent implements OnInit {
 
-  public courses: Course[];
+  readonly filter: Filter;
   public categories: Category[];
 
   /* Passing CSS to the popover. */
@@ -26,26 +22,15 @@ export class FilterPage implements OnInit {
     cssClass: "category-alert"
   };
 
-  private readonly filter: Filter;
-
   constructor(
-    private courseService: CourseService,
-    private categoryService: CategoryService,
     private filterService: FilterService,
+    private categoryService: CategoryService,
   ) {
-    this.categories = [];
     this.filter = filterService.getCurrentFilter();
-  }
-
-  ngOnInit() {
-    this.courseService.getAllCourses().subscribe(
-      (courses) => {
-        this.courses = courses;
-      }
-    );
-
     this.categories = this.categoryService.getAllCategories();
   }
+
+  ngOnInit() {}
 
   categoryHasChanged(event: CustomEvent) {
     console.log(event);
@@ -53,8 +38,6 @@ export class FilterPage implements OnInit {
     this.filter.isEmpty = this.checkIfFilterEmpty();
     this.filterService.changeFilter(this.filter);
   }
-
-  // TODO: Add Course changes here too.
 
   checkIfFilterEmpty(): boolean {
     return (

@@ -12,6 +12,8 @@ import {
 import {
   AlertToastModule,
   AuthModule,
+  FilterPopoverComponent,
+  FilterPopoverModule,
   HeadingModule
 } from 'cr-lib';
 import {AppRoutingModule} from './app-routing.module';
@@ -20,15 +22,18 @@ import {AppComponent} from './app.component';
 
 @NgModule({
   declarations: [AppComponent],
-  entryComponents: [],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
     AlertToastModule,
     AppRoutingModule,
     AuthModule,
+    FilterPopoverModule,
     HeadingModule,
     HttpClientModule
+  ],
+  entryComponents: [
+    FilterPopoverComponent
   ],
   providers: [
     StatusBar,

@@ -26,7 +26,7 @@ const routes: Routes = [
   { path: 'image-capture', loadChildren: './image-capture/image-capture.module#ImageCapturePageModule' },
   { path: 'puzzle-modal', loadChildren: './puzzle/modal/puzzle-modal.module#PuzzleModalPageModule' },
   { path: 'about', loadChildren: './about/about.module#AboutPageModule' },
-  { path: 'filter', loadChildren: './filter/filter.module#FilterPageModule' },
+  { path: 'filter', loadChildren: './filter/page/filter-page.module#FilterPageModule' },
 ];
 
 @NgModule({
