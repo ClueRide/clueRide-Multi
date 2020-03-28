@@ -6,6 +6,8 @@ import {Filter} from '../filter';
 import {Category} from '../../api/category/category';
 import {FilterService} from '../filter.service';
 import {CategoryService} from '../../api/category/category.service';
+import {Course} from '../../api/course/course';
+import {CourseService} from '../../api/course/course.service';
 
 @Component({
   selector: 'app-filter-popover',
@@ -15,6 +17,7 @@ import {CategoryService} from '../../api/category/category.service';
 export class FilterPopoverComponent implements OnInit {
 
   readonly filter: Filter;
+  public courses: Course[];
   public categories: Category[];
 
   /* Passing CSS to the popover. */
@@ -25,12 +28,19 @@ export class FilterPopoverComponent implements OnInit {
   constructor(
     private filterService: FilterService,
     private categoryService: CategoryService,
+    private courseService: CourseService,
   ) {
     this.filter = filterService.getCurrentFilter();
     this.categories = this.categoryService.getAllCategories();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.courseService.getAllCourses().subscribe(
+      (courses) => {
+        this.courses = courses;
+      }
+    );
+  }
 
   categoryHasChanged(event: CustomEvent) {
     console.log(event);

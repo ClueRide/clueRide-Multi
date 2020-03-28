@@ -10,11 +10,13 @@ import {
 import {MapActionComponent} from './action/map-action.component';
 import {AddLocButtonComponent} from './add-loc-button/add-loc-button';
 import {MapComponent} from './map';
+import {FilterActionComponent} from './filter-action/filter-action.component';
 
 @NgModule({
   declarations: [
     MapComponent,
     AddLocButtonComponent,
+    FilterActionComponent,
     MapActionComponent
   ],
   imports: [

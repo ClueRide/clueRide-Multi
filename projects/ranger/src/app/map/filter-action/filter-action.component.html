@@ -1,0 +1,8 @@
+<ion-fab horizontal="start" vertical="bottom">
+  <app-filter-popover [hidden]="expandedFlag"></app-filter-popover>
+  <ion-fab-button size="small"
+                  crPreventDoubleClick
+                  (throttledClick)="showFilterToggle($event)">
+    <ion-icon name="funnel"></ion-icon>
+  </ion-fab-button>
+</ion-fab>

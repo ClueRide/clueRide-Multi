@@ -1,13 +1,33 @@
-    <ion-select [(ngModel)]="filter.categoriesToIncludeById"
-                (ionChange)="categoryHasChanged($event)"
-                placeholder="No Categories included"
-                [interfaceOptions]="categoryAlertOptions"
-                multiple="true"
-                okText="Okay"
-                cancelText="Nah">
+<ion-item>
+  <ion-label>Course</ion-label>
 
-      <ion-select-option *ngFor="let category of categories"
-                         [value]="category.id">
-        {{category.name}}
-      </ion-select-option>
-    </ion-select>
+  <ion-select placeholder="No Courses included"
+              interface="alert"
+              multiple="true"
+              okText="Okay"
+              cancelText="Nah">
+    <ion-select-option *ngFor="let course of courses">
+      {{course.name}}
+    </ion-select-option>
+  </ion-select>
+
+</ion-item>
+
+<ion-item>
+  <ion-label>Category</ion-label>
+
+  <ion-select [(ngModel)]="filter.categoriesToIncludeById"
+              (ionChange)="categoryHasChanged($event)"
+              placeholder="No Categories included"
+              [interfaceOptions]="categoryAlertOptions"
+              multiple="true"
+              okText="Okay"
+              cancelText="Nah">
+
+    <ion-select-option *ngFor="let category of categories"
+                       [value]="category.id">
+      {{category.name}}
+    </ion-select-option>
+  </ion-select>
+
+</ion-item>
