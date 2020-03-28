@@ -5,6 +5,7 @@
   </ion-fab-button>
 
   <ion-fab-list>
+    <!-- until CI-34 is worked
     <div class="labeledFab">
       <ion-label>Toggle Lat/Lon</ion-label>
       <ion-fab-button size="small"
@@ -13,6 +14,7 @@
         <ion-icon name="checkmark"></ion-icon>
       </ion-fab-button>
     </div>
+    -->
 
     <div class="labeledFab">
       <ion-label>Toggle Auto-center</ion-label>
@@ -20,23 +22,6 @@
                       crPreventDoubleClick
                       (throttledClick)="settingsToggleAutoCenter($event)">
         <ion-icon name="locate"></ion-icon>
-      </ion-fab-button>
-    </div>
-
-    <div class="labeledFab">
-      <ion-label>Refresh Map</ion-label>
-      <ion-fab-button size="small"
-                      crPreventDoubleClick
-                      (throttledClick)="refreshMap($event)">
-        <ion-icon name="refresh"></ion-icon>
-      </ion-fab-button>
-    </div>
-
-    <div class="labeledFab">
-      <ion-label>Filter</ion-label>
-      <ion-fab-button class="filter-fab">
-        <ion-icon name="funnel"></ion-icon>
-        <app-filter-popover></app-filter-popover>
       </ion-fab-button>
     </div>
 
