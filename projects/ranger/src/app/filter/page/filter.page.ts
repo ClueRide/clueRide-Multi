@@ -26,7 +26,7 @@ export class FilterPage implements OnInit {
     cssClass: "category-alert"
   };
 
-  private readonly filter: Filter;
+  readonly filter: Filter;
 
   constructor(
     private courseService: CourseService,

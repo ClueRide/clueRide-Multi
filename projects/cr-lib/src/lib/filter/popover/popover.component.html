@@ -1,7 +1,8 @@
 <ion-item>
   <ion-label>Course</ion-label>
 
-  <ion-select placeholder="No Courses included"
+  <ion-select class="ion-select-for-filter"
+              placeholder="No Courses included"
               interface="alert"
               multiple="true"
               okText="Okay"
@@ -16,13 +17,14 @@
 <ion-item>
   <ion-label>Category</ion-label>
 
-  <ion-select [(ngModel)]="filter.categoriesToIncludeById"
+  <ion-select class="ion-select-for-filter"
+              [(ngModel)]="filter.categoriesToIncludeById"
               (ionChange)="categoryHasChanged($event)"
               placeholder="No Categories included"
               [interfaceOptions]="categoryAlertOptions"
               multiple="true"
-              okText="Okay"
-              cancelText="Nah">
+              okText="OK"
+              cancelText="Cancel">
 
     <ion-select-option *ngFor="let category of categories"
                        [value]="category.id">

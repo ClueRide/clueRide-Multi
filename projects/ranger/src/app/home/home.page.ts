@@ -5,6 +5,7 @@ import {
 import {MapComponent} from '../map/map';
 import {MapPositionService} from '../map/position/map-position.service';
 import {Geoposition} from '@ionic-native/geolocation';
+import {take} from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -35,9 +36,12 @@ export class HomePage {
     this.mapPositionService.findOurPosition();
 
     /* Once a position is determined, we can use it to open the map. */
-    this.mapPositionService.getCurrentPositionSubject().subscribe(
+    this.mapPositionService.getCurrentPositionSubject().pipe(
+      take(1)
+    ).subscribe(
       (geoPosition: Geoposition) => this.map.openMapAtPosition(geoPosition)
     );
+
   }
 
 }

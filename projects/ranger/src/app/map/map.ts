@@ -102,9 +102,6 @@ export class MapComponent {
       this.mapDragService.setAutoCenter(false);
     });
 
-    /* Begin paying attention to position changes. */
-    this.mapPositionService.setWatch(this.setNewCenterForMap);
-
     /* Register to be updated with the Category Layers. */
     // TODO-CA-447: don't need an array here.
     this.layerPerCategory[DEFAULT_CATEGORY] = L.layerGroup().addTo(this.map);

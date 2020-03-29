@@ -23,7 +23,9 @@ export class FilterService {
   private readonly filterSubject: Subject<Filter>;
 
   constructor() {
-    this.filterSubject = new ReplaySubject<Filter>();
+    console.log('FilterService: constructor()');
+    this.filterSubject = new ReplaySubject<Filter>(1);
+
     this.currentFilter = {
       categoriesToIncludeById: [],
       outingToInclude: null,
