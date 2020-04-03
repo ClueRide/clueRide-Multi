@@ -1,7 +1,14 @@
 import {Injectable} from '@angular/core';
-import {GeolocationOptions, Geoposition} from '@ionic-native/geolocation';
-import {Observable} from 'rxjs';
-import {Subject} from 'rxjs';
+import {
+  GeolocationOptions,
+  Geoposition
+} from '@ionic-native/geolocation';
+import {Geolocation} from '@ionic-native/geolocation/ngx';
+import {
+  Observable,
+  Subject,
+  Subscription
+} from 'rxjs';
 
 /**
  * Provides service for managing the GPS on this device.
@@ -19,7 +26,7 @@ export class DeviceGeoLocService {
   };
 
   /* Holds the ID of this instance's watch for later release. */
-  private watchId: number;
+  private watchSubscription: Subscription;
   /* Records result of asynchronous attempt to read GPS. */
   private gpsAvailable = false;
   /* How clients receive the position GPS would be supplying. */
@@ -28,6 +35,7 @@ export class DeviceGeoLocService {
   private lastPosition: Geoposition;
 
   constructor(
+    private geolocation: Geolocation,
   ) {
   }
 
@@ -37,21 +45,20 @@ export class DeviceGeoLocService {
   public checkGpsAvailability(): Observable<Geoposition> {
     console.log('2. Determining position sources');
     const availabilitySubject: Subject<Geoposition> = new Subject();
-    navigator.geolocation.getCurrentPosition(
+    this.geolocation.getCurrentPosition().then(
       (response) => {
         console.log('3. GPS available');
         this.gpsAvailable = true;
         this.lastPosition = response;
         availabilitySubject.next(response);
-      },
+      }
+    ).catch(
       (error) => {
         console.log(error);
         console.log('3. GPS not available');
         this.gpsAvailable = false;
         availabilitySubject.next(null);
-      },
-      this.geoLocOptions
-    );
+      });
     return availabilitySubject.asObservable();
   }
 
@@ -62,12 +69,11 @@ export class DeviceGeoLocService {
 
     if (!this.positionSubject) {
       this.positionSubject = new Subject();
-      this.watchId = navigator.geolocation.watchPosition(
+      this.watchSubscription = this.geolocation.watchPosition().subscribe(
         (response) => {
           this.positionSubject.next(response);
         },
         (error) => {},
-        this.geoLocOptions
       );
     }
 
@@ -80,7 +86,7 @@ export class DeviceGeoLocService {
   }
 
   public clearWatch() {
-    navigator.geolocation.clearWatch(this.watchId);
+    this.watchSubscription.unsubscribe();
     this.positionSubject = undefined;
   }
 
