@@ -10,22 +10,13 @@ import {
 } from 'cr-lib';
 import * as L from 'leaflet';
 import {Subscription} from 'rxjs';
-// TODO: CI-34: put this ViewLatLon component in the library
-// import {LatLonComponent} from '../lat-lon/lat-lon';
 import {MapDataService} from './data/map-data.service';
 import {MapDragService} from './drag/map-drag.service';
 import {MapPositionService} from './position/map-position.service';
+import {MapCenterDisplayComponent} from '../../../../cr-lib/src/lib/map-center/map-center-display.component';
 
 /** Defines reasonable Zoom Level for initially opening the map. */
 const DEFAULT_ZOOM_LEVEL = 14;
-
-/* TODO LE-76: Add separate category/layers. */
-const DEFAULT_CATEGORY = 1;
-
-/** Defines mapping between Category and Layer containing markers for that Category. */
-interface LayerPerCategoryMap {
-  [index: number]: L.Layer;
-}
 
 /**
  * Defines the Main Map upon which all Attractions are shown.
@@ -40,14 +31,17 @@ export class MapComponent {
   // TODO: CI-34: put this ViewLatLon component in the library
   // static latLon: LatLonComponent = {} as any;
 
-  public map: any;
+  public map: L.Map;
 
   /** Holds subscription resources so we can release them when map is closed. */
   private subscription: Subscription;
 
-  /** Holds Leaflet Layer for each Category of Markers. */
-  private layerPerCategory: LayerPerCategoryMap = [];
+  /** Holds Leaflet Layer for all Categories of Markers. */
+  private attractionLayerGroup: L.LayerGroup;
   private layerIdPerAttraction: { [index: number]: number } = [];
+
+  /** Displays the coordinates of the current center of the map. */
+  private static mapCenterDisplay: MapCenterDisplayComponent;
 
   constructor(
     private attractionLayerService: AttractionLayerService,
@@ -79,10 +73,12 @@ export class MapComponent {
         DEFAULT_ZOOM_LEVEL
       );
 
-      /* TODO: CI-34 Rename this presentation component. */
-      // MapComponent.latLon = new LatLonComponent();
-      // MapComponent.latLon.addTo(MapComponent.map);
-      // MapComponent.latLon.setPositionSubject(MapComponent.reportedPosition);
+      /* Setup the Map Center Display. */
+      MapComponent.mapCenterDisplay = new MapCenterDisplayComponent();
+      MapComponent.mapCenterDisplay.addTo(this.map);
+      MapComponent.mapCenterDisplay.setMapCenterObservable(
+        this.mapPositionService.getCurrentPositionSubject()
+      );
 
       /* Attach the reported position subject to the Move Start service. */
       this.mapDragService.useMap(this.map);
@@ -103,9 +99,8 @@ export class MapComponent {
     });
 
     /* Register to be updated with the Category Layers. */
-    // TODO-CA-447: don't need an array here.
-    this.layerPerCategory[DEFAULT_CATEGORY] = L.layerGroup().addTo(this.map);
-    this.mapDataService.registerMap(this.layerPerCategory[DEFAULT_CATEGORY]);
+    this.attractionLayerGroup = L.layerGroup().addTo(this.map);
+    this.mapDataService.registerAttractionLayerGroup(this.attractionLayerGroup);
   }
 
   setNewCenterForMap = (
@@ -125,7 +120,7 @@ export class MapComponent {
       /* Suspend move event generation. */
       this.map.off('movestart');
 
-      this.map.panTo(this.latLonService.toLatLon(geoPosition));
+      this.map.panTo(this.latLonService.toLatLng(geoPosition));
       // console.log('Map.updatePosition: next Reported Position');
 
       /* Restore move event generation. */
@@ -162,8 +157,8 @@ export class MapComponent {
     );
 
     /* TODO: Place within category-based layer/group (LE-76). */
-    poolMarker.addTo(this.layerPerCategory[DEFAULT_CATEGORY]);
-    this.layerIdPerAttraction[attraction.id] = this.layerPerCategory[DEFAULT_CATEGORY].getLayerId(poolMarker);
+    poolMarker.addTo(this.attractionLayerGroup);
+    this.layerIdPerAttraction[attraction.id] = this.attractionLayerGroup.getLayerId(poolMarker);
   }
 
   /**
@@ -178,7 +173,8 @@ export class MapComponent {
 
     /* TODO LE-76. */
     /* Remove existing Attraction from map. */
-    const layer = this.layerPerCategory[DEFAULT_CATEGORY];
+    const layer = this.attractionLayerGroup;
+    // @ts-ignore
     if (layer.hasLayer(this.layerIdPerAttraction[attraction.id])) {
       layer.removeLayer(this.layerIdPerAttraction[attraction.id]);
     }
@@ -195,7 +191,7 @@ export class MapComponent {
    */
   clearMap = (): void => {
     // TODO: perhaps touched by LE-76
-    this.layerPerCategory[DEFAULT_CATEGORY].clearLayers();
+    this.attractionLayerGroup.clearLayers();
   }
 
 }

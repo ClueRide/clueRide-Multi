@@ -39,7 +39,6 @@ describe('AttractionPage', () => {
         AttractionPage,
         {provide: ActivatedRoute, useValue: activatedRouteSpy},
         {provide: CourseAttractionService, useValue: attractionSpy},
-        // {provide: HttpClient, useValue: httpClientSpy},
       ]
     })
     .compileComponents();

@@ -16,7 +16,7 @@ import {Category} from '../../category/category';
 import {Attraction} from '../attraction';
 
 interface LayerPerCategory {
-  [index: number]: L.Layer;
+  [index: number]: L.LayerGroup;
 }
 
 /**
@@ -46,14 +46,24 @@ export class AttractionLayerService {
 
   /**
    * Trigger for when we can load the cache for Attraction Layers.
+   *
+   * This expects that a separate set of calls has initialized the dependent services:
+   * CategoryService to provide the list of Categories (stable throughout a session).
+   * CategoryAttractionService to provide the list of Attractions (changes for Ranger, stable for Seeker).
+   * PoolMarkerService to create the markers (no need to be initialized).
    */
   loadAttractionLayers(): Observable<boolean> {
     console.log('AttractionLayerService.loadAttractionLayers()');
 
+    /* AttractionLayers don't make any sense if we have no Categories. */
+    let allCategories = this.categoryService.getAllCategories();
+    if (allCategories.length === 0) {
+      return of(false);
+    }
+
     this.layerPerCategory = {};
 
-    /* AttractionLayers don't make any sense until we've got the Categories. */
-    this.categoryService.getAllCategories().forEach(
+    allCategories.forEach(
       (category: Category) => {
         console.log('AttractionLayerService.loadAttractionLayers()', category.name);
         this.layerPerCategory[category.id] = new L.LayerGroup();

@@ -5,27 +5,52 @@ import {
   TestBed
 } from '@angular/core/testing';
 
-import {PopoverComponent} from './popover.component';
+import {FilterPopoverComponent} from './popover.component';
+import {FilterService} from '../filter.service';
+import {CategoryService} from '../../api/category/category.service';
+import {CourseService} from '../../api/course/course.service';
+import {from} from 'rxjs';
 
-describe('PopoverComponent', () => {
-  let component: PopoverComponent;
-  let fixture: ComponentFixture<PopoverComponent>;
+describe('FilterPopoverComponent', () => {
+  const filterSpy = jasmine.createSpyObj('FilterService', ['getCurrentFilter']);
+  const categorySpy = jasmine.createSpyObj('CategoryService', ['getAllCategories']);
+  const courseSpy = jasmine.createSpyObj('CourseService', ['getAllCourses']);
+
+  let toTest: FilterPopoverComponent;
+  let fixture: ComponentFixture<FilterPopoverComponent>;
 
   beforeEach(async(() => {
+    courseSpy.getAllCourses = jasmine.createSpy('getAllCourses').and.returnValue(from([]));
+    filterSpy.getCurrentFilter = jasmine.createSpy('getCurrentFilter').and.returnValue(
+      {
+        categoriesToIncludeById: [],
+        isEmpty: true,
+        outingToInclude: null
+      }
+    );
+
     TestBed.configureTestingModule({
-      declarations: [ PopoverComponent ],
+      declarations: [ FilterPopoverComponent ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      providers: [
+        FilterPopoverComponent,
+        { provide: FilterService, useValue: filterSpy },
+        { provide: CategoryService, useValue: categorySpy },
+        { provide: CourseService, useValue: courseSpy },
+      ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PopoverComponent);
-    component = fixture.componentInstance;
+
+    fixture = TestBed.createComponent(FilterPopoverComponent);
+    toTest = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(toTest).toBeTruthy();
   });
+
 });

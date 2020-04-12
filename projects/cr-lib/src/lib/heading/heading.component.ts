@@ -3,13 +3,8 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
+import * as L from 'leaflet';
 import {Platform} from '@ionic/angular';
-import {
-  icon,
-  L,
-  marker,
-  PointExpression
-} from 'leaflet';
 import {Subscription} from 'rxjs';
 // TODO: CI-33 Replace with `navigator.compass`
 // import {
@@ -27,8 +22,8 @@ import {PlatformStateService} from '../state/platform/platform-state.service';
  */
 
 /** Marker size and anchor are common across all images. */
-const commonIconSize: PointExpression = [20, 50];
-const commonIconAnchor: PointExpression = [10, 25];
+const commonIconSize: L.PointExpression = [20, 50];
+const commonIconAnchor: L.PointExpression = [10, 25];
 
 // TODO: CI-33 Replace with `navigator.compass`
 // const headingOptions: DeviceOrientationCompassOptions = {
@@ -79,7 +74,7 @@ export class HeadingComponent implements OnInit, OnDestroy {
   private lastHeading: number;
 
   static iconFromImage(iconUrl: string): L.Icon {
-    return icon({
+    return L.icon({
       iconUrl,
       iconSize: commonIconSize,
       iconAnchor: commonIconAnchor
@@ -137,7 +132,7 @@ export class HeadingComponent implements OnInit, OnDestroy {
   ) {
     this.reportCompass();
     if (this.deviceHasCompass) {
-      this.headingMarker = marker(
+      this.headingMarker = L.marker(
         position,
         {
           icon: this.hereIAmHeadingIcon,
@@ -146,7 +141,7 @@ export class HeadingComponent implements OnInit, OnDestroy {
         } as any
       );
     } else {
-      this.headingMarker = marker(
+      this.headingMarker = L.marker(
         position,
         {
           icon: this.hereIAmIcon

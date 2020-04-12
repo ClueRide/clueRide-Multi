@@ -5,7 +5,8 @@ import {
   DoubleClickModule,
   FilterPopoverComponent,
   FilterPopoverModule,
-  HeadingModule
+  HeadingModule,
+  MapCenterModule
 } from 'cr-lib';
 import {MapActionComponent} from './action/map-action.component';
 import {AddLocButtonComponent} from './add-loc-button/add-loc-button';
@@ -25,6 +26,7 @@ import {FilterActionComponent} from './filter-action/filter-action.component';
     FilterPopoverModule,
     IonicModule,
     HeadingModule,
+    MapCenterModule,
   ],
   exports: [
     MapComponent,
