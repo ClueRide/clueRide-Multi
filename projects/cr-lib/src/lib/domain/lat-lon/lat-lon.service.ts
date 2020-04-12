@@ -26,28 +26,35 @@ import {LatLon} from './lat-lon';
 export class LatLonService {
   constructor() {}
 
+  static staticToLatLng(latLon: LatLon) {
+    return new L.LatLng(
+      (latLon as LatLon).lat,
+      (latLon as LatLon).lon
+    );
+  }
+
   /**
    * Accepts either LatLon or LatLng and turns it into Geoposition.
    *
    * This translation sets `coords.accuracy` to zero and all other values to null.
    *
-   * @param latLng - either a LatLon or LatLng.
+   * @param position - either a LatLon or LatLng.
    * @return Geoposition - matching the inbound LatLon or LatLng.
    */
-  toGeoPosition(latLng: L.LatLng | LatLon | number[]): Geoposition {
+  toGeoPosition(position:  number[] | LatLon | L.LatLng ): Geoposition {
     let lat;
     let lon;
 
-    if (latLng.hasOwnProperty('id')) {
-      lat = latLng.lat;
-      lon = latLng.lng || latLng.lon;
+    if (position.hasOwnProperty('id')) {
+      lat = (<LatLon>position).lat;
+      lon = (<LatLon>position).lon;
     } else {
-      if (isArray(latLng)) {
-        lat = latLng[0];
-        lon = latLng[1];
+      if (isArray(position)) {
+        lat = position[0];
+        lon = position[1];
       } else {
-        lat = latLng.lat;
-        lon = latLng.lng || latLng.lon;
+        lat = (<L.LatLng>position).lat;
+        lon = (<L.LatLng>position).lng;
       }
     }
     return {
@@ -86,6 +93,27 @@ export class LatLonService {
       );
     }
   }
+
+
+  /**
+   * Accepts either browser's Geoposition or LatLon from back-end,
+   * and returns Leaflet's LatLng -- with the decimal values fixed
+   * at 6 digits. This is intended for display.
+   *
+   * Altitude is set to zero in all cases.
+   *
+   * @param geoPosition from browser or LatLon from back-end.
+   * @return Leaflet's LatLng point that matches.
+   */
+  toFixedLatLng(geoPosition: Geoposition | LatLon): string {
+    let point = this.toLatLng(geoPosition);
+
+    return '('
+      + point.lat.toFixed(6) + ','
+      + point.lng.toFixed(6)
+      + ')';
+  }
+
 
   /**
    * Accepts Geoposition and turns it into a value that can be submitted to the back-end.

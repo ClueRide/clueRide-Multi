@@ -1,6 +1,9 @@
 import {GeoLocService} from './geo-loc';
 import {DeviceGeoLocService} from '../device-geo-loc/device-geo-loc.service';
-import {Subject} from 'rxjs';
+import {
+  Observable,
+  Subject
+} from 'rxjs';
 import {Geoposition} from '@ionic-native/geolocation';
 
 let toTest: GeoLocService;
@@ -14,12 +17,17 @@ const restangularService: any = {
 };
 
 describe('Geo-Location', () => {
+  const deviceGeoLocSpy = jasmine.createSpyObj('DeviceGeoLocService',
+    [
+      'getWatch',
+      'hasGPS',
+      'checkGpsAvailability'
+    ]
+  );
 
   beforeEach(() => {
-    deviceGeoLocService = new DeviceGeoLocService();
-
     toTest = new GeoLocService(
-      deviceGeoLocService
+      deviceGeoLocSpy
     );
 
   });
@@ -28,39 +36,30 @@ describe('Geo-Location', () => {
     expect(toTest).toBeDefined();
   });
 
-  describe('injections', () => {
-
-    it('should be defined', () => {
-      expect(deviceGeoLocService).toBeDefined();
-    });
-
-  });
-
   describe('Initialization', () => {
 
-    it('should provide signal (and a position) when available for use', () => {
+    it('should provide signal (and a position) when available for use', (done) => {
       /* setup data */
       let actual: Geoposition;
       const serviceReadySubject: Subject<Geoposition> = new Subject();
       const expected = GeoLocService.ATLANTA_GEOPOSITION;
 
       /* train mocks */
-      spyOn(deviceGeoLocService, 'checkGpsAvailability').and.returnValue(serviceReadySubject.asObservable());
+      deviceGeoLocSpy.checkGpsAvailability = jasmine.createSpy('checkGpsAvailability')
+        .and.returnValue(serviceReadySubject.asObservable());
 
       /* make call */
-      toTest.notifyWhenReady().subscribe(
-        (response) => {
-          actual = response;
-        },
-        () => {
-          // eat failure within test; we're checking the result
+      const readyObservable: Observable<Geoposition> = toTest.notifyWhenReady();
+
+      /* verify results */
+      readyObservable.subscribe(
+        (actual) => {
+          expect(actual).toBe(expected);
+          done();
         }
       );
 
-      /* verify results */
-      expect(actual).not.toBeDefined();
       serviceReadySubject.next(expected);
-      expect(actual).toBe(expected);
 
     });
 
@@ -69,8 +68,12 @@ describe('Geo-Location', () => {
   describe('Resolving which location source to use', () => {
 
     it('should read from GPS when it is available', () => {
+      const positionSubject: Subject<any> = new Subject();
       /* train mocks */
-      spyOn(deviceGeoLocService, 'hasGPS').and.returnValue(true);
+      deviceGeoLocSpy.getWatch = jasmine.createSpy('getWatch')
+        .and.returnValue(positionSubject);
+      deviceGeoLocSpy.hasGPS = jasmine.createSpy('hasGPS')
+        .and.returnValue(true);
 
       /* make call */
       toTest.getPositionWatch();
@@ -83,7 +86,10 @@ describe('Geo-Location', () => {
     it('should read from Tethered when GPS unavailable', () => {
       /* train mocks */
       const positionSubject: Subject<any> = new Subject();
-      spyOn(deviceGeoLocService, 'hasGPS').and.returnValue(false);
+      deviceGeoLocSpy.getWatch = jasmine.createSpy('getWatch')
+        .and.returnValue(positionSubject);
+      deviceGeoLocSpy.hasGPS = jasmine.createSpy('hasGPS')
+        .and.returnValue(false);
       spyOn(restangularService, 'one').and.returnValue({
         get() {
           return positionSubject;
@@ -101,7 +107,8 @@ describe('Geo-Location', () => {
     it('should run tethered when overridden', () => {
       /* train mocks */
       const positionSubject: Subject<any> = new Subject();
-      spyOn(deviceGeoLocService, 'hasGPS').and.returnValue(true);
+      deviceGeoLocSpy.hasGPS = jasmine.createSpy('hasGPS')
+        .and.returnValue(true);
       spyOn(restangularService, 'one').and.returnValue({
         get() {
           return positionSubject;
@@ -124,9 +131,8 @@ describe('Geo-Location', () => {
       let actual: any;
 
       /* train mocks */
-      spyOn(deviceGeoLocService, 'checkGpsAvailability').and.returnValue(
-        positionSubject.asObservable()
-      );
+      deviceGeoLocSpy.checkGpsAvailability = jasmine.createSpy('checkGpsAvailability')
+        .and.returnValue(positionSubject.asObservable());
       spyOn(restangularService, 'one').and.returnValue({
         get() {
           return positionSubject;
@@ -149,9 +155,8 @@ describe('Geo-Location', () => {
     it('should give us Observable in any case', () => {
       /* train mocks */
       const positionSubject: Subject<any> = new Subject();
-      spyOn(deviceGeoLocService, 'checkGpsAvailability').and.returnValue(
-        positionSubject.asObservable()
-      );
+      deviceGeoLocSpy.checkGpsAvailability = jasmine.createSpy('checkGpsAvailability')
+        .and.returnValue(positionSubject.asObservable());
       spyOn(restangularService, 'one').and.returnValue({
         get() {
           return positionSubject;
@@ -180,9 +185,8 @@ describe('Geo-Location', () => {
       let actual: any;
 
       /* train mocks */
-      spyOn(deviceGeoLocService, 'checkGpsAvailability').and.returnValue(
-        positionSubject.asObservable()
-      );
+      deviceGeoLocSpy.checkGpsAvailability = jasmine.createSpy('checkGpsAvailability')
+        .and.returnValue(positionSubject.asObservable());
 
       /* make call */
       toTest.notifyWhenReady().subscribe(
@@ -202,9 +206,8 @@ describe('Geo-Location', () => {
       const positionSubject: Subject<any> = new Subject();
 
       /* train mocks */
-      spyOn(deviceGeoLocService, 'checkGpsAvailability').and.returnValue(
-        positionSubject.asObservable()
-      );
+      deviceGeoLocSpy.checkGpsAvailability = jasmine.createSpy('checkGpsAvailability')
+        .and.returnValue(positionSubject.asObservable());
       positionSubject.next(expected);
 
       /* make call */
@@ -225,9 +228,8 @@ describe('Geo-Location', () => {
       const positionSubject: Subject<any> = new Subject();
 
       /* train mocks */
-      spyOn(deviceGeoLocService, 'checkGpsAvailability').and.returnValue(
-        positionSubject.asObservable()
-      );
+      deviceGeoLocSpy.checkGpsAvailability = jasmine.createSpy('checkGpsAvailability')
+        .and.returnValue(positionSubject.asObservable());
 
       /* make call */
       toTest.notifyWhenReady().subscribe(
@@ -250,9 +252,8 @@ describe('Geo-Location', () => {
       const positionSubject: Subject<any> = new Subject();
 
       /* train mocks */
-      spyOn(deviceGeoLocService, 'checkGpsAvailability').and.returnValue(
-        positionSubject.asObservable()
-      );
+      deviceGeoLocSpy.checkGpsAvailability = jasmine.createSpy('checkGpsAvailability')
+        .and.returnValue(positionSubject.asObservable());
 
       /* make call */
       toTest.notifyWhenReady().subscribe(

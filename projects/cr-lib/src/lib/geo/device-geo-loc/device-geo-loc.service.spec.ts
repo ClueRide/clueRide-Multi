@@ -1,16 +1,21 @@
 import {DeviceGeoLocService} from './device-geo-loc.service';
 import {TestBed} from '@angular/core/testing';
+import {of} from 'rxjs';
 
 let toTest: DeviceGeoLocService;
 
 describe('Device Geo-Loc Service', () => {
+  const geoLocationSpy = jasmine.createSpyObj('Geolocation', ['watchPosition']);
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
+    geoLocationSpy.watchPosition = jasmine.createSpy('watchPosition', () => {
+      return of({});
+    })
   });
 
   it('should be defined', () => {
-    toTest = TestBed.get(DeviceGeoLocService);
+    toTest = new DeviceGeoLocService(geoLocationSpy);
     expect(toTest).toBeDefined();
   });
 

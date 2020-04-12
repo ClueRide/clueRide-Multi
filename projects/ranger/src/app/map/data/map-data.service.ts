@@ -115,9 +115,9 @@ export class MapDataService {
    *
    * @param attractionLayerGroup where to put the filtered layers.
    */
-  registerMap(map: L.Map): void {
+  registerAttractionLayerGroup(attractionLayerGroup: L.LayerGroup): void {
     console.log('MapDataService.registerMap()');
-    this.attractionLayerGroup = map;
+    this.attractionLayerGroup = attractionLayerGroup;
     this.attractionLayerService.showFilteredAttractions(
       this.filterService.getCurrentFilter(),
       this.attractionLayerGroup

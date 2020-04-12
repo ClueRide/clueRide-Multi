@@ -1,23 +1,10 @@
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import * as L from 'leaflet';
-import 'leaflet.awesome-markers/dist/leaflet.awesome-markers';
+import 'leaflet.awesome-markers';
 import {Attraction} from '../../api/attraction/attraction';
-
-/**
- * This list of valid marker colors is taken from the leaflet.awesome-markers github README:
- * https://github.com/lvoogdt/Leaflet.awesome-markers
- */
-export type MarkerColor =
-  'red'
-  | 'darkred'
-  | 'orange'
-  | 'green'
-  | 'darkgreen'
-  | 'blue'
-  | 'purple'
-  | 'darkpurple'
-  | 'cadetblue';
+import {ClickableMarker} from '../clickableMarker';
+import MarkerOptions = L.MarkerOptions;
 
 /**
  * Creates the markers used in Clue Ride Player module.
@@ -64,49 +51,19 @@ export class GameMarkerService {
     this.defaultAttractionIcon = L.AwesomeMarkers.icon(
       {
         icon: 'lock-open',
-        markerColor: 'darkblue',
+        markerColor: 'cadetblue',
         prefix: 'fa'
       }
     );
 
-    this.monumentIcon = GameMarkerService.createIcon(
-      'monument',
-      'fa',
-      'darkpurple'
-    );
-
-  }
-
-  static createIcon(
-    iconName: string = 'flag',
-    prefix: 'ion' | 'fa' = 'fa',
-    markerColor: MarkerColor = 'blue'
-  ): L.AwesomeMarkers.Icon {
-    return L.AwesomeMarkers.icon(
+    this.monumentIcon = L.AwesomeMarkers.icon(
       {
-        icon: iconName,
-        prefix,
-        markerColor
+        icon: 'monument',
+        prefix: 'fa',
+        markerColor: 'darkpurple'
       }
     );
-  }
 
-  /**
-   * For the given marker, set the OnClick response to push the Location Page
-   * for the Attraction ID carried by the marker.
-   *
-   * Exception is thrown if the marker doesn't carry the `id` property.
-   *
-   * @param marker Leaflet marker with additional attribute for the attraction ID.
-   */
-  static setOnClickToLocationPage(marker: L.marker): void {
-    if (!marker.options.id) {
-      console.error('Marker without Attraction ID');
-      throw {
-        error: 'setOnClickToLocationPage: marker doesn\'t have an attraction ID'
-      };
-    }
-    marker.on('click', GameMarkerService.onAttractionMarker);
   }
 
   /** Response to clicks on the attraction's marker: show the attraction's page. */
@@ -115,27 +72,49 @@ export class GameMarkerService {
     details.router.navigate(['attraction', details.id]);
   }
 
-  generateAttractionMarker(
+  /**
+   * Builds a ClickableMarker carrying the Attraction's ID with the color and image
+   * on the marker set to the position within the Course.
+   *
+   * @param attraction containing ID and its state along the Course.
+   */
+  public generateAttractionMarker(
     attraction: Attraction
-  ): L.marker {
-    /* Adding the right color and icon goes here. */
-    const marker: L.marker = L.marker(
-      L.latLng(attraction.latLon),
-      {
-        id: attraction.id,
-        title: attraction.name,
-        router: this.router,
-        icon: this.selectMarkerIcon(attraction),
-      }
+  ): ClickableMarker {
+
+    const gameIcon = this.selectMarkerIcon(attraction);
+
+    const markerOptions: MarkerOptions = {
+      icon: gameIcon,
+      alt: 'id:' + attraction.id,
+      title: attraction.name,
+    };
+
+    const marker: ClickableMarker = new ClickableMarker(
+      attraction,
+      markerOptions
     );
 
     /* What to do when user clicks on the attraction. */
-    GameMarkerService.setOnClickToLocationPage(marker);
+    marker.on('click', (mouseEvent) => {
+      this.openLocationPageForMarkerClick(mouseEvent);
+    });
 
     return marker;
   }
 
-  selectMarkerIcon(attraction: Attraction): L.AwesomeMarker.Icon {
+  private openLocationPageForMarkerClick(
+    mouseEvent
+  ): void {
+    const crMarker: ClickableMarker = mouseEvent.target;
+    this.router.navigate(
+      ['attraction', crMarker.attractionId]
+    ).then(() => console.log('Successful launch of Attraction Page')
+    ).catch( (error) => console.log('Failed to launch Attraction Page')
+    );
+  }
+
+  selectMarkerIcon(attraction: Attraction): L.AwesomeMarkers.Icon {
     if (attraction.isLast) { return this.nextAttractionIcon; }
     if (attraction.isCurrent) { return this.currentAttractionIcon; }
     return this.defaultAttractionIcon;

@@ -3,10 +3,18 @@ import {TestBed} from '@angular/core/testing';
 import {FilterPopoverService} from './filter-popover.service';
 
 describe('FilterPopoverService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  const popoverControllerSpy = jasmine.createSpyObj('PopoverController', ['get']);
+  let toTest: FilterPopoverService;
+
+  beforeEach(() => {
+      TestBed.configureTestingModule({});
+
+      toTest = new FilterPopoverService(popoverControllerSpy);
+    }
+  );
 
   it('should be created', () => {
-    const service: FilterPopoverService = TestBed.get(FilterPopoverService);
-    expect(service).toBeTruthy();
+    expect(toTest).toBeTruthy();
   });
+
 });
