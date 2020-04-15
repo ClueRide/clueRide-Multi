@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
   build: {
-    gitSha: 'f7d1ccf',
-    date: '2020-04-11T18:49:42.923Z',
+    gitSha: '747e778',
+    date: '2020-04-14T01:55:42.070Z',
   }
 };

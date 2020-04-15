@@ -30,7 +30,7 @@ export class AddLocButtonComponent {
   }
 
   addLocationAction(event: Event) {
-    const newGeoposition: Geoposition = this.mapPositionService.getReportedPosition();
+    const newGeoposition: Geoposition = this.mapPositionService.getMapCenterPosition();
     alert(JSON.stringify(newGeoposition.coords));
 
     // TODO: CA-256 Turn this into AttractionService

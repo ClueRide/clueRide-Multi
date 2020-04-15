@@ -69,11 +69,15 @@ export class DeviceGeoLocService {
 
     if (!this.positionSubject) {
       this.positionSubject = new Subject();
-      this.watchSubscription = this.geolocation.watchPosition().subscribe(
+      this.watchSubscription = this.geolocation.watchPosition(
+        this.geoLocOptions
+      ).subscribe(
         (response) => {
           this.positionSubject.next(response);
         },
-        (error) => {},
+        (error) => {
+          console.log('getWatch(): unable to obtain position', error);
+        },
       );
     }
 
