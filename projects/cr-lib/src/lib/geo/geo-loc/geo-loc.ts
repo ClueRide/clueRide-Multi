@@ -12,10 +12,11 @@ import {DeviceGeoLocService} from '../device-geo-loc/device-geo-loc.service';
 })
 export class GeoLocService {
 
+  /* Atlanta's coordinates are taken at Five Points. */
   public static readonly ATLANTA_GEOPOSITION: Geoposition = {
     coords: {
-      latitude: 33.753,
-      longitude: -84.390,
+      latitude: 33.754440,
+      longitude: -84.389819,
       accuracy: 0.0,
       altitude: null,
       altitudeAccuracy: null,

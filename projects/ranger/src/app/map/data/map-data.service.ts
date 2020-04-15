@@ -7,8 +7,6 @@ import {
   CategoryService,
   Filter,
   FilterService,
-  LatLonService,
-  LocationService,
   LocTypeService
 } from 'cr-lib';
 import {
@@ -59,8 +57,6 @@ export class MapDataService {
     private categoryAttractionService: CategoryAttractionService,
     private categoryService: CategoryService,
     private filterService: FilterService,
-    private latLonService: LatLonService,
-    public locationService: LocationService,
     public locationTypeService: LocTypeService,
   ) {
     console.log('Hello MapDataService Provider');
@@ -72,9 +68,9 @@ export class MapDataService {
    */
   private subscribeToFilterChanges() {
     this.filterService.getFilterObservable().subscribe(
-      (filter: Filter) => {
+      (newFilter: Filter) => {
         if (this.attractionLayerGroup) {
-          this.attractionLayerService.showFilteredAttractions(filter, this.attractionLayerGroup);
+          this.attractionLayerService.showFilteredAttractions(newFilter, this.attractionLayerGroup);
         } else {
           console.log('Responding to Filter Change without a attractionLayerGroup to put it on');
         }
@@ -123,10 +119,6 @@ export class MapDataService {
       this.attractionLayerGroup
     );
   }
-
-  logError = (error: any): void => {
-    console.log('Error while updating one of the attractions', error);
-  };
 
   /**
    * Allows a Map Data client to be told whenever there is a new Attraction

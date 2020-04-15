@@ -2,11 +2,11 @@ import {Injectable} from '@angular/core';
 import {Geoposition} from '@ionic-native/geolocation';
 import {
   BehaviorSubject,
-  Observable,
   ReplaySubject,
   Subject
 } from 'rxjs';
 import {GeoLocService} from 'cr-lib';
+import {MapDragService} from '../drag/map-drag.service';
 
 /**
  * Responsible for:
@@ -14,7 +14,7 @@ import {GeoLocService} from 'cr-lib';
  *   <li>Obtaining suitable position sources (GPS/Device or Tether and via MapDrag).
  *   <li>Able to send trigger once that position is known/settled (can involve asking permission to use GPS, for example).
  *   <li>Maintains the map center, sometimes specifying the map's center and sometimes using the map's center.
- *   <li>Serves to provide value for back-end know where we are so it can recommend appropriate geometry elements (mainly attractions).
+ *   <li>Serves to provide GeoPosition we tell the back-end so it can recommend nearby geometry elements (usually attractions).
  * </ul>
  *
  * Collaborates with:
@@ -24,21 +24,24 @@ import {GeoLocService} from 'cr-lib';
   providedIn: 'root'
 })
 export class MapPositionService {
-  /* Where we are */
+  /* Where we are regardless of how we display it. */
   private currentPosition: Geoposition;
   private currentPositionSubject: Subject<Geoposition> = new ReplaySubject<Geoposition>(1);
 
   /* Our current Center of the map; can be different from GPS or Tether reported position when we drag the map. */
-  readonly reportedPosition: BehaviorSubject<Geoposition>;
+  private mapCenterSubject: Subject<Geoposition>;
+
+  /* Provides a new position whenever we want to move the map to our current position (Auto-center). */
+  readonly moveMapSubject: Subject<Geoposition>;
 
   private positionSourceKnownFlag: boolean;
 
   constructor(
-    private geoLocService: GeoLocService
+    private geoLocService: GeoLocService,
+    private mapDragService: MapDragService,
   ) {
-    /* Set an Atlanta position if we don't have any other value yet. */
-    this.reportedPosition = new BehaviorSubject(GeoLocService.ATLANTA_GEOPOSITION);
     this.positionSourceKnownFlag = false;
+    this.moveMapSubject = new Subject<Geoposition>();
   }
 
   /**
@@ -51,23 +54,37 @@ export class MapPositionService {
       return;
     }
 
-    console.log("MapPositionService: findOurPosition()");
+    console.log('MapPositionService: findOurPosition()');
     this.geoLocService.getPositionWatch().subscribe(
       (geoPosition: Geoposition) => {
         this.positionSourceKnownFlag = true;
-        this.currentPositionSubject.next(geoPosition)
+        this.currentPositionSubject.next(geoPosition);
+
+        // TODO CI-149: Have this guy subscribe to the MapDataService or other appropriate source.
+        // this.heading.updateLocation(geoPosition.coords);
+
+        this.maybeMoveMap(geoPosition);
       }
     );
   }
 
+  /**
+   * Tell this service which Subject will be broadcasting the result of Map Drag events.
+   *
+   * @param dragEndSubject subject that is updated when a Map Drag event has ended.
+   */
+  public setDragEndSubject(dragEndSubject: Subject<Geoposition>): void {
+    this.mapCenterSubject = dragEndSubject;
+  }
+
   /** Subject published when center of map is moved. */
-  public getReportedPositionSubject(): BehaviorSubject<Geoposition> {
-    return this.reportedPosition;
+  public getMapCenterPositionSubject(): Subject<Geoposition> {
+    return this.mapCenterSubject;
   }
 
   /** Geoposition published when center of map is moved. */
-  public getReportedPosition(): Geoposition {
-    return this.reportedPosition.getValue();
+  public getMapCenterPosition(): Geoposition {
+    return (this.mapCenterSubject as BehaviorSubject<Geoposition>).getValue();
   }
 
   public getCurrentPosition(): Geoposition {
@@ -79,25 +96,32 @@ export class MapPositionService {
   }
 
   /**
-   * Pays attention to the GeoLoc service to provide new positions and passes them along to
-   * the function which handles that new position.
-   *
-   * @param setNewCenterForMap function which is expected to respond to a new position.
+   * Provides events when we want to move the map center to the supplied position.
    */
-  public setWatch(
-    setNewCenterForMap: (position: Geoposition) => void
-  ): Observable<Geoposition> {
-    const positionObservable = this.geoLocService.getPositionWatch();
-    positionObservable.subscribe(
-      (position) => {
-        setNewCenterForMap(position);
-      }
-    );
-    return positionObservable;
+  public getMapMoveSubject(): Subject<Geoposition> {
+    return this.moveMapSubject;
   }
 
-  public releaseWatch(): void {
-    this.geoLocService.clearWatch();
+  /**
+   * Upon a "Move Map" event carrying a new Geoposition, check if it is a good time
+   * to change the center of the map.
+   *
+   * This contains the logic for determining when we have a position that should be
+   * used to center the map at that new position.
+   *
+   * @param geoPosition device or tether position update.
+   */
+  private maybeMoveMap(geoPosition: Geoposition) {
+    console.log('MaybeMoveMap:', geoPosition.coords);
+    /* Ignore new position updates until the drag completes. */
+    if (this.mapDragService.isDragInProgress()) {
+      return;
+    }
+
+    /* Move map so current location is centered. */
+    if (this.mapDragService.isAutoCenter()) {
+      this.moveMapSubject.next(geoPosition);
+    }
   }
 
 }

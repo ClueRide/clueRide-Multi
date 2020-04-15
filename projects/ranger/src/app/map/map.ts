@@ -1,19 +1,24 @@
-import {isDefined} from '@angular/compiler/src/util';
-import {Component} from '@angular/core';
+import {
+  Component,
+  OnDestroy
+} from '@angular/core';
 import {Geoposition} from '@ionic-native/geolocation';
 import {
   Attraction,
   AttractionLayerService,
   HeadingComponent,
   LatLonService,
+  MapCenterDisplayComponent,
   PoolMarkerService
 } from 'cr-lib';
 import * as L from 'leaflet';
-import {Subscription} from 'rxjs';
 import {MapDataService} from './data/map-data.service';
 import {MapDragService} from './drag/map-drag.service';
 import {MapPositionService} from './position/map-position.service';
-import {MapCenterDisplayComponent} from '../../../../cr-lib/src/lib/map-center/map-center-display.component';
+import {
+  Subject,
+  Subscription
+} from 'rxjs';
 
 /** Defines reasonable Zoom Level for initially opening the map. */
 const DEFAULT_ZOOM_LEVEL = 14;
@@ -26,22 +31,17 @@ const DEFAULT_ZOOM_LEVEL = 14;
   templateUrl: 'map.html',
   styleUrls: ['map.scss']
 })
-export class MapComponent {
-
-  // TODO: CI-34: put this ViewLatLon component in the library
-  // static latLon: LatLonComponent = {} as any;
-
-  public map: L.Map;
-
-  /** Holds subscription resources so we can release them when map is closed. */
-  private subscription: Subscription;
-
-  /** Holds Leaflet Layer for all Categories of Markers. */
-  private attractionLayerGroup: L.LayerGroup;
-  private layerIdPerAttraction: { [index: number]: number } = [];
+export class MapComponent implements OnDestroy {
 
   /** Displays the coordinates of the current center of the map. */
   private static mapCenterDisplay: MapCenterDisplayComponent;
+
+  public map: L.Map;
+  /** Holds Leaflet Layer for all Categories of Markers. */
+  private attractionLayerGroup: L.LayerGroup;
+
+  private layerIdPerAttraction: { [index: number]: number } = [];
+  private positionSubscription: Subscription;
 
   constructor(
     private attractionLayerService: AttractionLayerService,
@@ -73,15 +73,17 @@ export class MapComponent {
         DEFAULT_ZOOM_LEVEL
       );
 
-      /* Setup the Map Center Display. */
-      MapComponent.mapCenterDisplay = new MapCenterDisplayComponent();
-      MapComponent.mapCenterDisplay.addTo(this.map);
-      MapComponent.mapCenterDisplay.setMapCenterObservable(
-        this.mapPositionService.getCurrentPositionSubject()
+      /* Respond to changes in our position by moving the map. */
+      this.positionSubscription = this.mapPositionService.getMapMoveSubject().subscribe(
+        (moveMapPosition: Geoposition) => this.panMapToNewPosition(moveMapPosition)
       );
 
-      /* Attach the reported position subject to the Move Start service. */
-      this.mapDragService.useMap(this.map);
+      /* Attach the map center position subject to the Map Drag service. */
+      const mapCenterSubject = this.mapDragService.registerMap(this.map);
+      this.mapPositionService.setDragEndSubject(mapCenterSubject);
+      mapCenterSubject.next(position);
+
+      this.addMapCenterDisplay(mapCenterSubject);
     }
 
     /* Specify the tile layer for the map and add the attribution. */
@@ -93,51 +95,21 @@ export class MapComponent {
     /* Add a "here I am" marker. */
     this.heading.getHeadingMarker().addTo(this.map);
 
-    /* Turn off auto-center if user drags the map. */
-    this.map.on('movestart', () => {
-      this.mapDragService.setAutoCenter(false);
-    });
-
     /* Register to be updated with the Category Layers. */
     this.attractionLayerGroup = L.layerGroup().addTo(this.map);
     this.mapDataService.registerAttractionLayerGroup(this.attractionLayerGroup);
   }
 
-  setNewCenterForMap = (
-    geoPosition: Geoposition
-  ) => {
-    /* Ignore new position updates until the drag completes. */
-    if (this.mapDragService.isDragInProgress()) {
-      return;
-    }
-
-    // TODO CI-149: Have this guy subscribe to the MapDataService or other appropriate source.
-    this.heading.updateLocation(geoPosition.coords);
-
-    /* Move map so current location is centered. */
-    if (this.mapDragService.isAutoCenter() && this.map) {
-
-      /* Suspend move event generation. */
-      this.map.off('movestart');
-
-      this.map.panTo(this.latLonService.toLatLng(geoPosition));
-      // console.log('Map.updatePosition: next Reported Position');
-
-      /* Restore move event generation. */
-      this.map.on('movestart',
-        () => {
-          this.mapDragService.setAutoCenter(false);
-        }
-      );
-    }
+  /** Setup the Map Center Display. */
+  private addMapCenterDisplay(mapCenterSubject: Subject<Geoposition>) {
+    MapComponent.mapCenterDisplay = new MapCenterDisplayComponent();
+    MapComponent.mapCenterDisplay.addTo(this.map);
+    MapComponent.mapCenterDisplay.setMapCenterObservable(mapCenterSubject);
   }
 
   ngOnDestroy(): void {
     console.log('Close Map -- turn off watches');
-    // this.subscription.unsubscribe();
-    if (isDefined(this.map) && this.map !== null) {
-      this.mapPositionService.releaseWatch();
-    }
+    this.positionSubscription.unsubscribe();
     this.heading.releaseHeadingMarker();
   }
 
@@ -192,6 +164,24 @@ export class MapComponent {
   clearMap = (): void => {
     // TODO: perhaps touched by LE-76
     this.attractionLayerGroup.clearLayers();
+  }
+
+  /**
+   * When a Move Map event occurs, respond by panning the map, and take care to avoid drag events
+   * during that animated panning.
+   */
+  private panMapToNewPosition(geoPosition: Geoposition): void {
+    /* Suspend move event generation. */
+    this.map.off('movestart');
+
+    this.map.panTo(this.latLonService.toLatLng(geoPosition));
+
+    /* Restore move event generation. */
+    this.map.on('movestart',
+      () => {
+        this.mapDragService.setAutoCenter(false);
+      }
+    );
   }
 
 }

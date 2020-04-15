@@ -1,32 +1,40 @@
 import {Injectable} from '@angular/core';
 import {Geoposition} from '@ionic-native/geolocation';
+import * as L from 'leaflet';
+import {LatLonService} from 'cr-lib';
 import {
-  LatLon,
-  LatLonService
-} from 'cr-lib';
-import {Subject} from 'rxjs';
-import {MapPositionService} from '../position/map-position.service';
+  ReplaySubject,
+  Subject
+} from 'rxjs';
 
 /**
  * This responds to map drag events and is a source of new position info which is pushed
- * to the MapDataService.
+ * to subscribers of the MapCenterSubject.
+ *
+ * Also exposes a function which will turn on/off the auto-centering that allows the map
+ * to track a separate source of GPS position for the center of the map.
  */
 @Injectable({
   providedIn: 'root'
 })
 export class MapDragService {
 
+  /** The Subject that broadcasts changes to the map's center at the end of a Drag Event. */
+  private centerSubject: Subject<Geoposition>;
+
   /** Set to true if the center of the map should follow either Device or Tether instead of Drag. */
   private autoCenterFlag = true;
-  private mapInstance: any;
-  private centerSubject: Subject<Geoposition>;
+  private mapInstance: L.Map;
   private dragInProgress = false;
 
   constructor(
     private latLonService: LatLonService,
-    private mapPositionService: MapPositionService
   ) {
-    this.centerSubject = mapPositionService.getReportedPositionSubject();
+    this.centerSubject = new ReplaySubject<Geoposition>(1);
+  }
+
+  public getCenterSubject(): Subject<Geoposition> {
+    return this.centerSubject;
   }
 
   public isAutoCenter(): boolean {
@@ -37,9 +45,15 @@ export class MapDragService {
     this.autoCenterFlag = autoCenter;
   }
 
-  useMap(
-    map: any
-  ) {
+  /**
+   * Provides the instance of L.Map whose drag events we're watching.
+   *
+   * @param map
+   * @returns Subject<Geoposition> representing the center of the map at the end of a drag event.
+   */
+  registerMap(
+    map: L.Map
+  ): Subject<Geoposition> {
     this.mapInstance = map;
 
     map.on('movestart', () => {
@@ -48,10 +62,15 @@ export class MapDragService {
     });
 
     map.on('moveend', () => {
-      this.sendDragEndLocation(map.getCenter());
+      this.sendDragEndLocation(
+        this.latLonService.toGeoPosition(
+          map.getCenter()
+        )
+      );
       this.dragInProgress = false;
     });
 
+    return this.centerSubject;
   }
 
   isDragInProgress(): boolean {
@@ -63,13 +82,12 @@ export class MapDragService {
    * the map is centered, typically components that want to create
    * an object at the map's current center.
    *
-   * @param latLon LatLon representation of the current position.
+   * @param geoPosition representation of the center of the map at
+   * the end of a drag event.
    */
-  sendDragEndLocation(latLon: LatLon) {
+  sendDragEndLocation(geoPosition: Geoposition) {
     this.centerSubject.next(
-      this.latLonService.toGeoPosition(
-        latLon
-      )
+      geoPosition
     );
   }
 
