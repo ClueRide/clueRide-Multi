@@ -3,7 +3,7 @@ import {Geoposition} from '@ionic-native/geolocation';
 import * as L from 'leaflet';
 import {LatLonService} from 'cr-lib';
 import {
-  ReplaySubject,
+  BehaviorSubject,
   Subject
 } from 'rxjs';
 
@@ -20,7 +20,7 @@ import {
 export class MapDragService {
 
   /** The Subject that broadcasts changes to the map's center at the end of a Drag Event. */
-  private centerSubject: Subject<Geoposition>;
+  private readonly centerSubject: BehaviorSubject<Geoposition>;
 
   /** Set to true if the center of the map should follow either Device or Tether instead of Drag. */
   private autoCenterFlag = true;
@@ -30,7 +30,9 @@ export class MapDragService {
   constructor(
     private latLonService: LatLonService,
   ) {
-    this.centerSubject = new ReplaySubject<Geoposition>(1);
+    this.centerSubject = new BehaviorSubject<Geoposition>(
+      this.latLonService.toGeoPosition([0, 0])
+    );
   }
 
   public getCenterSubject(): Subject<Geoposition> {
@@ -48,12 +50,12 @@ export class MapDragService {
   /**
    * Provides the instance of L.Map whose drag events we're watching.
    *
-   * @param map
+   * @param map instance whose drag events to watch.
    * @returns Subject<Geoposition> representing the center of the map at the end of a drag event.
    */
   registerMap(
     map: L.Map
-  ): Subject<Geoposition> {
+  ): BehaviorSubject<Geoposition> {
     this.mapInstance = map;
 
     map.on('movestart', () => {

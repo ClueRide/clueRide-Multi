@@ -17,7 +17,7 @@ import {of} from 'rxjs';
 import {MapDataService} from '../../map/data/map-data.service';
 import {ActiveAttractionService} from '../active-attraction.service';
 
-import {PuzzleTabPage} from './puzzle-tab.page';
+import {PuzzleTabPageComponent} from './puzzle-tab.page';
 
 class MockParamMap {
   paramMap: {
@@ -31,8 +31,8 @@ class MockParamMap {
 }
 
 describe('PuzzleTabPage', () => {
-  let component: PuzzleTabPage;
-  let fixture: ComponentFixture<PuzzleTabPage>;
+  let component: PuzzleTabPageComponent;
+  let fixture: ComponentFixture<PuzzleTabPageComponent>;
 
   const activeAttractionSpy = jasmine.createSpyObj('ActiveAttractionService', ['setActiveAttractionId']);
   const activatedRouteSpy = jasmine.createSpyObj('ActivatedRoute', ['get']);
@@ -51,10 +51,10 @@ describe('PuzzleTabPage', () => {
     );
 
     TestBed.configureTestingModule({
-      declarations: [ PuzzleTabPage ],
+      declarations: [ PuzzleTabPageComponent ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
-        PuzzleTabPage,
+        PuzzleTabPageComponent,
         {provide: ActiveAttractionService, useValue: activeAttractionSpy},
         {provide: ActivatedRoute, useValue: activatedRouteSpy},
         {provide: CategoryAttractionService, useValue: categoryAttractionSpy},
@@ -67,7 +67,7 @@ describe('PuzzleTabPage', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PuzzleTabPage);
+    fixture = TestBed.createComponent(PuzzleTabPageComponent);
     component = fixture.componentInstance;
     component.attraction = AttractionMock.createAttractionMock(123);
 

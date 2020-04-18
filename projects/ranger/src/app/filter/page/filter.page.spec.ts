@@ -6,38 +6,49 @@ import {
 } from '@angular/core/testing';
 import {
   CategoryService,
-  CourseService
+  CourseService,
+  Filter,
+  FilterService
 } from 'cr-lib';
-import {of} from 'rxjs';
 
-import {FilterPage} from './filter.page';
+import {FilterPageComponent} from './filter.page';
+import {from} from 'rxjs';
+
+const courseSpy = jasmine.createSpyObj('CourseService', ['getAllCourses']);
+const categorySpy = jasmine.createSpyObj('CategoryService', ['getAllCategories']);
+const filterSpy = jasmine.createSpyObj('FilterService', ['getCurrentFilter']);
+
+const emptyFilter: Filter = {
+  categoriesToIncludeById: [],
+  isEmpty: true,
+  outingToInclude: null
+};
 
 describe('FilterPage', () => {
-  let component: FilterPage;
-  let fixture: ComponentFixture<FilterPage>;
-
-  const courseSpy = jasmine.createSpyObj('CourseService', ['getAllCourses']);
-  const categorySpy = jasmine.createSpyObj('CategoryService', ['getAllCategories']);
+  let component: FilterPageComponent;
+  let fixture: ComponentFixture<FilterPageComponent>;
 
   beforeEach(async(() => {
 
-    courseSpy.getAllCourses = jasmine.createSpy('getAllCourses').and.returnValue(of([]));
-    categorySpy.getAllCategories = jasmine.createSpy('getAllCategories').and.returnValue(of([]));
+    courseSpy.getAllCourses = jasmine.createSpy('getAllCourses').and.returnValue(from([]));
+    // categorySpy.getAllCategories = jasmine.createSpy('getAllCategories').and.returnValue(of([]));
+    filterSpy.getCurrentFilter = jasmine.createSpy('getCurrentFilter').and.returnValue(emptyFilter);
 
     TestBed.configureTestingModule({
-      declarations: [ FilterPage ],
+      declarations: [ FilterPageComponent ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
-        FilterPage,
+        FilterPageComponent,
         {provide: CategoryService, useValue: categorySpy},
         {provide: CourseService, useValue: courseSpy},
+        {provide: FilterService, useValue: filterSpy},
       ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FilterPage);
+    fixture = TestBed.createComponent(FilterPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

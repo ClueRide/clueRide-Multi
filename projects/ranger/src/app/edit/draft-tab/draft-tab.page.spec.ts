@@ -4,12 +4,10 @@ import {
   ComponentFixture,
   TestBed
 } from '@angular/core/testing';
-import {
-  ActivatedRoute,
-  Router
-} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {
   Attraction,
+  AttractionLayerService,
   Category,
   CategoryAttractionService,
   CategoryService,
@@ -21,7 +19,8 @@ import {of} from 'rxjs';
 import {MapDataService} from '../../map/data/map-data.service';
 import {ActiveAttractionService} from '../active-attraction.service';
 
-import {DraftTabPage} from './draft-tab.page';
+import {DraftTabPageComponent} from './draft-tab.page';
+import {NavController} from '@ionic/angular';
 
 class MockParamMap {
   paramMap: {
@@ -71,10 +70,10 @@ function createLocType(index): LocationType {
 }
 
 describe('DraftTabPage', () => {
-  let component: DraftTabPage;
-  let toTest: DraftTabPage;
+  let component: DraftTabPageComponent;
+  let toTest: DraftTabPageComponent;
 
-  let fixture: ComponentFixture<DraftTabPage>;
+  let fixture: ComponentFixture<DraftTabPageComponent>;
   const category1 = createCategory(1);
   const category2 = createCategory(1);
 
@@ -84,6 +83,7 @@ describe('DraftTabPage', () => {
 
   const activeAttractionSpy = jasmine.createSpyObj('ActiveAttractionService', ['setActiveAttractionId']);
   const activatedRouteSpy = jasmine.createSpyObj('ActivatedRoute', ['get']);
+  const attractionLayerSpy = jasmine.createSpyObj('attractionLayerService', ['deleteAttraction']);
   const categorySpy = jasmine.createSpyObj('CategoryService', ['get']);
   const categoryAttractionSpy = jasmine.createSpyObj('CategoryAttractionService', ['getAttraction']);
   const attractionSpy = jasmine.createSpyObj('LocationService', ['get']);
@@ -93,7 +93,7 @@ describe('DraftTabPage', () => {
   ]);
   const mapDataSpy = jasmine.createSpyObj('MapDataService', ['getAttractionById']);
 
-  const routerSpy = jasmine.createSpyObj('Router', ['get']);
+  const navCtrlSpy = jasmine.createSpyObj('NavController', ['back']);
 
   beforeEach(async(() => {
     activatedRouteSpy.queryParams = of(true);
@@ -109,25 +109,26 @@ describe('DraftTabPage', () => {
     });
 
     TestBed.configureTestingModule({
-      declarations: [ DraftTabPage ],
+      declarations: [ DraftTabPageComponent ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
-        DraftTabPage,
+        DraftTabPageComponent,
         {provide: ActiveAttractionService, useValue: activeAttractionSpy},
         {provide: ActivatedRoute, useValue: activatedRouteSpy},
+        {provide: AttractionLayerService, useValue: attractionLayerSpy},
         {provide: CategoryService, useValue: categorySpy},
         {provide: CategoryAttractionService, useValue: categoryAttractionSpy},
         {provide: LocationService, useValue: attractionSpy},
         {provide: LocTypeService, useValue: locationTypeSpy},
         {provide: MapDataService, useValue: mapDataSpy},
-        {provide: Router, useValue: routerSpy},
+        {provide: NavController, useValue: navCtrlSpy},
       ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DraftTabPage);
+    fixture = TestBed.createComponent(DraftTabPageComponent);
     component = fixture.componentInstance;
     toTest = component;
     component.categories = [

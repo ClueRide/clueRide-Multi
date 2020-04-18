@@ -179,6 +179,7 @@ export class MapDataService {
    */
   assembleAttraction = (attraction: Attraction) => {
     const locationType = this.locationTypeService.getById(attraction.locationTypeId);
+    attraction.locationType = locationType;
     attraction.locationTypeIconName = locationType.icon;
 
     /* Both adds new and replaces existing attractions in the cache. */
@@ -187,8 +188,14 @@ export class MapDataService {
   }
 
   assembleAndAddAttraction = (attraction: Attraction) => {
+    console.log('MapDataService.assembleAndAddAttraction()');
+    const newAttraction: Attraction = this.assembleAttraction(attraction);
     /* Push to attraction stream. */
-    this.attractionToAdd.next(this.assembleAttraction(attraction));
+    this.attractionToAdd.next(newAttraction);
+
+    /* Direct calls to dependent services. */
+    this.attractionLayerService.addNewAttraction(newAttraction);
+    this.categoryAttractionService.addNewAttraction(newAttraction);
   }
 
   updateAttraction(updatedAttraction: Attraction) {

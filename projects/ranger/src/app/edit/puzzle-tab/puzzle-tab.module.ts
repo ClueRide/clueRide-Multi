@@ -6,7 +6,7 @@ import {IonicModule} from '@ionic/angular';
 import {ConnectionStateModule} from 'cr-lib';
 import {PuzzleModule} from '../../puzzle/puzzle.module';
 
-import {PuzzleTabPage} from './puzzle-tab.page';
+import {PuzzleTabPageComponent} from './puzzle-tab.page';
 
 @NgModule({
   imports: [
@@ -16,6 +16,6 @@ import {PuzzleTabPage} from './puzzle-tab.page';
     IonicModule,
     PuzzleModule,
   ],
-  declarations: [PuzzleTabPage]
+  declarations: [PuzzleTabPageComponent]
 })
 export class PuzzleTabModule {}

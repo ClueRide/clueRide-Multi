@@ -9,13 +9,13 @@ import {
 import {IonicModule} from '@ionic/angular';
 import {ConnectionStateModule} from 'cr-lib';
 import {DraftTabModule} from './draft-tab/draft-tab.module';
-import {DraftTabPage} from './draft-tab/draft-tab.page';
+import {DraftTabPageComponent} from './draft-tab/draft-tab.page';
 
 import {EditPage} from './edit.page';
 import {PlaceTabModule} from './place-tab/place-tab.module';
-import {PlaceTabPage} from './place-tab/place-tab.page';
+import {PlaceTabPageComponent} from './place-tab/place-tab.page';
 import {PuzzleTabModule} from './puzzle-tab/puzzle-tab.module';
-import {PuzzleTabPage} from './puzzle-tab/puzzle-tab.page';
+import {PuzzleTabPageComponent} from './puzzle-tab/puzzle-tab.page';
 
 const routes: Routes = [
   {
@@ -24,15 +24,15 @@ const routes: Routes = [
     children: [
       {
         path: ':id/draft',
-        component: DraftTabPage
+        component: DraftTabPageComponent
       },
       {
         path: ':id/place',
-        component: PlaceTabPage
+        component: PlaceTabPageComponent
       },
       {
         path: ':id/puzzle',
-        component: PuzzleTabPage
+        component: PuzzleTabPageComponent
       }
     ]
   }

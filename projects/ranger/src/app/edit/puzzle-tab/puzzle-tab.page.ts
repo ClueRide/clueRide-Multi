@@ -21,7 +21,7 @@ import {ActiveAttractionService} from '../active-attraction.service';
   templateUrl: './puzzle-tab.page.html',
   styleUrls: ['./puzzle-tab.page.scss'],
 })
-export class PuzzleTabPage implements OnInit, OnDestroy {
+export class PuzzleTabPageComponent implements OnInit, OnDestroy {
 
   /* Expose instance to be edited. */
   public attraction: Attraction;

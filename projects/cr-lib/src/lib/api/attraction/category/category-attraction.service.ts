@@ -16,7 +16,9 @@ import {AttractionsByCategory} from './attractions-by-category';
   providedIn: 'root'
 })
 export class CategoryAttractionService {
-  private attractionSubject: Subject<boolean>;
+  /* Sends true event when attractions have loaded. */
+  private attractionsLoadedSubject: Subject<boolean>;
+  /* Records an array of attractions for each Category which has been assigned. */
   private attractionsPerCategory: AttractionsByCategory = {};
   private attractionMap: AttractionMap = {};
 
@@ -25,7 +27,7 @@ export class CategoryAttractionService {
     private locationService: LocationService,
     private locTypeService: LocTypeService,
   ) {
-    this.attractionSubject = new Subject<boolean>();
+    this.attractionsLoadedSubject = new Subject<boolean>();
   }
 
   /**
@@ -44,10 +46,10 @@ export class CategoryAttractionService {
       (allAttractions: Attraction[]) => {
         this.attractionMap = this.commonAttractionService.buildAttractionMap(allAttractions);
         this.buildCategoryMap(allAttractions);
-        this.attractionSubject.next(true);
+        this.attractionsLoadedSubject.next(true);
       }
     );
-    return this.attractionSubject.asObservable();
+    return this.attractionsLoadedSubject.asObservable();
   }
 
   buildCategoryMap(allAttractions: Attraction[]): void {
@@ -56,10 +58,7 @@ export class CategoryAttractionService {
       (attraction) => {
         attraction.locationType = this.locTypeService.getById((attraction.locationTypeId));
 
-        /* Account for the possibility that our Attraction hasn't been assigned to a location type or category. */
-        const categoryId = attraction.locationType &&
-          attraction.locationType.category &&
-          attraction.locationType.category.id || 0;
+        const categoryId = this.getCategoryIdForAttraction(attraction);
 
         /* define empty array if we haven't seen this category yet. */
         if (isUndefined(this.attractionsPerCategory[categoryId])) {
@@ -86,6 +85,25 @@ export class CategoryAttractionService {
    */
   getAttractionMap(): AttractionsByCategory {
     return this.attractionsPerCategory;
+  }
+
+  /**
+   * Given an Attraction, tell us what the assigned Category ID would be.
+   *
+   * Returns the UNCATEGORIZED ID of 0 if there isn't an assignment.
+   *
+   * @param attraction which may or may not carry an assigned Category.
+   */
+  public getCategoryIdForAttraction(attraction: Attraction): number {
+    /* Account for the possibility that our Attraction hasn't been assigned to a location type or category. */
+    return attraction.locationType &&
+      attraction.locationType.category &&
+      attraction.locationType.category.id || 0;
+  }
+
+  addNewAttraction(newAttraction: Attraction) {
+    this.attractionMap[newAttraction.id] = newAttraction;
+    this.attractionsPerCategory[this.getCategoryIdForAttraction(newAttraction)].push(newAttraction);
   }
 
   // TODO: Comes from MapDataService; will propagate through Layer stuff soon.
