@@ -8,7 +8,7 @@ import {
   LocTypeChipModule
 } from 'cr-lib';
 
-import {DraftTabPage} from './draft-tab.page';
+import {DraftTabPageComponent} from './draft-tab.page';
 
 @NgModule({
   imports: [
@@ -18,7 +18,7 @@ import {DraftTabPage} from './draft-tab.page';
     IonicModule,
     LocTypeChipModule,
   ],
-  declarations: [DraftTabPage]
+  declarations: [DraftTabPageComponent]
 })
 export class DraftTabModule {}
 

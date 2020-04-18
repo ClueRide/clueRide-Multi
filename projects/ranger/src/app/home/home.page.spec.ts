@@ -7,6 +7,7 @@ import {
 import {IonicModule} from '@ionic/angular';
 
 import {HomePage} from './home.page';
+import {MapPositionService} from '../map/position/map-position.service';
 
 @Component({selector: 'cr-connection-state', template: ''})
 export class ConnectionStateComponent {}
@@ -18,6 +19,8 @@ describe('HomePage', () => {
   let component: HomePage;
   let fixture: ComponentFixture<HomePage>;
 
+  const mapPositionSpy = jasmine.createSpyObj('MapPositionService', ['getAttractionById']);
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
@@ -27,6 +30,10 @@ describe('HomePage', () => {
       ],
       imports: [
         IonicModule.forRoot(),
+      ],
+      providers: [
+        HomePage,
+        {provide: MapPositionService, useValue: mapPositionSpy},
       ]
     }).compileComponents();
 

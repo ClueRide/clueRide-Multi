@@ -70,12 +70,11 @@ export class LocationService {
     );
   }
 
-  /* Currently, the filter is ignored; we're just hitting a specific course right now. */
-  getFilteredAttractions(attractionFilter: any): Observable<Location[]> {
-   return this.http.get<Location[]>(
-     BASE_URL + 'location/4/course',
-     {headers: this.httpService.getAuthHeaders()}
-   );
+  public delete(locationId: number): Observable<Location> {
+    return this.http.delete<Location>(
+      BASE_URL + 'location?id=' + locationId,
+      {headers: this.httpService.getAuthHeaders()}
+    );
   }
 
 }

@@ -41,7 +41,7 @@ export class AddLocButtonComponent {
         /* TODO: SVR-79: take care of this server-side. */
         newAttraction.readinessLevel = 'DRAFT';
 
-        /* Add to the client-side service. */
+        /* Add to the client-side service(s). */
         this.mapDataService.assembleAndAddAttraction(newAttraction);
 
         /* Navigate to the Attraction Edit pages. */

@@ -5,7 +5,7 @@ import {FormsModule} from '@angular/forms';
 import {IonicModule} from '@ionic/angular';
 import {ConnectionStateModule} from 'cr-lib';
 
-import {PlaceTabPage} from './place-tab.page';
+import {PlaceTabPageComponent} from './place-tab.page';
 
 @NgModule({
   imports: [
@@ -14,6 +14,6 @@ import {PlaceTabPage} from './place-tab.page';
     FormsModule,
     IonicModule,
   ],
-  declarations: [PlaceTabPage]
+  declarations: [PlaceTabPageComponent]
 })
 export class PlaceTabModule {}

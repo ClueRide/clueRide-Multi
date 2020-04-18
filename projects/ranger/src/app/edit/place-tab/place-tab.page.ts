@@ -23,7 +23,7 @@ import {ActiveAttractionService} from '../active-attraction.service';
   templateUrl: './place-tab.page.html',
   styleUrls: ['./place-tab.page.scss'],
 })
-export class PlaceTabPage implements OnInit, OnDestroy {
+export class PlaceTabPageComponent implements OnInit, OnDestroy {
 
   /* Expose instance to be edited. */
   public attraction: Attraction;

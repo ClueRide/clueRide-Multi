@@ -1,12 +1,21 @@
-import {TestBed} from '@angular/core/testing';
-
 import {MapPositionService} from './map-position.service';
 
+const geoLocSpy = jasmine.createSpyObj('GeoLocService', ['get']);
+const mapDragSpy = jasmine.createSpyObj('MapDragService', ['get']);
+
 describe('MapPositionService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  let toTest: MapPositionService;
+
+  beforeEach(() => {
+      toTest = new MapPositionService(
+        geoLocSpy,
+        mapDragSpy
+      );
+    }
+  );
 
   it('should be created', () => {
-    const service: MapPositionService = TestBed.get(MapPositionService);
-    expect(service).toBeTruthy();
+    expect(toTest).toBeTruthy();
   });
+
 });

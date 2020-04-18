@@ -1,12 +1,14 @@
-import {TestBed} from '@angular/core/testing';
-
 import {FilterService} from './filter.service';
 
 describe('FilterService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  let toTest: FilterService;
+
+  beforeEach(() => {
+    toTest = new FilterService();
+  });
 
   it('should be created', () => {
-    const service: FilterService = TestBed.get(FilterService);
-    expect(service).toBeTruthy();
+    expect(toTest).toBeTruthy();
   });
+
 });

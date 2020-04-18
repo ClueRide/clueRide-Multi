@@ -1,13 +1,12 @@
 import {
   Component,
+  OnDestroy,
   OnInit
 } from '@angular/core';
-import {
-  ActivatedRoute,
-  Router
-} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {
   Attraction,
+  AttractionLayerService,
   Category,
   CategoryAttractionService,
   CategoryService,
@@ -18,6 +17,7 @@ import {
 import {Subscription} from 'rxjs';
 import {MapDataService} from '../../map/data/map-data.service';
 import {ActiveAttractionService} from '../active-attraction.service';
+import {NavController} from '@ionic/angular';
 
 /**
  * Page/Tab for editing draft-level of Attractions.
@@ -34,7 +34,7 @@ import {ActiveAttractionService} from '../active-attraction.service';
   templateUrl: './draft-tab.page.html',
   styleUrls: ['./draft-tab.page.scss'],
 })
-export class DraftTabPage implements OnInit {
+export class DraftTabPageComponent implements OnInit, OnDestroy {
 
   /* Exposed for the view. */
   public attraction: Attraction;
@@ -49,12 +49,13 @@ export class DraftTabPage implements OnInit {
   constructor(
     private activeAttractionService: ActiveAttractionService,
     private activatedRoute: ActivatedRoute,
+    private attractionLayerService: AttractionLayerService,
     private categoryAttractionService: CategoryAttractionService,
     private categoryService: CategoryService,
     private locationService: LocationService,
     private locationTypeService: LocTypeService,
     private mapDataService: MapDataService,
-    private router: Router,
+    private navCtrl: NavController,
   ) {
     this.offeredLocTypes = [];
   }
@@ -102,7 +103,7 @@ export class DraftTabPage implements OnInit {
       }
     );
     // TODO: This should wait for a good response from the save.
-    this.router.navigate(['home']);
+    this.navCtrl.back();
   }
 
   /**
@@ -159,6 +160,16 @@ export class DraftTabPage implements OnInit {
       this.offeredLocTypes = this.locationTypeService.getByCategoryId(this.selectedCategory.id);
     }
 
+  }
+
+  deleteAttraction() {
+    this.locationService.delete(this.attractionId).subscribe(
+      (location) => {
+        console.log('Location is deleted:', location);
+        this.attractionLayerService.deleteAttraction(this.attraction);
+        this.navCtrl.back();
+      }
+    );
   }
 
 }

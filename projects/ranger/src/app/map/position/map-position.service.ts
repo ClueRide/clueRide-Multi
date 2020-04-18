@@ -29,7 +29,7 @@ export class MapPositionService {
   private currentPositionSubject: Subject<Geoposition> = new ReplaySubject<Geoposition>(1);
 
   /* Our current Center of the map; can be different from GPS or Tether reported position when we drag the map. */
-  private mapCenterSubject: Subject<Geoposition>;
+  private mapCenterSubject: BehaviorSubject<Geoposition>;
 
   /* Provides a new position whenever we want to move the map to our current position (Auto-center). */
   readonly moveMapSubject: Subject<Geoposition>;
@@ -73,7 +73,7 @@ export class MapPositionService {
    *
    * @param dragEndSubject subject that is updated when a Map Drag event has ended.
    */
-  public setDragEndSubject(dragEndSubject: Subject<Geoposition>): void {
+  public setDragEndSubject(dragEndSubject: BehaviorSubject<Geoposition>): void {
     this.mapCenterSubject = dragEndSubject;
   }
 

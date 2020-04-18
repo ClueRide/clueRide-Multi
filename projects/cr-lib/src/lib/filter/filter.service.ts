@@ -16,7 +16,6 @@ import {
   providedIn: 'root'
 })
 export class FilterService {
-  private filterShown: boolean;
   private currentFilter: Filter;
 
   /* Publish changes to the Filter on this Subject. */
@@ -35,6 +34,7 @@ export class FilterService {
 
   public changeFilter(filter: Filter) {
     this.currentFilter = filter;
+    filter.isEmpty = (filter.categoriesToIncludeById.length === 0);
     this.filterSubject.next(filter);
   }
 

@@ -9,12 +9,12 @@ import {
 import {IonicModule} from '@ionic/angular';
 import {ConnectionStateModule} from 'cr-lib';
 
-import {FilterPage} from './filter.page';
+import {FilterPageComponent} from './filter.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: FilterPage
+    component: FilterPageComponent
   }
 ];
 
@@ -27,7 +27,7 @@ const routes: Routes = [
     RouterModule.forChild(routes)
   ],
   declarations: [
-    FilterPage,
+    FilterPageComponent,
   ]
 })
 export class FilterPageModule {}
