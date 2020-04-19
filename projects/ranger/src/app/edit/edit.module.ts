@@ -11,7 +11,7 @@ import {ConnectionStateModule} from 'cr-lib';
 import {DraftTabModule} from './draft-tab/draft-tab.module';
 import {DraftTabPageComponent} from './draft-tab/draft-tab.page';
 
-import {EditPage} from './edit.page';
+import {EditPageComponent} from './edit.page';
 import {PlaceTabModule} from './place-tab/place-tab.module';
 import {PlaceTabPageComponent} from './place-tab/place-tab.page';
 import {PuzzleTabModule} from './puzzle-tab/puzzle-tab.module';
@@ -20,7 +20,7 @@ import {PuzzleTabPageComponent} from './puzzle-tab/puzzle-tab.page';
 const routes: Routes = [
   {
     path: '',
-    component: EditPage,
+    component: EditPageComponent,
     children: [
       {
         path: ':id/draft',
@@ -51,7 +51,7 @@ const routes: Routes = [
     PuzzleTabModule,
   ],
   declarations: [
-    EditPage
+    EditPageComponent
   ],
   exports: [RouterModule]
 })

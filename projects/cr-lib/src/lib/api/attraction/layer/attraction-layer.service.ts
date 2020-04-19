@@ -112,6 +112,10 @@ export class AttractionLayerService {
     this.addAttractionToLayer(attraction, '0');
   }
 
+  public updateAttraction(attraction: Attraction): void {
+    this.addAttractionToLayer(attraction, '' + this.categoryAttractionService.getCategoryIdForAttraction(attraction));
+  }
+
   /**
    * Given an attraction to be deleted, remove it from the layer where it resides.
    * Removal from the layer also removes it from being viewed or clicked on the map.

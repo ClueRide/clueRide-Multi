@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {
   Attraction,
   AttractionLayerService,
+  AttractionService,
   Category,
   CategoryAttractionService,
   CategoryService,
@@ -10,14 +11,11 @@ import {
   LocTypeService
 } from 'cr-lib';
 import {
-  from,
   Observable,
-  Subject,
-  Subscription
+  Subject
 } from 'rxjs';
 import * as L from 'leaflet';
 import {
-  filter,
   flatMap,
   tap
 } from 'rxjs/operators';
@@ -45,7 +43,6 @@ import {
 })
 export class MapDataService {
 
-  private attractionByIdCache = [];
   private attractionToAdd: Subject<Attraction> = new Subject<Attraction>();
   private attractionToUpdate: Subject<Attraction> = new Subject<Attraction>();
 
@@ -56,6 +53,7 @@ export class MapDataService {
     private attractionLayerService: AttractionLayerService,
     private categoryAttractionService: CategoryAttractionService,
     private categoryService: CategoryService,
+    private attractionService: AttractionService,
     private filterService: FilterService,
     public locationTypeService: LocTypeService,
   ) {
@@ -121,73 +119,22 @@ export class MapDataService {
   }
 
   /**
-   * Allows a Map Data client to be told whenever there is a new Attraction
-   * to be added to the attractionLayerGroup. Since we've setup the subscription for a new client,
-   * we can populate that client by resending all the locations.
-   *
-   * @param addAttractionFunction accepts an Attraction.
-  public sendMeNewAttractions(addAttractionFunction): Subscription {
-    const subscription = this.attractionToAdd.subscribe(
-      addAttractionFunction,
-      this.logError
-    );
-
-    if (this.filterService.isFilterShown()) {
-      // TODO: Turn `true` into a real filter.
-      this.sendFilteredAttractions(true);
-    } else {
-      this.resendAllLocations();
-    }
-    return subscription;
-  }
-   */
-
-  /**
-   * Allows a Map Data client to be told whenever this is an updated Attraction
-   * to be added to the attractionLayerGroup.
-   *
-   * @param updateAttractionFunction accepts an Attraction.
-   */
-  public sendMeUpdatedAttractions(updateAttractionFunction): Subscription {
-    return this.attractionToUpdate.subscribe((updateAttractionFunction));
-  }
-
-  /**
-   * Given a position, retrieve the locations nearest that position.
-   * @param position to center the search for Attractions.
-  loadNearestLocations(position) {
-    this.locationService.nearest(
-      this.latLonService.toLatLon(position)
-    ).subscribe(
-      (attractions) => {
-        this.attractionByIdCache = [];
-        attractions.forEach(
-          (attraction) => {
-            this.assembleAndAddAttraction(attraction);
-          }
-        );
-      }
-    );
-  }
-   */
-
-  /**
    * There are multiple pieces of data that build up a Attraction; this puts
    * them all together.
    *
    * @param attraction partially assembled instance from LocationService.
    */
-  assembleAttraction = (attraction: Attraction) => {
+  assembleAttraction(attraction: Attraction) {
     const locationType = this.locationTypeService.getById(attraction.locationTypeId);
     attraction.locationType = locationType;
     attraction.locationTypeIconName = locationType.icon;
 
     /* Both adds new and replaces existing attractions in the cache. */
-    this.attractionByIdCache[attraction.id] = attraction;
+    this.attractionService.addAttraction(attraction);
     return attraction;
   }
 
-  assembleAndAddAttraction = (attraction: Attraction) => {
+  assembleAndAddAttraction(attraction: Attraction) {
     console.log('MapDataService.assembleAndAddAttraction()');
     const newAttraction: Attraction = this.assembleAttraction(attraction);
     /* Push to attraction stream. */
@@ -198,77 +145,31 @@ export class MapDataService {
     this.categoryAttractionService.addNewAttraction(newAttraction);
   }
 
-  updateAttraction(updatedAttraction: Attraction) {
-    console.log('MapDataService: updateAttraction', updatedAttraction.id);
-    this.attractionToUpdate.next(this.assembleAttraction(updatedAttraction));
+  updateAttraction(attractionToUpdate: Attraction) {
+    console.log('MapDataService: updateAttraction', attractionToUpdate.id);
+    const originalAttraction: Attraction = this.categoryAttractionService.getAttraction(attractionToUpdate.id);
+    const updatedAttraction: Attraction = this.assembleAttraction(attractionToUpdate);
+
+    this.categoryAttractionService.updateAttraction(updatedAttraction);
+    this.attractionLayerService.deleteAttraction(originalAttraction);
+    this.attractionLayerService.updateAttraction(updatedAttraction);
+
+    this.attractionToUpdate.next(updatedAttraction);
+  }
+
+  deleteAttraction(attraction: Attraction) {
+    this.attractionLayerService.deleteAttraction(attraction);
   }
 
   /** Given the Attraction ID, retrieve the cached copy of
    * the Attraction loaded from backend.
    *
+   * TODO: Currently mocked by several spies, but it may make sense to use the CategoryAttractionService itself directly.
+   *
    * @param attractionId unique identifier for the Attraction.
    */
   getAttractionById(attractionId: number): Attraction {
-    return this.attractionByIdCache[attractionId];
+    return this.categoryAttractionService.getAttraction(attractionId);
   }
-
-  /**
-   * Request that all currently cached locations be sent to the subscribers.
-   *
-   * NOTE: This does not refresh the cache from the back-end.
-   */
-  resendAllLocations() {
-    console.log('MapDataService: Resending all Locations');
-    /* `from()` requires an instance that implements iterable. */
-    from(this.attractionByIdCache).pipe(
-      filter((item) => !!item)
-    ).subscribe(
-      (attraction) => {this.attractionToAdd.next(attraction); }
-    );
-  }
-  /**
-   * Notification that we're ready to change to another filter for the Attractions.
-   *
-   * @param attractionFilter currently just a boolean, but expect that there will be details
-   * about the filter being applied so this service can retrieve the right set of records.
-  public changeAttractionFilter(attractionFilter: any): void {
-    if (this.respondToClearMap) {
-      this.respondToClearMap();
-    } else {
-      console.log('No response setup for clearing the attractionLayerGroup');
-    }
-
-    if (attractionFilter) {
-      this.sendFilteredAttractions(attractionFilter);
-    } else {
-      this.resendAllLocations();
-    }
-  }
-   */
-
-  /**
-   * Given the filter, ask back-end for a list of matching attractions and send each one to the attraction subject.
-   * @param attractionFilter - TODO: Turn this into an actual filter.
-  private sendFilteredAttractions(attractionFilter) {
-    this.locationService.getFilteredAttractions(attractionFilter).subscribe(
-      (attractions: Attraction[]) => {
-        from(attractions).subscribe(
-          (attraction: Attraction) => {
-            this.assembleAndAddAttraction(attraction);
-          }
-        );
-      }
-    );
-  }
-   */
-
-  /**
-   * Assigns the function to call when the attractionLayerGroup needs to be cleared.
-   *
-   * @param clearMap function supplied by caller to perform the attractionLayerGroup clearing.
-  onMapClear(clearMap: any) {
-    this.respondToClearMap = clearMap;
-  }
-   */
 
 }
