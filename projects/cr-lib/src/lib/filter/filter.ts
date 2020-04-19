@@ -11,6 +11,6 @@
 /** Default is to include nothing. */
 export class Filter {
   categoriesToIncludeById: number[] = [];
-  outingToInclude: number = null;
+  courseToInclude: number = null;
   isEmpty: boolean = true;
 }

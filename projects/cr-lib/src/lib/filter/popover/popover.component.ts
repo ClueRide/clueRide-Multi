@@ -9,6 +9,10 @@ import {CategoryService} from '../../api/category/category.service';
 import {Course} from '../../api/course/course';
 import {CourseService} from '../../api/course/course.service';
 
+/**
+ * Responsible for populating the values that show up in the pull-downs
+ * on the Filter Popover.
+ */
 @Component({
   selector: 'app-filter-popover',
   templateUrl: './popover.component.html',
@@ -20,9 +24,20 @@ export class FilterPopoverComponent implements OnInit {
   public courses: Course[];
   public categories: Category[];
 
-  /* Passing CSS to the popover. */
+  readonly noCourseSelected: Course = {
+    id: 0,
+    name: 'No Course',
+    courseTypeId: null,
+    description: 'No Course Selected',
+    departure: '',
+    destination: '',
+    pathIds: [],
+    url: ''
+  };
+
+  /* Passing CSS to the popover; exposed to the HTML template. */
   public categoryAlertOptions: any = {
-    cssClass: "category-alert"
+    cssClass: 'category-alert'
   };
 
   constructor(
@@ -38,12 +53,33 @@ export class FilterPopoverComponent implements OnInit {
     this.courseService.getAllCourses().subscribe(
       (courses) => {
         this.courses = courses;
+        this.courses.push(this.noCourseSelected);
       }
     );
   }
 
+  /**
+   * Invoked when Course selection is made.
+   *
+   * @param event details of the Course changes.
+   */
+  courseHasChanged(event: CustomEvent) {
+    const courseId = event.detail.value;
+    if (courseId === 0 || courseId === '') {
+      this.filter.courseToInclude = null;
+    } else {
+      this.filter.courseToInclude = courseId;
+    }
+    this.filter.isEmpty = this.checkIfFilterEmpty();
+    this.filterService.changeFilter(this.filter);
+  }
+
+  /**
+   * Invoked when Category selection is made.
+   *
+   * @param event details of the changes.
+   */
   categoryHasChanged(event: CustomEvent) {
-    console.log(event);
     this.filter.categoriesToIncludeById = event.detail.value;
     this.filter.isEmpty = this.checkIfFilterEmpty();
     this.filterService.changeFilter(this.filter);
@@ -52,7 +88,7 @@ export class FilterPopoverComponent implements OnInit {
   checkIfFilterEmpty(): boolean {
     return (
       this.filter.categoriesToIncludeById.length === 0 &&
-      this.filter.outingToInclude != null
+      this.filter.courseToInclude === null
     );
   }
 

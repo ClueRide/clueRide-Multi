@@ -27,14 +27,13 @@ export class FilterService {
 
     this.currentFilter = {
       categoriesToIncludeById: [],
-      outingToInclude: null,
+      courseToInclude: null,
       isEmpty: true
     };
   }
 
   public changeFilter(filter: Filter) {
     this.currentFilter = filter;
-    filter.isEmpty = (filter.categoriesToIncludeById.length === 0);
     this.filterSubject.next(filter);
   }
 

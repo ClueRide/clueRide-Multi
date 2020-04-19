@@ -4,7 +4,6 @@ import {
 } from '@angular/core';
 import {Geoposition} from '@ionic-native/geolocation';
 import {
-  Attraction,
   AttractionLayerService,
   HeadingComponent,
   LatLonService,
@@ -37,11 +36,14 @@ export class MapComponent implements OnDestroy {
   private static mapCenterDisplay: MapCenterDisplayComponent;
 
   public map: L.Map;
-  /** Holds Leaflet Layer for all Categories of Markers. */
+  /** Holds Leaflet LayerGroup for all Categories of Markers. */
   private attractionLayerGroup: L.LayerGroup;
+  /** Holdes Leaflet LayerGroup for all Course Markers. */
+  private courseLayerGroup: L.LayerGroup;
 
   private layerIdPerAttraction: { [index: number]: number } = [];
   private positionSubscription: Subscription;
+  private boundsSubscription: Subscription;
 
   constructor(
     private attractionLayerService: AttractionLayerService,
@@ -78,6 +80,11 @@ export class MapComponent implements OnDestroy {
         (moveMapPosition: Geoposition) => this.panMapToNewPosition(moveMapPosition)
       );
 
+      /* Respond to changes in bounds by re-fitting the map. */
+      this.boundsSubscription = this.mapDataService.getBoundsChangeSubject().subscribe(
+        (bounds: L.LatLngBounds) => this.map.fitBounds(bounds.pad(.2))
+      );
+
       /* Attach the map center position subject to the Map Drag service. */
       const mapCenterSubject = this.mapDragService.registerMap(this.map);
       this.mapPositionService.setDragEndSubject(mapCenterSubject);
@@ -98,6 +105,10 @@ export class MapComponent implements OnDestroy {
     /* Register to be updated with the Category Layers. */
     this.attractionLayerGroup = L.layerGroup().addTo(this.map);
     this.mapDataService.registerAttractionLayerGroup(this.attractionLayerGroup);
+
+    /* Register to be updated with the Course Layers. */
+    this.courseLayerGroup = L.layerGroup().addTo(this.map);
+    this.mapDataService.registerCourseLayerGroup(this.courseLayerGroup);
   }
 
   /** Setup the Map Center Display. */
@@ -108,62 +119,10 @@ export class MapComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log('Close Map -- turn off watches');
+    console.log('Close Map');
     this.positionSubscription.unsubscribe();
+    this.boundsSubscription.unsubscribe();
     this.heading.releaseHeadingMarker();
-  }
-
-  /**
-   * Given an Attraction, place it on the map using a Clickable Pool Marker.
-   * Pool Service sets up the mouse-click event to open the editing page for that attraction.
-   *
-   * Anonymous function so it maintains `this` when called from separate scope.
-   * @param attraction to be added.
-   */
-  addAttraction = (
-    attraction: Attraction
-  ): void => {
-    /* `any` -> unable to tell that ClickableMarker extends Marker? */
-    const poolMarker: any = this.poolMarkerService.getAttractionMarker(
-      attraction
-    );
-
-    /* TODO: Place within category-based layer/group (LE-76). */
-    poolMarker.addTo(this.attractionLayerGroup);
-    this.layerIdPerAttraction[attraction.id] = this.attractionLayerGroup.getLayerId(poolMarker);
-  }
-
-  /**
-   * Replace an existing Attraction with this new version of the same Attraction.
-   *
-   * @param attraction with updated information.
-   */
-  updateAttraction = (
-    attraction: Attraction
-  ): void => {
-    console.log('MapComponent: Updating Attraction', attraction.id);
-
-    /* TODO LE-76. */
-    /* Remove existing Attraction from map. */
-    const layer = this.attractionLayerGroup;
-    // @ts-ignore
-    if (layer.hasLayer(this.layerIdPerAttraction[attraction.id])) {
-      layer.removeLayer(this.layerIdPerAttraction[attraction.id]);
-    }
-
-    /* Now we can place the updated instance of the attraction. */
-    this.addAttraction(attraction);
-  }
-
-  /**
-   * Passed to Map Data Service whenever it determines that the map needs to be cleared in preparation for a new
-   * set of Attractions. This will eventually serve as the main Attraction layer for a focused set of Attractions.
-   *
-   * This is separate from the Category Group Layers discussed as part of ticket LE-76.
-   */
-  clearMap = (): void => {
-    // TODO: perhaps touched by LE-76
-    this.attractionLayerGroup.clearLayers();
   }
 
   /**

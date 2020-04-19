@@ -2,12 +2,14 @@
   <ion-label>Course</ion-label>
 
   <ion-select class="ion-select-for-filter"
+              [(ngModel)]="filter.courseToInclude"
+              (ionChange)="courseHasChanged($event)"
               placeholder="No Courses included"
-              interface="alert"
-              multiple="true"
-              okText="Okay"
-              cancelText="Nah">
-    <ion-select-option *ngFor="let course of courses">
+              multiple="false"
+              okText="OK"
+              cancelText="Cancel">
+    <ion-select-option *ngFor="let course of courses"
+                       [value]="course.id">
       {{course.name}}
     </ion-select-option>
   </ion-select>

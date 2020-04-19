@@ -5,6 +5,7 @@ import {
   Observable,
   Subject
 } from 'rxjs';
+import * as L from 'leaflet';
 import {
   AuthHeaderService,
   BASE_URL
@@ -12,6 +13,9 @@ import {
 import {Attraction} from '../attraction';
 import {AttractionMap} from '../attraction-map';
 import {AttractionService} from '../attraction.service';
+import {Filter} from '../../../filter/filter';
+import {PoolMarkerService} from '../../../marker/pool/pool-marker.service';
+import {LatLonService} from '../../../domain/lat-lon/lat-lon.service';
 
 @Injectable({
   providedIn: 'root'
@@ -27,12 +31,21 @@ export class CourseAttractionService {
   /* Holds Map from Attraction ID to the Attraction instance. */
   private attractionMap: AttractionMap = {};
 
+  /* Filter which is currently in effect. */
+  private currentFilter: Filter;
+
+  readonly boundsChangeSubject: Subject<L.LatLngBounds>;
+
   constructor(
     private http: HttpClient,
     private httpService: AuthHeaderService,
     private commonAttractionService: AttractionService,
+    private latLonService: LatLonService,
+    private poolMarkerService: PoolMarkerService,
   ) {
     this.attractionLoadingCompleteSubject = new Subject<boolean>();
+    this.boundsChangeSubject = new Subject<L.LatLngBounds>();
+    this.currentFilter = new Filter();    // Default is empty filter.
   }
 
   /**
@@ -103,6 +116,61 @@ export class CourseAttractionService {
    */
   public getAttraction(attractionId: number): Attraction {
     return this.attractionMap[attractionId];
+  }
+
+  /**
+   * Trigger for populating (or clearing) a given set of Course markers.
+   *
+   * Algorithm is to clear everything and then load everything.
+   *
+   * @param newFilter tells us what courses to include.
+   * @param courseLayerGroup where we place the markers.
+   */
+  showFilteredAttractions(
+    newFilter: Filter,
+    courseLayerGroup: L.LayerGroup
+  ): void {
+    if (!courseLayerGroup) {
+      console.log('Course LayerGroup not provided; no place to put the markers');
+      return;
+    }
+
+    if (newFilter.courseToInclude === this.currentFilter.courseToInclude) {
+      console.log('Course.showFilteredAttractions(); No change to the course filter');
+      return;
+    }
+
+    /* Something is changing; clear the old set of markers. */
+    courseLayerGroup.clearLayers();
+
+    let bounds: L.LatLngBounds = null;
+    if (newFilter.courseToInclude != null) {
+      console.log('Course.showFilteredAttractions() Course to show:', newFilter.courseToInclude);
+      this.commonAttractionService.getAllAttractionsForCourse(newFilter.courseToInclude).subscribe(
+        (filledAttraction: Attraction) => {
+          const latLng: L.LatLng = this.latLonService.toLatLng(filledAttraction.latLon);
+          if (bounds === null) {
+            bounds = L.latLngBounds([latLng, latLng]);
+          } else {
+            bounds.extend(latLng);
+          }
+          courseLayerGroup.addLayer(
+            this.poolMarkerService.getAttractionMarker(filledAttraction)
+          );
+        },
+        error => console.log('error during getAllAttractionsForCourse:', error),
+        () => {
+          this.boundsChangeSubject.next(bounds);
+        }
+      );
+    }
+
+    /* Record our current setting; copying using spread operator. */
+    this.currentFilter = { ...newFilter };
+  }
+
+  public getBoundsChangeSubject(): Subject<L.LatLngBounds> {
+    return this.boundsChangeSubject;
   }
 
 }
