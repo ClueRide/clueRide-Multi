@@ -7,14 +7,6 @@ import {
 import {Geoposition} from '@ionic-native/geolocation';
 
 let toTest: GeoLocService;
-let deviceGeoLocService: DeviceGeoLocService;
-const restangularService: any = {
-  one() {
-    return {
-      get() {}
-    };
-  }
-};
 
 describe('Geo-Location', () => {
   const deviceGeoLocSpy = jasmine.createSpyObj('DeviceGeoLocService',
@@ -40,7 +32,6 @@ describe('Geo-Location', () => {
 
     it('should provide signal (and a position) when available for use', (done) => {
       /* setup data */
-      let actual: Geoposition;
       const serviceReadySubject: Subject<Geoposition> = new Subject();
       const expected = GeoLocService.ATLANTA_GEOPOSITION;
 
@@ -90,11 +81,6 @@ describe('Geo-Location', () => {
         .and.returnValue(positionSubject);
       deviceGeoLocSpy.hasGPS = jasmine.createSpy('hasGPS')
         .and.returnValue(false);
-      spyOn(restangularService, 'one').and.returnValue({
-        get() {
-          return positionSubject;
-        }
-      });
 
       /* make call */
       toTest.getPositionWatch();
@@ -106,14 +92,8 @@ describe('Geo-Location', () => {
 
     it('should run tethered when overridden', () => {
       /* train mocks */
-      const positionSubject: Subject<any> = new Subject();
       deviceGeoLocSpy.hasGPS = jasmine.createSpy('hasGPS')
         .and.returnValue(true);
-      spyOn(restangularService, 'one').and.returnValue({
-        get() {
-          return positionSubject;
-        }
-      });
 
       /* make call */
       toTest.forceUsingTether();
@@ -128,16 +108,11 @@ describe('Geo-Location', () => {
       /* setup data */
       const expected = {lat: 33.78, lon: -84.38};
       const positionSubject: Subject<any> = new Subject();
-      let actual: any;
+      let actual: any = null;
 
       /* train mocks */
       deviceGeoLocSpy.checkGpsAvailability = jasmine.createSpy('checkGpsAvailability')
         .and.returnValue(positionSubject.asObservable());
-      spyOn(restangularService, 'one').and.returnValue({
-        get() {
-          return positionSubject;
-        }
-      });
 
       /* make call */
       toTest.notifyWhenReady().subscribe(
@@ -157,11 +132,6 @@ describe('Geo-Location', () => {
       const positionSubject: Subject<any> = new Subject();
       deviceGeoLocSpy.checkGpsAvailability = jasmine.createSpy('checkGpsAvailability')
         .and.returnValue(positionSubject.asObservable());
-      spyOn(restangularService, 'one').and.returnValue({
-        get() {
-          return positionSubject;
-        }
-      });
 
       /* make call */
       const positionObservable = toTest.getPositionWatch();
@@ -182,7 +152,7 @@ describe('Geo-Location', () => {
     it('should not return until device can be polled for position', () => {
       /* setup data */
       const positionSubject: Subject<any> = new Subject();
-      let actual: any;
+      let actual: any = null;
 
       /* train mocks */
       deviceGeoLocSpy.checkGpsAvailability = jasmine.createSpy('checkGpsAvailability')
@@ -196,7 +166,7 @@ describe('Geo-Location', () => {
       );
 
       /* verify results */
-      expect(actual).not.toBeDefined();
+      expect(actual).toBeNull();
     });
 
     it('should return device position when GPS available', () => {
@@ -223,7 +193,7 @@ describe('Geo-Location', () => {
 
     it('should return default position when GPS not available', () => {
       /* setup data */
-      let actual: any;
+      let actual: any = null;
       const expected = GeoLocService.ATLANTA_GEOPOSITION;
       const positionSubject: Subject<any> = new Subject();
 
@@ -244,10 +214,9 @@ describe('Geo-Location', () => {
 
     });
 
-
     it('should return default position when device returns null', () => {
       /* setup data */
-      let actual: any;
+      let actual: any = null;
       const expected = GeoLocService.ATLANTA_GEOPOSITION;
       const positionSubject: Subject<any> = new Subject();
 

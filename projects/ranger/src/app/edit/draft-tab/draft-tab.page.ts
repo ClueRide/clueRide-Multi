@@ -10,14 +10,12 @@ import {
   Category,
   CategoryAttractionService,
   CategoryService,
-  LocationService,
   LocationType,
   LocTypeService
 } from 'cr-lib';
 import {Subscription} from 'rxjs';
-import {MapDataService} from '../../map/data/map-data.service';
 import {ActiveAttractionService} from '../active-attraction.service';
-import {NavController} from '@ionic/angular';
+import {EditService} from '../edit.service';
 
 /**
  * Page/Tab for editing draft-level of Attractions.
@@ -52,10 +50,8 @@ export class DraftTabPageComponent implements OnInit, OnDestroy {
     private attractionLayerService: AttractionLayerService,
     private categoryAttractionService: CategoryAttractionService,
     private categoryService: CategoryService,
-    private locationService: LocationService,
+    private editService: EditService,
     private locationTypeService: LocTypeService,
-    private mapDataService: MapDataService,
-    private navCtrl: NavController,
   ) {
     this.offeredLocTypes = [];
   }
@@ -91,19 +87,12 @@ export class DraftTabPageComponent implements OnInit, OnDestroy {
     this.categories = this.categoryService.getAllCategories();
   }
 
-  /**
-   * Invoked when the user is ready to persist changes.
-   */
-  save() {
-    console.log('Saving');
-    this.locationService.update(this.attraction).subscribe(
-      (updatedAttraction: Attraction) => {
-        this.mapDataService.updateAttraction(updatedAttraction);
-        this.categoryAttractionService.updateAttraction(updatedAttraction);
-      }
-    );
-    // TODO: This should wait for a good response from the save.
-    this.navCtrl.back();
+  save(): void {
+    this.editService.save(this.attraction);
+  }
+
+  deleteAttraction(): void {
+    this.editService.delete(this.attraction);
   }
 
   /**
@@ -161,15 +150,4 @@ export class DraftTabPageComponent implements OnInit, OnDestroy {
     }
 
   }
-
-  deleteAttraction() {
-    this.locationService.delete(this.attractionId).subscribe(
-      (location) => {
-        console.log('Location is deleted:', location);
-        this.attractionLayerService.deleteAttraction(this.attraction);
-        this.navCtrl.back();
-      }
-    );
-  }
-
 }

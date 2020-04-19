@@ -60,14 +60,6 @@ export class MapActionComponent implements OnInit {
     this.mapDragService.setAutoCenter(!this.mapDragService.isAutoCenter());
   }
 
-  /* Respond to request to repaint the locations. */
-  refreshMap(event: Event) {
-    // this.openMapAtPosition(this.mapDataService.getCurrentPosition());
-    /* Clear existing list of locations. */
-    /* Trigger sending us another set of locations. */
-    this.mapDataService.resendAllLocations();
-  }
-
   showFilter(event: Event) {
     return this.filterPopoverService.showFilter(event);
   }
