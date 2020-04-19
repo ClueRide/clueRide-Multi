@@ -1,4 +1,3 @@
-import {HttpClient} from '@angular/common/http';
 import {AuthHeaderService} from '../../auth/header/auth-header.service';
 import {OutingService} from '../outing/outing.service';
 import {AttractionService} from './attraction.service';
@@ -7,6 +6,7 @@ const authHeaderSpy = jasmine.createSpyObj('AuthHeaderService', ['get']);
 const httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
 const outingSpy = jasmine.createSpyObj('OutingService', ['get']);
 const locationSpy = jasmine.createSpyObj('LocationService', ['get']);
+const locTypeSpy = jasmine.createSpyObj('LocTypeService', ['get']);
 
 describe('attraction-service', () => {
   let toTest: AttractionService;
@@ -16,7 +16,8 @@ describe('attraction-service', () => {
       httpClientSpy,
       authHeaderSpy,
       outingSpy,
-      locationSpy
+      locationSpy,
+      locTypeSpy
     );
   });
 

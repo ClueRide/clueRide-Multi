@@ -6,6 +6,7 @@ import {
   Category,
   CategoryAttractionService,
   CategoryService,
+  CourseAttractionService,
   Filter,
   FilterService,
   LocTypeService
@@ -46,13 +47,17 @@ export class MapDataService {
   private attractionToAdd: Subject<Attraction> = new Subject<Attraction>();
   private attractionToUpdate: Subject<Attraction> = new Subject<Attraction>();
 
-  /* The attractionLayerGroup which we place Attraction Groups upon. */
-  private attractionLayerGroup: L.LayerGroup;
+  /* The Leaflet LayerGroup where Categories of Attraction Markers are added; each layer holds a Category of Markers. */
+  private categoryLayerGroup: L.LayerGroup;
+
+  /* The Leaflet LayerGroup where Course Markers are added to the map; each layer is a Course Marker. */
+  private courseLayerGroup: L.LayerGroup;
 
   constructor(
     private attractionLayerService: AttractionLayerService,
     private categoryAttractionService: CategoryAttractionService,
     private categoryService: CategoryService,
+    private courseAttractionService: CourseAttractionService,
     private attractionService: AttractionService,
     private filterService: FilterService,
     public locationTypeService: LocTypeService,
@@ -67,13 +72,21 @@ export class MapDataService {
   private subscribeToFilterChanges() {
     this.filterService.getFilterObservable().subscribe(
       (newFilter: Filter) => {
-        if (this.attractionLayerGroup) {
-          this.attractionLayerService.showFilteredAttractions(newFilter, this.attractionLayerGroup);
+        if (this.categoryLayerGroup) {
+          this.attractionLayerService.showFilteredAttractions(newFilter, this.categoryLayerGroup);
+          this.courseAttractionService.showFilteredAttractions(newFilter, this.courseLayerGroup);
         } else {
           console.log('Responding to Filter Change without a attractionLayerGroup to put it on');
         }
       }
     );
+  }
+
+  /**
+   * Surface for Bounds Changes.
+   */
+  getBoundsChangeSubject(): Subject<L.LatLngBounds> {
+    return this.courseAttractionService.getBoundsChangeSubject();
   }
 
   /**
@@ -110,12 +123,17 @@ export class MapDataService {
    * @param attractionLayerGroup where to put the filtered layers.
    */
   registerAttractionLayerGroup(attractionLayerGroup: L.LayerGroup): void {
-    console.log('MapDataService.registerMap()');
-    this.attractionLayerGroup = attractionLayerGroup;
+    console.log('MapDataService.registerCategoryGroup()');
+    this.categoryLayerGroup = attractionLayerGroup;
     this.attractionLayerService.showFilteredAttractions(
       this.filterService.getCurrentFilter(),
-      this.attractionLayerGroup
+      this.categoryLayerGroup
     );
+  }
+
+  registerCourseLayerGroup(courseLayerGroup: L.LayerGroup) {
+    console.log('MapDataService.registerCourseGroup()');
+    this.courseLayerGroup = courseLayerGroup;
   }
 
   /**
@@ -128,9 +146,6 @@ export class MapDataService {
     const locationType = this.locationTypeService.getById(attraction.locationTypeId);
     attraction.locationType = locationType;
     attraction.locationTypeIconName = locationType.icon;
-
-    /* Both adds new and replaces existing attractions in the cache. */
-    this.attractionService.addAttraction(attraction);
     return attraction;
   }
 
@@ -171,5 +186,4 @@ export class MapDataService {
   getAttractionById(attractionId: number): Attraction {
     return this.categoryAttractionService.getAttraction(attractionId);
   }
-
 }

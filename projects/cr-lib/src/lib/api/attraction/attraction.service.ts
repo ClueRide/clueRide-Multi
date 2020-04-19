@@ -5,12 +5,20 @@ import {
   Observable,
   Subject
 } from 'rxjs';
-import {AuthHeaderService} from '../../auth/header/auth-header.service';
+import {
+  AuthHeaderService,
+  BASE_URL
+} from '../../auth/header/auth-header.service';
 import {LatLon} from '../../domain/lat-lon/lat-lon';
 import {LocationService} from '../location/location.service';
 import {OutingService} from '../outing/outing.service';
 import {Attraction} from './attraction';
 import {AttractionMap} from './attraction-map';
+import {
+  map,
+  mergeAll
+} from 'rxjs/operators';
+import {LocTypeService} from '../loc-type/loc-type.service';
 
 /**
  * This provides for the Attractions which can be sequenced into a Course.
@@ -48,7 +56,8 @@ export class AttractionService {
     public http: HttpClient,
     public httpService: AuthHeaderService,
     private outingService: OutingService,
-    private locationService: LocationService
+    private locationService: LocationService,
+    private locTypeService: LocTypeService,
   ) {
     if (this.cachedSessionAttractions.length === 0) {
       console.log('Hello AttractionService - Session Cache Empty');
@@ -100,6 +109,26 @@ export class AttractionService {
 
   getAttraction(id: number) {
     return this.attractionMap[id];
+  }
+
+  /**
+   * For the given courseId, retrieve all Attractions.
+   *
+   * Attractions returned by this service will have the Location Type populated.
+   *
+   * @param courseId unique identifier for the Course.
+   */
+  public getAllAttractionsForCourse(courseId: number): Observable<Attraction> {
+    return this.http.get<Attraction[]>(
+      BASE_URL + 'location/' + courseId + '/course',
+      {headers: this.httpService.getAuthHeaders()}
+    ).pipe(
+      mergeAll(),   /* Generates event for each element of the array. */
+      map((attraction) => {
+        attraction.locationType = this.locTypeService.getById(attraction.locationTypeId);
+        return attraction;
+      })
+    );
   }
 
   /**

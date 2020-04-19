@@ -59,7 +59,7 @@ export class FilterPageComponent implements OnInit {
   checkIfFilterEmpty(): boolean {
     return (
       this.filter.categoriesToIncludeById.length === 0 &&
-      this.filter.outingToInclude != null
+      this.filter.courseToInclude != null
     );
   }
 

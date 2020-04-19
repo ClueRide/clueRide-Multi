@@ -8,6 +8,8 @@ import {BASE_URL} from '../../../auth/header/auth-header.service';
 import {AttractionMock} from '../attraction-mock';
 
 import {CourseAttractionService} from './course-attraction.service';
+import {LatLonService} from '../../../domain/lat-lon/lat-lon.service';
+import {PoolMarkerService} from '../../../marker/pool/pool-marker.service';
 
 /* Populate a set of Attractions to serve as the Course. */
 const attraction1 = AttractionMock.createAttractionMock(1);
@@ -23,22 +25,27 @@ const attractionsForCourse = [
   attraction5,
 ];
 
+const latLonSpy = jasmine.createSpyObj('LatLonService', ['getAllCategories']);
+const poolMarkerSpy = jasmine.createSpyObj('PoolMarkerService', ['getAllCategories']);
+
 describe('CourseAttractionService', () => {
   let toTest: CourseAttractionService;
-  let httpMock: HttpTestingController;
+  let httpClientSpy: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        CourseAttractionService
-      ],
       imports: [
         HttpClientTestingModule
+      ],
+      providers: [
+        CourseAttractionService,
+        { provide: LatLonService, useValue: latLonSpy },
+        { provide: PoolMarkerService, useValue: poolMarkerSpy },
       ]
     });
 
     toTest = TestBed.get(CourseAttractionService);
-    httpMock = TestBed.get(HttpTestingController);
+    httpClientSpy = TestBed.get(HttpTestingController);
   });
 
   it('should be created', () => {
@@ -60,11 +67,11 @@ describe('CourseAttractionService', () => {
         }
       );
 
-      const attractionRequest: TestRequest = httpMock.expectOne(BASE_URL + 'location/active');
+      const attractionRequest: TestRequest = httpClientSpy.expectOne(BASE_URL + 'location/active');
       attractionRequest.flush(attractionsForCourse);
 
       /* verify results */
-      httpMock.verify();
+      httpClientSpy.verify();
       const actual = toTest.getAllCourseAttractions();
       expect(actual).toEqual(attractionsForCourse);
       expect(toTest.getAttraction(1)).toEqual(attraction1);
@@ -91,7 +98,7 @@ describe('CourseAttractionService', () => {
         }
       );
 
-      const attractionRequest: TestRequest = httpMock.expectOne(BASE_URL + 'location/active');
+      const attractionRequest: TestRequest = httpClientSpy.expectOne(BASE_URL + 'location/active');
       attractionRequest.flush(attractionsForCourse);
 
       /* make call */
@@ -111,7 +118,7 @@ describe('CourseAttractionService', () => {
         }
       );
 
-      const attractionRequest: TestRequest = httpMock.expectOne(BASE_URL + 'location/active');
+      const attractionRequest: TestRequest = httpClientSpy.expectOne(BASE_URL + 'location/active');
       attractionRequest.flush(attractionsForCourse);
 
       /* make call */
@@ -141,11 +148,11 @@ describe('CourseAttractionService', () => {
         }
       );
 
-      const attractionRequest: TestRequest = httpMock.expectOne(BASE_URL + 'location/active');
+      const attractionRequest: TestRequest = httpClientSpy.expectOne(BASE_URL + 'location/active');
       attractionRequest.flush(attractionsForCourse);
 
       /* verify results */
-      httpMock.verify();
+      httpClientSpy.verify();
       const actual = toTest.getAllCourseAttractions();
       expect(actual).toEqual(attractionsForCourse);
       expect(toTest.getAttraction(1)).toEqual(attraction1);
