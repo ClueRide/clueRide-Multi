@@ -9,11 +9,13 @@ import {
 } from 'cr-lib';
 
 import {DraftTabPageComponent} from './draft-tab.page';
+import {FlagButtonModule} from '../../flag/button/flag-button.module';
 
 @NgModule({
   imports: [
     CommonModule,
     ConnectionStateModule,
+    FlagButtonModule,
     FormsModule,
     IonicModule,
     LocTypeChipModule,
