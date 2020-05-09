@@ -1,4 +1,7 @@
-import {Component} from '@angular/core';
+import {
+  Component,
+  OnDestroy
+} from '@angular/core';
 import {
   Attraction,
   CourseAttractionService,
@@ -42,7 +45,7 @@ const BLUE_LINE = {
   templateUrl: './rolling.page.html',
   styleUrls: ['./rolling.page.scss'],
 })
-export class RollingPage {
+export class RollingPage implements OnDestroy {
 
   static map: any;
   /* Providing a layer upon which we pile on the stuff we show the user should be easier this way. */
