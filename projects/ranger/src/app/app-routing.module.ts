@@ -27,6 +27,7 @@ const routes: Routes = [
   { path: 'puzzle-modal', loadChildren: './puzzle/modal/puzzle-modal.module#PuzzleModalPageModule' },
   { path: 'about', loadChildren: './about/about.module#AboutPageModule' },
   { path: 'filter', loadChildren: './filter/page/filter-page.module#FilterPageModule' },
+  { path: 'flag', loadChildren: './flag/flag.module#FlagPageModule' },
 ];
 
 @NgModule({

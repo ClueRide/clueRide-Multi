@@ -1,0 +1,6 @@
+export enum FlagReason {
+  SAFETY = 'SAFETY',
+  ACCURACY = 'ACCURACY',
+  FUN_FACTOR = 'FUN_FACTOR',
+  TIMELINESS = 'TIMELINESS'
+}
