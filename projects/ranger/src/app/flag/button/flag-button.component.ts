@@ -8,7 +8,11 @@ import {
   FlaggedAttribute,
   FlagReason
 } from 'cr-lib';
-import {ActionSheetController} from '@ionic/angular';
+import {
+  ActionSheetController,
+  ModalController
+} from '@ionic/angular';
+import {FlagDetailsPage} from '../details/flag-details.page';
 
 @Component({
   selector: 'app-flag-button',
@@ -23,6 +27,7 @@ export class FlagButtonComponent implements OnInit {
 
   constructor(
     private actionSheetController: ActionSheetController,
+    private modalController: ModalController,
   ) { }
 
   ngOnInit() {}
@@ -87,7 +92,23 @@ export class FlagButtonComponent implements OnInit {
       attribute,
       description: ''
     };
-    console.log(this.flag);
+    console.table(this.flag);
+    this.openDetailsPopover();
+  }
+
+  private async openDetailsPopover() {
+    const modal = await this.modalController.create({
+      component: FlagDetailsPage,
+      componentProps: {
+        "flag": this.flag,
+      }
+    });
+
+    modal.onDidDismiss().then((dataReturned) => {
+      console.table(this.flag);
+    });
+
+    return await modal.present();
   }
 
 }
