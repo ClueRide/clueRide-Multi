@@ -20,6 +20,8 @@ import {AppRoutingModule} from './app-routing.module';
 
 import {AppComponent} from './app.component';
 import {Geolocation} from '@ionic-native/geolocation/ngx';
+import {FlagDetailsPage} from './flag/details/flag-details.page';
+import {FlagDetailsPageModule} from './flag/details/flag-details.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -30,11 +32,13 @@ import {Geolocation} from '@ionic-native/geolocation/ngx';
     AppRoutingModule,
     AuthModule,
     FilterPopoverModule,
+    FlagDetailsPageModule,
     HeadingModule,
     HttpClientModule
   ],
   entryComponents: [
-    FilterPopoverComponent
+    FilterPopoverComponent,
+    FlagDetailsPage,
   ],
   providers: [
     Geolocation,
