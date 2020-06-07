@@ -2,6 +2,7 @@ import {LatLon} from '../../domain/lat-lon/lat-lon';
 import {Image} from '../image/image';
 import {LocLink} from '../loc-link/loc-link';
 import {LocationType} from '../loc-type/loc-type';
+import {Flag} from '../flag/flag';
 
 /**
  * Attractions are specific instances of Location; they have a
@@ -23,6 +24,7 @@ export class Attraction {
   featuredImage: Image;
   establishmentId?: number;
   readinessLevel: string;
+  flags?: Flag[];
   isLast?: boolean;
   isCurrent?: boolean;
   mainLink?: LocLink;

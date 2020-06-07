@@ -2,7 +2,10 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import {Flag} from 'cr-lib';
+import {
+  Flag,
+  FlagService
+} from 'cr-lib';
 import {
   ModalController,
   NavParams
@@ -20,6 +23,7 @@ export class FlagDetailsPage implements OnInit {
   constructor(
     private modalController: ModalController,
     private navParams: NavParams,
+    private flagService: FlagService,
   ) { }
 
   ngOnInit() {
@@ -27,8 +31,12 @@ export class FlagDetailsPage implements OnInit {
   }
 
   async save() {
-    // TODO: CI-195 persist the flag.
-    console.table(this.flag);
+    this.flagService.addFlag(this.flag).subscribe(
+      (newFlag: Flag) => {
+        console.table(newFlag);
+        this.flag = newFlag;
+      }
+    );
     await this.modalController.dismiss(this.flag);
   }
 

@@ -30,7 +30,6 @@ export class CategoryService {
    * Populates the cached copy of the Categories as well as returning the same as an Observable
    * so we know when it completes.
    */
-  // public load(): Observable<Category[]> {
   public load(): Observable<Category[]> {
     console.log('CategoryService.load()');
     return this.http.get<Category[]>(
