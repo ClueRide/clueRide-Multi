@@ -6,7 +6,9 @@ import {
 import {
   Flag,
   FlaggedAttribute,
-  FlagReason
+  FlaggedAttributeService,
+  FlagReason,
+  FlagReasonService
 } from 'cr-lib';
 import {
   ActionSheetController,
@@ -23,12 +25,49 @@ export class FlagButtonComponent implements OnInit {
 
   @Input() attractionId: number;
 
+  /* Choices for the Reason Action Sheet. */
+  static reasonButtons = [];
+  /* Choices for the Flagged Attribute Action Sheet. */
+  static flaggedAttributeButtons = [];
+
   private flag: Flag;
 
   constructor(
     private actionSheetController: ActionSheetController,
     private modalController: ModalController,
-  ) { }
+    private flagReasonService: FlagReasonService,
+    private flaggedAttributeService: FlaggedAttributeService,
+  ) {
+    FlagButtonComponent.reasonButtons = [];
+    this.flagReasonService.getFlagReasons().subscribe(
+      (reasons) => {
+        reasons.forEach(
+          (flagReason: FlagReason) => {
+            FlagButtonComponent.reasonButtons.push({
+              text: flagReason,
+              handler: () => {this.reasonActionHandler(flagReason)}
+            });
+          }
+        );
+      }
+    );
+    FlagButtonComponent.reasonButtons.push({text: 'Cancel', role: 'cancel' });
+
+    FlagButtonComponent.flaggedAttributeButtons = [];
+    this.flaggedAttributeService.getFlaggedAttributes().subscribe(
+      (attributes) => {
+        attributes.forEach(
+          (flaggedAttribute: FlaggedAttribute) => {
+            FlagButtonComponent.flaggedAttributeButtons.push({
+              text: flaggedAttribute,
+              handler: () => {this.attributeActionHandler(flaggedAttribute)}
+            });
+          }
+        );
+      }
+    );
+    FlagButtonComponent.flaggedAttributeButtons.push({text: 'Cancel', role: 'cancel' });
+  }
 
   ngOnInit() {}
 
@@ -46,14 +85,7 @@ export class FlagButtonComponent implements OnInit {
     /* Present Dialog to capture Reason. */
     const actionSheet = await this.actionSheetController.create({
       header: 'Choose the Reason for this Issue',
-      buttons: [
-        /* TODO: CI-195 Replace with list from the back-end. */
-        {text: FlagReason.SAFETY, handler: () => {this.reasonActionHandler(FlagReason.SAFETY); }},
-        {text: FlagReason.ACCURACY, handler: () => {this.reasonActionHandler(FlagReason.ACCURACY); }},
-        {text: FlagReason.FUN_FACTOR, handler: () => {this.reasonActionHandler(FlagReason.FUN_FACTOR); }},
-        {text: FlagReason.TIMELINESS, handler: () => {this.reasonActionHandler(FlagReason.TIMELINESS); }},
-        {text: 'Cancel', role: 'cancel' }
-      ]
+      buttons: FlagButtonComponent.reasonButtons
     });
 
     await actionSheet.present();
@@ -68,30 +100,14 @@ export class FlagButtonComponent implements OnInit {
   async captureFlaggedAttribute() {
     const actionSheet = await this.actionSheetController.create({
       header: 'What part has an Issue?',
-      buttons: [
-        /* TODO: CI-195 Replace with list from the back-end. */
-        {text: 'The Attraction itself', handler: () => {this.attributeActionHandler(null); }},
-        {text: FlaggedAttribute.NAME, handler: () => {this.attributeActionHandler(FlaggedAttribute.NAME); }},
-        {text: FlaggedAttribute.DESCRIPTION, handler: () => {this.attributeActionHandler(FlaggedAttribute.DESCRIPTION); }},
-        {text: FlaggedAttribute.CATEGORY_OR_TYPE, handler: () => {this.attributeActionHandler(FlaggedAttribute.CATEGORY_OR_TYPE); }},
-        {text: FlaggedAttribute.MAIN_LINK, handler: () => {this.attributeActionHandler(FlaggedAttribute.MAIN_LINK); }},
-        {text: FlaggedAttribute.OTHER_LINK, handler: () => {this.attributeActionHandler(FlaggedAttribute.OTHER_LINK); }},
-        {text: FlaggedAttribute.PREFERRED_IMAGE, handler: () => {this.attributeActionHandler(FlaggedAttribute.PREFERRED_IMAGE); }},
-        {text: FlaggedAttribute.OTHER_IMAGE, handler: () => {this.attributeActionHandler(FlaggedAttribute.OTHER_IMAGE); }},
-        {text: FlaggedAttribute.PUZZLE, handler: () => {this.attributeActionHandler(FlaggedAttribute.PUZZLE); }},
-        {text: FlaggedAttribute.ANSWER, handler: () => {this.attributeActionHandler(FlaggedAttribute.ANSWER); }},
-        {text: 'Cancel', role: 'cancel' }
-      ]
+      buttons: FlagButtonComponent.flaggedAttributeButtons
     });
 
     await actionSheet.present();
   }
 
   private attributeActionHandler(attribute: FlaggedAttribute) {
-    this.flag.details = {
-      attribute,
-      description: ''
-    };
+    this.flag.flaggedAttribute = attribute;
     console.table(this.flag);
     this.openDetailsPopover();
   }

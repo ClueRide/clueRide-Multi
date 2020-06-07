@@ -1,14 +1,12 @@
-import {FlagReason} from './flag-reason.enum';
-import {FlaggedAttribute} from './flagged-attribute.enum';
+import {FlagReason} from '../flag-reason/flag-reason.enum';
+import {FlaggedAttribute} from '../flagged-attribute/flagged-attribute.enum';
 
 export class Flag {
   id: number;
   attractionId: number;
   reason: FlagReason;
-  details: {
-    description: string;
-    attribute: FlaggedAttribute;
-  };
+  description: string;
+  flaggedAttribute: FlaggedAttribute;
   openBadgeEventId: number;
   closeBadgeEventId: number;
 }
