@@ -42,7 +42,7 @@ export class CategoryAttractionService {
     latLon.lat = 0.0;
     latLon.lon = 0.0;
 
-    this.locationService.nearest(latLon).subscribe(
+    this.commonAttractionService.getAllFlaggedAttractions().subscribe(
       (allAttractions: Attraction[]) => {
         this.attractionMap = this.commonAttractionService.buildAttractionMap(allAttractions);
         this.buildCategoryMap(allAttractions);
@@ -110,4 +110,5 @@ export class CategoryAttractionService {
   updateAttraction(updatedAttraction: Attraction) {
 
   }
+
 }

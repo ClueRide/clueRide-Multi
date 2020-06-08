@@ -21,10 +21,7 @@ import {
 import {LocTypeService} from '../loc-type/loc-type.service';
 
 /**
- * This provides for the Attractions which can be sequenced into a Course.
- * Separate from the Location Service (which handles the broader sense of Location for editing).
- * This is being kept in the FEC project since it may be shared with the
- * front-end client that assembles Courses.
+ * This provides for the Attractions.
  *
  * This caches the Attractions for a given session since it remains static
  * for the duration of the session.
@@ -81,7 +78,7 @@ export class AttractionService {
     latLon.lat = 0.0;
     latLon.lon = 0.0;
 
-    this.locationService.nearest(latLon).subscribe(
+    this.getAllFlaggedAttractions().subscribe(
       (allAttractions: Attraction[]) => {
         this.allCachedAttractions = allAttractions;
         this.loadAllAttractionsMap();
@@ -144,6 +141,17 @@ export class AttractionService {
       }
     );
     return attractionMap;
+  }
+
+  /**
+   * Retrieves full list of Attractions with Flags attached when they exist.
+   */
+  getAllFlaggedAttractions(): Observable<Attraction[]> {
+    /* self-closing subscription. */
+    return this.http.get<Attraction[]>(
+      BASE_URL + 'flagged-attraction',
+      {headers: this.httpService.getAuthHeaders()}
+    );
   }
 
 }
