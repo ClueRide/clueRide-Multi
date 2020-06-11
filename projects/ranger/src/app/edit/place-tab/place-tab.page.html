@@ -28,7 +28,7 @@
         <ion-row>
           <ion-col>
             <!-- TODO: CI-51 [press]="showImageActions()" -->
-            <ion-img *ngIf="attraction.featuredImage && attraction.featuredImage.url"
+            <ion-img *ngIf="attraction && attraction.featuredImage && attraction.featuredImage.url"
                  [src]="attraction.featuredImage.url"
                  alt="Featured Image"
             >
