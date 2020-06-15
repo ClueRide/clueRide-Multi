@@ -4,6 +4,7 @@ import {
   OnInit
 } from '@angular/core';
 import {Flag} from '../api/flag/flag';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-flag-count-chip',
@@ -13,9 +14,20 @@ import {Flag} from '../api/flag/flag';
 export class FlagCountChipComponent implements OnInit {
 
   @Input() flags: Flag[];
+  @Input() attractionId: number;
 
-  constructor() { }
+  constructor(
+    private router: Router,
+  ) { }
 
   ngOnInit() {}
+
+  openFlagPageForAttraction(): void {
+    this.router.navigate(
+      ['flags', this.attractionId]
+    ).then(() => console.log('Successful launch of Flags Page')
+    ).catch( (error) => console.log('Failed to launch Flags Page', error)
+    );
+  }
 
 }

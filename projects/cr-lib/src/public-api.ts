@@ -78,6 +78,8 @@ export * from './lib/filter/popover/filter-popover.service';
 export * from './lib/filter/popover/filter-popover.module';
 export * from './lib/flag-count/flag-count.module';
 export * from './lib/flag-count/flag-count-chip.component';
+export * from './lib/flag-row/flag-row.module';
+export * from './lib/flag-row/flag-row.component';
 export * from './lib/geo/device-geo-loc/device-geo-loc.service';
 export * from './lib/geo/geo-loc/geo-loc';
 export * from './lib/heading/heading.component';

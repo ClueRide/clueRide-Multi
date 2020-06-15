@@ -92,7 +92,11 @@
         Delete
       </ion-button>
 
-      <app-flag-count-chip slot="end" [flags]="attraction.flags"></app-flag-count-chip>
+      <app-flag-count-chip slot="end"
+                           [attractionId]="attraction.id"
+                           [flags]="attraction.flags">
+
+      </app-flag-count-chip>
 
       <app-flag-button slot="end" [attractionId]="attraction.id"></app-flag-button>
     </ion-item>

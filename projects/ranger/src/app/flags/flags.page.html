@@ -1,0 +1,15 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title *ngIf="attraction.name">Flags for {{attraction.name}}</ion-title>
+    <ion-title *ngIf="!attraction.name">Flags</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <div *ngFor="let flag of attraction.flags">
+      <app-flag-row [flag]="flag"></app-flag-row>
+    </div>
+  </ion-list>
+</ion-content>

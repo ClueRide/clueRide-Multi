@@ -29,6 +29,7 @@ const routes: Routes = [
   { path: 'filter', loadChildren: './filter/page/filter-page.module#FilterPageModule' },
   { path: 'flag', loadChildren: './flag/flag.module#FlagPageModule' },
   { path: 'flag-details', loadChildren: './flag/details/flag-details.module#FlagDetailsPageModule' },
+  { path: 'flags', loadChildren: './flags/flags.module#FlagsPageModule' },
 ];
 
 @NgModule({
