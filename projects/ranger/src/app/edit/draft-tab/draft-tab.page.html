@@ -84,13 +84,23 @@
         <ion-textarea class="value-field" [(ngModel)]="attraction.description"></ion-textarea>
     </ion-item>
 
+    <!-- Button Footer -->
     <ion-item>
       <ion-button color="danger"
-      (click)="deleteAttraction()">
+                  slot="start"
+                  (click)="deleteAttraction()">
         Delete
       </ion-button>
+
+      <app-flag-count-chip slot="end"
+                           [attractionId]="attraction.id"
+                           [flags]="attraction.flags">
+
+      </app-flag-count-chip>
+
       <app-flag-button slot="end" [attractionId]="attraction.id"></app-flag-button>
     </ion-item>
+
   </ion-list>
 
 

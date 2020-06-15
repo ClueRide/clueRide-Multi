@@ -5,6 +5,7 @@ import {FormsModule} from '@angular/forms';
 import {IonicModule} from '@ionic/angular';
 import {
   ConnectionStateModule,
+  FlagCountModule,
   LocTypeChipModule
 } from 'cr-lib';
 
@@ -16,6 +17,7 @@ import {FlagButtonModule} from '../../flag/button/flag-button.module';
     CommonModule,
     ConnectionStateModule,
     FlagButtonModule,
+    FlagCountModule,
     FormsModule,
     IonicModule,
     LocTypeChipModule,

@@ -97,13 +97,13 @@ export class GameMarkerService {
 
     /* What to do when user clicks on the attraction. */
     marker.on('click', (mouseEvent) => {
-      this.openLocationPageForMarkerClick(mouseEvent);
+      this.openAttractionPageForMarkerClick(mouseEvent);
     });
 
     return marker;
   }
 
-  private openLocationPageForMarkerClick(
+  private openAttractionPageForMarkerClick(
     mouseEvent
   ): void {
     const crMarker: ClickableMarker = mouseEvent.target;

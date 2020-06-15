@@ -1,0 +1,19 @@
+<ng-container *ngIf="flags && flags.length > 0; else noFlags">
+
+  <ion-chip color="warning" (click)="openFlagPageForAttraction()">
+    <ion-label>
+      {{flags.length}} flags
+    </ion-label>
+  </ion-chip>
+
+</ng-container>
+
+<ng-template #noFlags>
+
+  <ion-chip color="success">
+    <ion-label>
+      No flags
+    </ion-label>
+  </ion-chip>
+
+</ng-template>
