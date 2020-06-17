@@ -7,8 +7,7 @@ import {
   AttractionLayerService,
   HeadingComponent,
   LatLonService,
-  MapCenterDisplayComponent,
-  PoolMarkerService
+  MapCenterDisplayComponent
 } from 'cr-lib';
 import * as L from 'leaflet';
 import {MapDataService} from './data/map-data.service';
@@ -41,7 +40,6 @@ export class MapComponent implements OnDestroy {
   /** Holdes Leaflet LayerGroup for all Course Markers. */
   private courseLayerGroup: L.LayerGroup;
 
-  private layerIdPerAttraction: { [index: number]: number } = [];
   private positionSubscription: Subscription;
   private boundsSubscription: Subscription;
 
@@ -52,7 +50,6 @@ export class MapComponent implements OnDestroy {
     private mapDragService: MapDragService,
     private mapDataService: MapDataService,
     private mapPositionService: MapPositionService,
-    private poolMarkerService: PoolMarkerService,
   ) {
     console.log('Map Component: constructor()');
   }
@@ -64,11 +61,13 @@ export class MapComponent implements OnDestroy {
   public openMapAtPosition(
     position: Geoposition
   ) {
+    this.validatePosition(position);
 
     console.log('Map Component: openMapAtPosition()');
     /* If map is already initialized, no need to re-initialize. */
     if (!this.map) {
       console.log('MapComponent Initializing');
+      this.mapPositionService.readyForMapMoves(false);
       this.map = L.map('map');
       this.map.setView(
         this.latLonService.toLatLng(position),
@@ -91,6 +90,7 @@ export class MapComponent implements OnDestroy {
       mapCenterSubject.next(position);
 
       this.addMapCenterDisplay(mapCenterSubject);
+      this.mapPositionService.readyForMapMoves(true);
     }
 
     /* Specify the tile layer for the map and add the attribution. */
@@ -141,6 +141,15 @@ export class MapComponent implements OnDestroy {
         this.mapDragService.setAutoCenter(false);
       }
     );
+  }
+
+  /**
+   * Throws error if the position can't be used to position the map.
+   * @param position
+   */
+  private validatePosition(position: Geoposition) {
+    /* Simply try to perform a conversion; should throw error if there is a problem. */
+    this.latLonService.toLatLng(position);
   }
 
 }

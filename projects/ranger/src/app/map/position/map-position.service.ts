@@ -36,6 +36,9 @@ export class MapPositionService {
 
   private positionSourceKnownFlag: boolean;
 
+  /* True if the map is able to accept new positions. */
+  private readyForMapMovesFlag: boolean;
+
   constructor(
     private geoLocService: GeoLocService,
     private mapDragService: MapDragService,
@@ -103,6 +106,14 @@ export class MapPositionService {
   }
 
   /**
+   * The map tells this service whether or not it is able to be moved.
+   * @param readyFlag true if the map is in a state where moves can occur.
+   */
+  public readyForMapMoves(readyFlag: boolean): void {
+    this.readyForMapMovesFlag = readyFlag;
+  }
+
+  /**
    * Upon a "Move Map" event carrying a new Geoposition, check if it is a good time
    * to change the center of the map.
    *
@@ -118,10 +129,14 @@ export class MapPositionService {
       return;
     }
 
-    /* Move map so current location is centered. */
-    if (this.mapDragService.isAutoCenter()) {
-      this.moveMapSubject.next(geoPosition);
+    /* Only entertain moves if the Map is ready for one. */
+    if (this.readyForMapMovesFlag) {
+      /* Move map so current location is centered. */
+      if (this.mapDragService.isAutoCenter()) {
+        this.moveMapSubject.next(geoPosition);
+      }
     }
+
   }
 
 }
