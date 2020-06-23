@@ -16,6 +16,7 @@ import {AttractionService} from '../attraction.service';
 import {Filter} from '../../../filter/filter';
 import {PoolMarkerService} from '../../../marker/pool/pool-marker.service';
 import {LatLonService} from '../../../domain/lat-lon/lat-lon.service';
+import {BoundsService} from '../bounds/bounds-service';
 
 @Injectable({
   providedIn: 'root'
@@ -34,17 +35,16 @@ export class CourseAttractionService {
   /* Filter which is currently in effect. */
   private currentFilter: Filter;
 
-  readonly boundsChangeSubject: Subject<L.LatLngBounds>;
 
   constructor(
     private http: HttpClient,
     private httpService: AuthHeaderService,
+    private boundsService: BoundsService,
     private commonAttractionService: AttractionService,
     private latLonService: LatLonService,
     private poolMarkerService: PoolMarkerService,
   ) {
     this.attractionLoadingCompleteSubject = new Subject<boolean>();
-    this.boundsChangeSubject = new Subject<L.LatLngBounds>();
     this.currentFilter = new Filter();    // Default is empty filter.
   }
 
@@ -143,34 +143,25 @@ export class CourseAttractionService {
     /* Something is changing; clear the old set of markers. */
     courseLayerGroup.clearLayers();
 
-    let bounds: L.LatLngBounds = null;
+    let attractions: Attraction[] = [];
     if (newFilter.courseToInclude != null) {
       console.log('Course.showFilteredAttractions() Course to show:', newFilter.courseToInclude);
       this.commonAttractionService.getAllAttractionsForCourse(newFilter.courseToInclude).subscribe(
         (filledAttraction: Attraction) => {
-          const latLng: L.LatLng = this.latLonService.toLatLng(filledAttraction.latLon);
-          if (bounds === null) {
-            bounds = L.latLngBounds([latLng, latLng]);
-          } else {
-            bounds.extend(latLng);
-          }
+          attractions.push(filledAttraction);
           courseLayerGroup.addLayer(
             this.poolMarkerService.getAttractionMarker(filledAttraction)
           );
         },
         error => console.log('error during getAllAttractionsForCourse:', error),
         () => {
-          this.boundsChangeSubject.next(bounds);
+          this.boundsService.setNewBounds(attractions);
         }
       );
     }
 
     /* Record our current setting; copying using spread operator. */
     this.currentFilter = { ...newFilter };
-  }
-
-  public getBoundsChangeSubject(): Subject<L.LatLngBounds> {
-    return this.boundsChangeSubject;
   }
 
 }

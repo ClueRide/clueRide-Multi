@@ -3,6 +3,7 @@ import {
   Attraction,
   AttractionLayerService,
   AttractionService,
+  BoundsService,
   Category,
   CategoryAttractionService,
   CategoryService,
@@ -55,6 +56,7 @@ export class MapDataService {
 
   constructor(
     private attractionLayerService: AttractionLayerService,
+    private boundsService: BoundsService,
     private categoryAttractionService: CategoryAttractionService,
     private categoryService: CategoryService,
     private courseAttractionService: CourseAttractionService,
@@ -86,7 +88,7 @@ export class MapDataService {
    * Surface for Bounds Changes.
    */
   getBoundsChangeSubject(): Subject<L.LatLngBounds> {
-    return this.courseAttractionService.getBoundsChangeSubject();
+    return this.boundsService.getBoundsChangeSubject();
   }
 
   /**

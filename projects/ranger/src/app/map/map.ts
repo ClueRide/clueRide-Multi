@@ -81,7 +81,10 @@ export class MapComponent implements OnDestroy {
 
       /* Respond to changes in bounds by re-fitting the map. */
       this.boundsSubscription = this.mapDataService.getBoundsChangeSubject().subscribe(
-        (bounds: L.LatLngBounds) => this.map.fitBounds(bounds.pad(.2))
+        (bounds: L.LatLngBounds) => {
+          console.log('Adjusting Map Bounds');
+          this.map.fitBounds(bounds.pad(.2));
+        }
       );
 
       /* Attach the map center position subject to the Map Drag service. */
