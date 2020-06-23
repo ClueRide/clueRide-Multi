@@ -8,6 +8,7 @@ export * from './lib/api/attraction/attraction';
 export * from './lib/api/attraction/attraction-map';
 export * from './lib/api/attraction/attraction-mock';
 export * from './lib/api/attraction/attraction.service';
+export * from './lib/api/attraction/bounds/bounds-service';
 export * from './lib/api/attraction/course/course-attraction.service';
 export * from './lib/api/attraction/category/category-attraction.service';
 export * from './lib/api/attraction/layer/attraction-layer.service';

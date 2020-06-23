@@ -1,8 +1,13 @@
 <ion-fab horizontal="start" vertical="bottom">
+
+  <!-- The meat of this component: -->
   <app-filter-popover [hidden]="expandedFlag"></app-filter-popover>
+
+  <!-- expand/collapse the filter popover. -->
   <ion-fab-button size="small"
                   crPreventDoubleClick
                   (throttledClick)="showFilterToggle($event)">
     <ion-icon name="funnel"></ion-icon>
   </ion-fab-button>
+
 </ion-fab>

@@ -14,6 +14,7 @@ import {AttractionsByCategory} from '../category/attractions-by-category';
 import {CategoryAttractionService} from '../category/category-attraction.service';
 import {Category} from '../../category/category';
 import {Attraction} from '../attraction';
+import {BoundsService} from '../bounds/bounds-service';
 
 interface LayerPerCategory {
   [index: number]: L.LayerGroup;
@@ -44,6 +45,7 @@ export class AttractionLayerService {
   private layerIdPerAttractionId: LayerIdPerAttractionId = [];
 
   constructor(
+    private boundsService: BoundsService,
     private categoryService: CategoryService,
     private categoryAttractionService: CategoryAttractionService,
     private poolMarkerService: PoolMarkerService,
@@ -169,6 +171,15 @@ export class AttractionLayerService {
         }
       );
     } else {
+      /* Check if we will be setting the bounds based on a single category. */
+      if (filter.categoriesToIncludeById.length === 1) {
+        let singleCategoryId = filter.categoriesToIncludeById[0];
+
+        this.boundsService.setNewBounds(
+          this.categoryAttractionService.getAttractionsByCategory(singleCategoryId)
+        );
+      }
+
       const existingLayers = layerGroup.getLayers();
       this.categoryService.getAllCategories().forEach(
         (category) => {
