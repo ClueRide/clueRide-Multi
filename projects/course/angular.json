@@ -12,7 +12,7 @@
       "schematics": {},
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
             "outputPath": "www",
             "index": "src/index.html",
@@ -20,6 +20,9 @@
             "polyfills": "src/polyfills.ts",
             "preserveSymlinks": true,
             "tsConfig": "tsconfig.app.json",
+            "customWebpackConfig": {
+              "path": "../../webpack.config.js"
+            },
             "assets": [
               {
                 "glob": "**/*",
@@ -73,9 +76,12 @@
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "course:build"
+            "browserTarget": "course:build",
+            "customWebpackConfig": {
+              "path": "../../webpack.config.js"
+            }
           },
           "configurations": {
             "production": {
