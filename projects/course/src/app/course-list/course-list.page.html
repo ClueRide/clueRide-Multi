@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Courses</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-list>
+    <div *ngFor="let course of courses">
+      <app-course-item [course]="course"></app-course-item>
+    </div>
+
+    <ion-item>
+      <ion-button (click)="addNew()">
+        Add New
+      </ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>
