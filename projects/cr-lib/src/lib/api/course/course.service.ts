@@ -64,8 +64,8 @@ export class CourseService {
     }
   }
 
-  public getAllCourses(): Observable<any> {
-    return this.http.get(
+  public getAllCourses(): Observable<Course[]> {
+    return this.http.get<Course[]>(
       BASE_URL + 'course',
       {
         headers: this.httpService.getAuthHeaders()

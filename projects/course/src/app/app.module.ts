@@ -12,6 +12,7 @@ import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {AuthModule} from 'cr-lib';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,6 +22,7 @@ import {AuthModule} from 'cr-lib';
     IonicModule.forRoot(),
     AppRoutingModule,
     AuthModule,
+    HttpClientModule
   ],
   providers: [
     StatusBar,
