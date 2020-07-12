@@ -141,7 +141,8 @@ export class RollingPage implements OnDestroy {
 
     /* Define operation that adds Current (green) line to the map. */
     const addCurrentPathToMap = tap((path: Path) => {
-        const styledPath = L.geoJSON(path.features, {
+        // @ts-ignore
+      const styledPath = L.geoJSON(path.features, {
           style: GREEN_LINE
         });
         styledPath.addTo(RollingPage.pathGroup);
@@ -159,6 +160,7 @@ export class RollingPage implements OnDestroy {
           /* Adds history line to the map. */
           (path: Path) => {
             L.geoJSON(
+              // @ts-ignore
               path.features, {
                 style: BLUE_LINE,
               }

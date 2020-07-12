@@ -1,14 +1,17 @@
-# Responsibilities
-Presents the profile of a Member/User when it is available post Authentication.
-- Email address which is used as the Principal.
-- Image of user when available ().
-- Observable/Subject for confirmation that user wants to use the 
-email address currently recorded for the access token.
-
-# Collaborations
-Profile Service works with:
-- Back-end REST API to retrieve current session's Member record.
-- Clients requesting Email Address or the URL of the user's image.
-- Clients requesting the Member ID of logged in user.
-- Clients requesting the BadgeOS ID of logged in user.
-- Confirmation Page informs the profile of confirmation status and notifies listeners of this event.
+# Responsibilities - Member Profile
+The Lifecycle: creation from JWT, persistence to back-end, availability to client.
+- From JWT: uses the Token service to decode into a JSON object that is 
+mapped to our Member object.
+- From back-end: uses `member/active` endpoint to obtain a profile whose session has
+already been established via Auth services. This instance is cached.
+- Provides convenience functions to retrieve attributes of the Profile:
+  - Email
+  - Name
+  - Image URL
+  - Member ID
+  - BadgeOS ID
+- To persist to the back-end:
+  - responds to Confirm event; new user has decided upon the email address to use.
+  - Invokes the AccessState service to setup new accounts on the back-end.
+  - Returns an observable so the client receives positive confirmation the accounts
+  have been successfully created.
