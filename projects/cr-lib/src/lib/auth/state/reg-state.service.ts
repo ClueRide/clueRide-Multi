@@ -1,11 +1,18 @@
 import {HttpClient} from '@angular/common/http';
-import {Injectable, NgZone} from '@angular/core';
+import {
+  Injectable,
+  NgZone
+} from '@angular/core';
 import Auth0Cordova from '@auth0/cordova';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  Subject
+} from 'rxjs';
 import {ProfileService} from '../../api/profile/profile.service';
 import {PlatformStateService} from '../../state/platform/platform-state.service';
 import {Auth0ConfigService} from '../auth0Config/Auth0Config.service';
-import {AuthHeaderService, BASE_URL} from '../header/auth-header.service';
+import {AuthHeaderService} from '../header/auth-header.service';
 import {REGISTRATION_TYPE} from '../registration-type';
 import {RenewalService} from '../renewal/renewal.service';
 import {TokenService} from '../token/token.service';
@@ -177,11 +184,15 @@ export class RegStateService {
    */
   public confirm(): void {
     /* Update Profile on backend. */
-    this.profileService.crossCheckProfile();
-
-    /* We now have a confirmed profile and valid Access Token. */
-    this.regStateSubject.next(new RegState(RegStateKey.ACTIVE, 'Freshly Confirmed new Registration'));
-
+    this.profileService.createNewProfile().subscribe(
+      () => {
+        /* We now have a confirmed profile and valid Access Token. */
+        this.regStateSubject.next(new RegState(RegStateKey.ACTIVE, 'Freshly Confirmed new Registration'));
+      },
+      error => {
+        console.error("Failed registration confirmation", error);
+      }
+    );
   }
 
   /**
@@ -189,19 +200,6 @@ export class RegStateService {
    */
   public retry(): void {
     this.regStateSubject.next(new RegState(RegStateKey.REGISTRATION_REQUIRED, 'User-requested Retry'));
-  }
-
-  /**
-   * Talks to the backend to give it a chance to look at the Auth Headers and tell us if
-   * it likes what it sees.
-   *
-   * TODO: This will probably go into a different service.
-   */
-  public isRegistered(): Observable<boolean> {
-    return this.http.get<boolean>(
-      BASE_URL + 'access/state',
-      {headers: this.httpService.getAuthHeaders()}
-    );
   }
 
 }

@@ -7,7 +7,8 @@ import {
 } from 'rxjs';
 import {
   map,
-  share
+  share,
+  tap
 } from 'rxjs/operators';
 import {
   AuthHeaderService,
@@ -15,6 +16,7 @@ import {
 } from '../../auth/header/auth-header.service';
 import {TokenService} from '../../auth/token/token.service';
 import {Member} from '../member/member';
+import {MemberService} from '../member/member.service';
 
 /**
  * Responsible for the Member's Profile.
@@ -32,13 +34,14 @@ export class ProfileService {
   /* Defined once we have received valid data and we haven't been asked to refresh. */
   private cachedMember: Member;
   /* Defined only during the async window after request and before response. */
-  private observable: Observable<any>;
+  readonly observable: Observable<any>;
 
   private memberSubject: Subject<Member>;
 
   constructor(
     public http: HttpClient,
     private authHeaderService: AuthHeaderService,
+    private memberService: MemberService,
     private tokenService: TokenService,
   ) {
     console.log('ProfileService: Constructing');
@@ -47,7 +50,7 @@ export class ProfileService {
   }
 
   /**
-   * Client's call this to obtain the session's profile/Member record.
+   * Clients call this to obtain the session's profile/Member record.
    *
    * Triggers call to back-end if we haven't done so already. Otherwise,
    * we let clients ask the ReplaySubject to give them what had been
@@ -165,9 +168,27 @@ export class ProfileService {
     return this.cachedMember.id;
   }
 
-  // TODO: FEC-57 Implement this and return an Observable.
-  public crossCheckProfile(): void {
-      console.log('Talking to the backend to crosscheck the User Profile');
+  /**
+   * Persists new profile once user has confirmed the email address they wish to use.
+   *
+   * This sends the profile obtained from parsing the JWT token so it can be compared
+   * to what the AuthHeaders would provide when presented to the 3rd-party Auth service.
+   */
+  public createNewProfile(): Observable<Member> {
+    console.log('Talking to the backend to create new User Profile');
+
+    return this.http.post<Member>(
+      BASE_URL + 'access/state/init',
+      this.getMemberFromToken(),
+      {headers: this.authHeaderService.getAuthHeaders()}
+    ).pipe(
+      /* Tapping this here allows us to capture the newly created IDs from the backend. */
+      tap(
+        (updatedMember) => {
+          this.memberSubject.next(updatedMember)
+        }
+      )
+    );
   }
 
 }

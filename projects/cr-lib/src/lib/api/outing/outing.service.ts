@@ -1,9 +1,18 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {BASE_URL, AuthHeaderService} from '../../auth/header/auth-header.service';
-import {Observable, of} from 'rxjs';
+import {
+  AuthHeaderService,
+  BASE_URL
+} from '../../auth/header/auth-header.service';
+import {
+  Observable,
+  of
+} from 'rxjs';
 import {Outing} from './outing';
-import {map, share} from 'rxjs/operators';
+import {
+  map,
+  share
+} from 'rxjs/operators';
 
 /**
  * Service for retrieving Outing Details.
@@ -22,6 +31,7 @@ export class OutingService {
     public http: HttpClient,
     private authHeaderService: AuthHeaderService,
   ) {
+    console.log("Hello OutingService");
   }
 
   public getSessionOuting(): Observable<Outing> {
@@ -44,6 +54,7 @@ export class OutingService {
             this.cachedOuting = response.body as Outing;
             return this.cachedOuting;
           } else {
+            console.error("No outing for this session");
             return 'Request failed with status ' + response.status;
           }
         }),
