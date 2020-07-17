@@ -5,22 +5,22 @@ import {
   TestBed
 } from '@angular/core/testing';
 
-import {AttractionsPage} from './attractions.page';
+import {AttractionsSequencePage} from './attractions-sequence-page.component';
 
 describe('AttractionsPage', () => {
-  let component: AttractionsPage;
-  let fixture: ComponentFixture<AttractionsPage>;
+  let component: AttractionsSequencePage;
+  let fixture: ComponentFixture<AttractionsSequencePage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AttractionsPage ],
+      declarations: [ AttractionsSequencePage ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AttractionsPage);
+    fixture = TestBed.createComponent(AttractionsSequencePage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

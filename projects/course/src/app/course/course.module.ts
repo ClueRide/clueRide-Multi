@@ -1,6 +1,9 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import {
   RouterModule,
   Routes
@@ -12,7 +15,8 @@ import {CoursePage} from './course.page';
 import {CourseThemeComponent} from './theme/course-theme.component';
 import {CourseStartComponent} from './start/course-start.component';
 import {DetailsPage} from './details/details.page';
-import {AttractionsPage} from './attractions/attractions.page';
+import {AttractionsSequencePage} from './attractions/attractions-sequence-page.component';
+import {AttractionsPageModule} from './attractions/attractions.module';
 
 const routes: Routes = [
   {
@@ -25,7 +29,7 @@ const routes: Routes = [
       },
       {
         path: ':id/attractions',
-        component: AttractionsPage
+        component: AttractionsSequencePage
       }
     ]
   }
@@ -37,14 +41,15 @@ const routes: Routes = [
     CourseThemeComponent,
     RouterModule
   ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    RouterModule.forChild(routes)
-  ],
+    imports: [
+        AttractionsPageModule,
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        RouterModule.forChild(routes),
+        ReactiveFormsModule
+    ],
   declarations: [
-    AttractionsPage,
     CoursePage,
     CourseStartComponent,
     CourseThemeComponent,

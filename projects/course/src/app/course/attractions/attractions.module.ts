@@ -8,12 +8,12 @@ import {
 
 import {IonicModule} from '@ionic/angular';
 
-import {AttractionsPage} from './attractions.page';
+import {AttractionsSequencePage} from './attractions-sequence-page.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: AttractionsPage
+    component: AttractionsSequencePage
   }
 ];
 
@@ -24,6 +24,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [AttractionsPage]
+  declarations: [AttractionsSequencePage]
 })
 export class AttractionsPageModule {}

@@ -4,12 +4,11 @@ import {
 } from '@angular/core';
 import {
   Course,
-  CourseService
+  CourseService,
+  LoaderService
 } from 'cr-lib';
-import {
-  NavigationExtras,
-  Router
-} from '@angular/router';
+import {Router} from '@angular/router';
+import {EditedCourseService} from '../course/edited-course.service';
 
 @Component({
   selector: 'app-course-list',
@@ -22,28 +21,38 @@ export class CourseListPage implements OnInit {
 
   constructor(
     private courseService: CourseService,
+    private editedCourseService: EditedCourseService,
+    private loaderService: LoaderService,
     private router: Router,
   ) { }
 
   ngOnInit() {
-    this.courseService.getAllCourses().subscribe(
-      (courses: Course[]) => this.courses = courses
-    );
+    this.refreshCourseList();
   }
 
   public addNew(): void {
     console.log("Adding new Course");
-    let navigationExtras: NavigationExtras = {
-      state: {
-        course: new Course()
-      }
-    };
+    let newCourse = new Course();
 
+    this.editedCourseService.setEditedCourse(newCourse);
     this.router.navigate(
-      ['course'],
-      navigationExtras
+      ['course/' + newCourse.id + '/details']
     ).then(() => console.log('Successful launch of Course Page')
     ).catch( (error) => console.log('Failed to launch Course Page. How come?', error)
+    );
+  }
+
+  refreshCourseList(): void {
+    this.loaderService.showLoader("Retrieving Course List");
+    this.editedCourseService.refreshCourseList().subscribe(
+      (courses: Course[]) => {
+        this.courses = courses;
+        this.loaderService.hideLoader();
+      },
+      (error) => {
+        console.log("Failed to retrieve Courses", error);
+        this.loaderService.hideLoader();
+      }
     );
   }
 

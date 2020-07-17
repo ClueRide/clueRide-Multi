@@ -19,7 +19,7 @@ export class AppComponent {
     },
     {
       title: 'Course List',
-      url: '/course-list',
+      url: '/list',
       icon: 'list'
     }
   ];
