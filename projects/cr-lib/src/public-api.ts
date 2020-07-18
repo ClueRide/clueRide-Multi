@@ -86,6 +86,7 @@ export * from './lib/geo/geo-loc/geo-loc';
 export * from './lib/heading/heading.component';
 export * from './lib/heading/heading.module';
 export * from './lib/loader/loader.module';
+export * from './lib/loader/loader.service';
 export * from './lib/map-center/map-center.module';
 export * from './lib/map-center/map-center-display.component';
 export * from './lib/marker/clickableMarker';

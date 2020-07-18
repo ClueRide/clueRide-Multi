@@ -1,0 +1,74 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="course.name">{{course.name}} - Details</ion-title>
+    <ion-title *ngIf="!course.name">Edit Course</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div [formGroup]="detailsGroup">
+
+    <ion-list>
+      <!-- Name -->
+      <ion-item>
+        <ion-label position="floating">
+          Name
+        </ion-label>
+        <ion-input #courseName
+                   class="value-field"
+                   type="text"
+                   [ngModelOptions]="{standalone: true}"
+                   [(ngModel)]="course.name">
+        </ion-input>
+      </ion-item>
+
+      <!-- Theme -->
+      <ion-item>
+        <app-course-theme></app-course-theme>
+      </ion-item>
+
+      <!-- Description -->
+      <ion-item>
+        <ion-label position="floating">
+          Description
+        </ion-label>
+        <ion-input class="value-field"
+                   [ngModelOptions]="{standalone: true}"
+                   [(ngModel)]="course.description">
+        </ion-input>
+
+      </ion-item>
+
+      <!-- Link -->
+      <ion-item>
+        <ion-label position="floating">
+          Course Home Page
+        </ion-label>
+        <ion-input class="value-field"
+                   [ngModelOptions]="{standalone: true}"
+                   [(ngModel)]="course.url">
+        </ion-input>
+      </ion-item>
+
+      <ion-item>
+
+        <ion-button slot="start" (click)="cancel()">
+          Cancel
+        </ion-button>
+
+        <ion-button slot="end" (click)="save()">
+          Save
+        </ion-button>
+
+      </ion-item>
+
+    </ion-list>
+
+  </div>
+
+</ion-content>
+

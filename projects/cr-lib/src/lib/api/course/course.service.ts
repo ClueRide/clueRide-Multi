@@ -73,4 +73,14 @@ export class CourseService {
     );
   }
 
+  public saveNewCourse(newCourse: Course): Observable<Course> {
+    return this.http.post<Course>(
+      BASE_URL + 'course',
+      newCourse,
+      {
+        headers: this.httpService.getAuthHeaders()
+      }
+    )
+  }
+
 }
