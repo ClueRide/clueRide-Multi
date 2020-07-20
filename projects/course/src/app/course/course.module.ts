@@ -12,11 +12,11 @@ import {
 import {IonicModule} from '@ionic/angular';
 
 import {CoursePage} from './course.page';
-import {CourseThemeComponent} from './theme/course-theme.component';
 import {CourseStartComponent} from './start/course-start.component';
 import {DetailsPage} from './details/details.page';
 import {AttractionsSequencePage} from './attractions/attractions-sequence-page.component';
 import {AttractionsPageModule} from './attractions/attractions.module';
+import {DetailsPageModule} from './details/details.module';
 
 const routes: Routes = [
   {
@@ -38,22 +38,20 @@ const routes: Routes = [
 @NgModule({
   exports: [
     CourseStartComponent,
-    CourseThemeComponent,
     RouterModule
   ],
-    imports: [
-        AttractionsPageModule,
-        CommonModule,
-        FormsModule,
-        IonicModule,
-        RouterModule.forChild(routes),
-        ReactiveFormsModule
-    ],
+  imports: [
+    AttractionsPageModule,
+    CommonModule,
+    DetailsPageModule,
+    FormsModule,
+    IonicModule,
+    RouterModule.forChild(routes),
+    ReactiveFormsModule
+  ],
   declarations: [
     CoursePage,
     CourseStartComponent,
-    CourseThemeComponent,
-    DetailsPage,
   ]
 })
 export class CoursePageModule {}

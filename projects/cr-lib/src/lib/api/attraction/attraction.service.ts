@@ -154,4 +154,14 @@ export class AttractionService {
     );
   }
 
+  suggestAttractions(nameFragment: string): Observable<Attraction[]> {
+    return this.http.post<Attraction[]>(
+      BASE_URL + 'attraction/suggest/',
+      {
+        fragment: nameFragment
+      },
+      {headers: this.httpService.getAuthHeaders()}
+    );
+  }
+
 }

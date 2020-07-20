@@ -12,6 +12,7 @@ import {
 import {IonicModule} from '@ionic/angular';
 
 import {DetailsPage} from './details.page';
+import {CourseThemeComponent} from '../theme/course-theme.component';
 
 const routes: Routes = [
   {
@@ -28,6 +29,9 @@ const routes: Routes = [
     ReactiveFormsModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [DetailsPage]
+  declarations: [
+    DetailsPage,
+    CourseThemeComponent
+  ]
 })
 export class DetailsPageModule {}

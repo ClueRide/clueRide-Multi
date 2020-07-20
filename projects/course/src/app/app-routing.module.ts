@@ -8,7 +8,7 @@ import {
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'list',
     pathMatch: 'full'
   },
   {

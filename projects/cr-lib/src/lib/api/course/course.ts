@@ -5,6 +5,7 @@ export class Course {
   url: string;
   courseTypeId: string;
   pathIds: number[];
+  locationIds?: number[];
   departure: string;
   destination: string;
 }

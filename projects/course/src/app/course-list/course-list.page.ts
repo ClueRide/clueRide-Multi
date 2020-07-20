@@ -43,15 +43,16 @@ export class CourseListPage implements OnInit {
   }
 
   refreshCourseList(): void {
-    this.loaderService.showLoader("Retrieving Course List");
+    // TODO: CI-227 Loader broken
+    // this.loaderService.showLoader("Retrieving Course List");
     this.editedCourseService.refreshCourseList().subscribe(
       (courses: Course[]) => {
         this.courses = courses;
-        this.loaderService.hideLoader();
+        // this.loaderService.hideLoader();
       },
       (error) => {
         console.log("Failed to retrieve Courses", error);
-        this.loaderService.hideLoader();
+        // this.loaderService.hideLoader();
       }
     );
   }

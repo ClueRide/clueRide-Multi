@@ -5,6 +5,8 @@ import {
 import {EditedCourseService} from '../edited-course.service';
 import {Subscription} from 'rxjs';
 import {
+  Attraction,
+  AttractionByPathService,
   Course,
   LoaderService
 } from 'cr-lib';
@@ -21,12 +23,15 @@ export class AttractionsSequencePage implements OnInit {
   /* The instance being edited. */
   public course: Course | any = {};
 
+  public attractions: Attraction[] = [];
+
   private courseId: number;
 
   private subscription: Subscription;
 
   constructor(
     private activatedRoute: ActivatedRoute,
+    private attractionByPathService: AttractionByPathService,
     private editedCourseService: EditedCourseService,
     private loaderService: LoaderService,
     private navController: NavController,
@@ -40,10 +45,12 @@ export class AttractionsSequencePage implements OnInit {
       (params) => {
         this.courseId = parseInt(this.activatedRoute.snapshot.paramMap.get('id'), 10);
         this.course = this.editedCourseService.getCourseToEdit(this.courseId);
+        this.attractions = this.attractionByPathService.getAttractions();
       },
       (error) => console.log('DetailsPage: Unable to pick up query parans', error)
     );
   }
+
   save() {
     this.loaderService.showLoader('Saving Course');
     this.editedCourseService.saveNewCourse(this.course).subscribe(
