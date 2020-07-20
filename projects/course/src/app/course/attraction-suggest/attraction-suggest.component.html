@@ -1,0 +1,13 @@
+<ion-searchbar #nameSearch
+               type="text"
+               debounce="300"
+               placeholder="Attraction Name"
+               (ionChange)="getItems($event)">
+</ion-searchbar>
+
+<ion-list *ngIf="isItemAvailable">
+  <ion-item *ngFor="let attraction of attractions"
+            (click)="useAttraction(attraction)">
+    {{ attraction.name }}
+  </ion-item>
+</ion-list>

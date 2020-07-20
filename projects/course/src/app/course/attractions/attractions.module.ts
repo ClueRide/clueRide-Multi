@@ -9,6 +9,7 @@ import {
 import {IonicModule} from '@ionic/angular';
 
 import {AttractionsSequencePage} from './attractions-sequence-page.component';
+import {AttractionSuggestComponent} from '../attraction-suggest/attraction-suggest.component';
 
 const routes: Routes = [
   {
@@ -24,6 +25,9 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [AttractionsSequencePage]
+  declarations: [
+    AttractionsSequencePage,
+    AttractionSuggestComponent
+  ]
 })
 export class AttractionsPageModule {}

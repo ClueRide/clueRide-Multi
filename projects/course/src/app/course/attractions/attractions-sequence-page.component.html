@@ -1,28 +1,41 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Attractions</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="course.name">{{course.name}} - Details</ion-title>
+    <ion-title *ngIf="!course.name">Edit Course</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
   <ion-list>
-    <ion-item *ngFor="let pathId of course.pathIds">
-      Path ID: {{pathId}}
+    <!-- Existing Attractions -->
+    <ion-item *ngFor="let attraction of attractions">
+      {{attraction.name}}
     </ion-item>
 
+    <!-- Item for adding new Attraction -->
     <ion-item>
-
-      <ion-button slot="start" (click)="cancel()">
-        Cancel
-      </ion-button>
-
-      <ion-button slot="end" (click)="save()">
-        Save
-      </ion-button>
-
+      <app-attraction-suggest [course]="course"></app-attraction-suggest>
     </ion-item>
-
   </ion-list>
+
+  <ion-card>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-button slot="start" (click)="cancel()">
+            Cancel
+          </ion-button>
+
+          <ion-button slot="end" (click)="save()">
+            Save
+          </ion-button>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
 
 </ion-content>
