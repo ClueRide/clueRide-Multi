@@ -8,6 +8,7 @@ import {
   Attraction,
   AttractionByPathService,
   Course,
+  LinkPath,
   LoaderService
 } from 'cr-lib';
 import {ActivatedRoute} from '@angular/router';
@@ -23,6 +24,7 @@ export class AttractionsSequencePage implements OnInit {
   /* The instance being edited. */
   public course: Course | any = {};
 
+  public linkPaths: LinkPath[] = [];
   public attractions: Attraction[] = [];
 
   private courseId: number;
@@ -45,6 +47,7 @@ export class AttractionsSequencePage implements OnInit {
       (params) => {
         this.courseId = parseInt(this.activatedRoute.snapshot.paramMap.get('id'), 10);
         this.course = this.editedCourseService.getCourseToEdit(this.courseId);
+        this.linkPaths = this.attractionByPathService.linkPaths;
         this.attractions = this.attractionByPathService.getAttractions();
       },
       (error) => console.log('DetailsPage: Unable to pick up query parans', error)

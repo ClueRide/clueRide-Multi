@@ -11,7 +11,9 @@ import {
   Attraction,
   AttractionByPathService,
   Course,
+  LinkPathService,
 } from 'cr-lib';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-course',
@@ -29,6 +31,7 @@ export class CoursePage implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private attractionByPathService: AttractionByPathService,
+    private linkPathService: LinkPathService,
     private router: Router,
   ) {
     this.subscription = new Subscription();
@@ -42,11 +45,14 @@ export class CoursePage implements OnInit {
           if (this.router.getCurrentNavigation().extras.state) {
             this.course = this.router.getCurrentNavigation().extras.state.course;
             this.attractions = [];
-            this.subscription.add(
-              this.attractionByPathService.loadCourse(this.course).subscribe(
-                (attraction: Attraction) => this.attractions.push(attraction)
+            this.attractionByPathService.loadCourse(this.course).pipe(
+              map(
+                (attraction: Attraction) => {
+                  this.attractions.push(attraction);
+                }
               )
-            );
+            ).toPromise()
+              .then(() => this.attractionByPathService.updateLinkPaths());
           }
         },
         (error) => {
