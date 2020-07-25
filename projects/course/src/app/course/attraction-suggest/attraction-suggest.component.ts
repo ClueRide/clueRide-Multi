@@ -9,8 +9,6 @@ import {
   AttractionByPathService,
   AttractionService,
   Course,
-  LinkPath,
-  LinkPathService
 } from 'cr-lib';
 import {IonSearchbar} from '@ionic/angular';
 
@@ -29,12 +27,9 @@ export class AttractionSuggestComponent implements OnInit {
 
   public attractions: Attraction[] = [];
 
-  public paths: LinkPath[] = [];
-
   constructor(
     private attractionService: AttractionService,
     private attractionByPathService: AttractionByPathService,
-    private linkPathService: LinkPathService,
   ) { }
 
   ngOnInit() {}
@@ -58,11 +53,6 @@ export class AttractionSuggestComponent implements OnInit {
     this.isItemAvailable = false;
     this.nameSearchBar.value = '';
     this.attractionByPathService.addAttractionToCourse(attraction, this.course);
-    this.linkPathService.linkAttractions(this.course).subscribe(
-      (linkPaths: LinkPath[]) => {
-        this.paths = linkPaths;
-      }
-    );
   }
 
 }

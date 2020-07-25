@@ -12,8 +12,24 @@
 
   <ion-list>
     <!-- Existing Attractions -->
-    <ion-item *ngFor="let attraction of attractions">
+    <ion-item *ngFor="let attraction of attractions; let i = index" [attr.data-index]="i">
+      <span slot="start">
+        <ion-icon [name]="attraction.locationTypeIconName">
+        </ion-icon>
+      </span>
+      <span>
       {{attraction.name}}
+      </span>
+      <span *ngIf="i > 0" class="link-path">
+         <ion-icon name="return-left"
+                   *ngIf="linkPaths[i-1].hasEdges"
+                   color="success">
+         </ion-icon>
+         <ion-icon name="return-left"
+                   *ngIf="!linkPaths[i-1].hasEdges"
+                   color="danger">
+         </ion-icon>
+      </span>
     </ion-item>
 
     <!-- Item for adding new Attraction -->

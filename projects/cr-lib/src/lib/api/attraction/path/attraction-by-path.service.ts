@@ -4,6 +4,8 @@ import {Attraction} from '../attraction';
 import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {Course} from '../../course/course';
+import {LinkPathService} from './link-path.service';
+import {LinkPath} from './link-path';
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +14,13 @@ export class AttractionByPathService {
 
   public attractionList: Attraction[];
 
+  public linkPaths: LinkPath[] = [];
+
   private course: Course;
 
   constructor(
     private attractionService: AttractionService,
+    private linkPathService: LinkPathService,
   ) { }
 
   /**
@@ -23,21 +28,41 @@ export class AttractionByPathService {
    * we learn which Course is being worked upon.
    */
   public loadCourse(course: Course): Observable<Attraction> {
+    let attractionStream: Observable<Attraction>;
+
     this.course = course;
     this.course.locationIds = [];
     this.attractionList = [];
-    return this.attractionService.getAllAttractionsForCourse(course.id)
-      .pipe(
-        map((attraction: Attraction) => {
-          this.attractionList.push(attraction);
-          this.course.locationIds.push(attraction.id);
-          return attraction;
-        })
-      );
+
+    attractionStream = this.attractionService.getAllAttractionsForCourse(course.id);
+
+    /* Waits for all attractions to have been streamed. */
+    attractionStream.toPromise()
+      .then(() => this.updateLinkPaths());
+
+    /* Allows caller to respond to each individual Attraction in the stream. */
+    return attractionStream.pipe(
+      map((attraction: Attraction) => {
+        this.attractionList.push(attraction);
+        this.course.locationIds.push(attraction.id);
+        return attraction;
+      })
+    );
   }
 
   public getAttractions(): Attraction[] {
     return this.attractionList;
+  }
+
+  /**
+   * Updates Link Paths based on Attraction IDs.
+   */
+  public updateLinkPaths(): void {
+    this.linkPathService.linkAttractions(this.course).subscribe(
+      (linkPaths: LinkPath[]) => {
+        this.linkPaths = linkPaths;
+      }
+    );
   }
 
   addAttractionToCourse(attraction: Attraction, course: Course) {
@@ -45,6 +70,7 @@ export class AttractionByPathService {
       console.log("Updating", course.name);
       this.attractionList.push(attraction);
       this.course.locationIds.push(attraction.id);
+      this.updateLinkPaths();
     }
   }
 
