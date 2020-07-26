@@ -76,6 +76,11 @@ export class MapPositionService {
     );
   }
 
+  stopWatchingPosition() {
+    this.geoLocService.clearWatch();
+    this.positionSourceKnownFlag = false;
+  }
+
   /**
    * Tell this service which Subject will be broadcasting the result of Map Drag events.
    *
@@ -149,5 +154,4 @@ export class MapPositionService {
     }
 
   }
-
 }

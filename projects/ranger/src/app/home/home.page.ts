@@ -44,4 +44,9 @@ export class HomePage {
 
   }
 
+  ionViewWillLeave() {
+    console.log('Map/Home Page: Will Leave');
+    this.mapPositionService.stopWatchingPosition();
+  }
+
 }
