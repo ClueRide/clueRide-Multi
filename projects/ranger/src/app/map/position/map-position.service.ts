@@ -60,13 +60,18 @@ export class MapPositionService {
     console.log('MapPositionService: findOurPosition()');
     this.geoLocService.getPositionWatch().subscribe(
       (geoPosition: Geoposition) => {
-        this.positionSourceKnownFlag = true;
-        this.currentPositionSubject.next(geoPosition);
+        if (geoPosition) {
+          /* Only perform these actions if the Geo Loc service is actually giving us a valid position. */
+          this.positionSourceKnownFlag = true;
+          this.currentPositionSubject.next(geoPosition);
 
-        // TODO CI-149: Have this guy subscribe to the MapDataService or other appropriate source.
-        // this.heading.updateLocation(geoPosition.coords);
+          // TODO CI-149: Have this guy subscribe to the MapDataService or other appropriate source.
+          // this.heading.updateLocation(geoPosition.coords);
 
-        this.maybeMoveMap(geoPosition);
+          this.maybeMoveMap(geoPosition);
+        } else {
+          console.warn('MapPositionService: Picked up empty position');
+        }
       }
     );
   }
@@ -123,7 +128,13 @@ export class MapPositionService {
    * @param geoPosition device or tether position update.
    */
   private maybeMoveMap(geoPosition: Geoposition) {
+    if (!geoPosition) {
+      console.warn('Move position not defined');
+      return;
+    }
+
     console.log('MaybeMoveMap:', geoPosition.coords);
+
     /* Ignore new position updates until the drag completes. */
     if (this.mapDragService.isDragInProgress()) {
       return;

@@ -4,7 +4,7 @@ import {
   LocationService
 } from 'cr-lib';
 import {MapDataService} from '../map/data/map-data.service';
-import {NavController} from '@ionic/angular';
+import {Router} from '@angular/router';
 
 /**
  * Shared functionality between the tabs of the Edit pages.
@@ -17,7 +17,7 @@ export class EditService {
   constructor(
     private locationService: LocationService,
     private mapDataService: MapDataService,
-    private navCtrl: NavController,
+    private router: Router,
   ) { }
 
   /**
@@ -28,7 +28,7 @@ export class EditService {
     this.locationService.update(attraction).subscribe(
       (updatedAttraction: Attraction) => {
         this.mapDataService.updateAttraction(updatedAttraction);
-        this.navCtrl.back();
+        this.router.navigate(['home']);
       }
     );
   }
@@ -39,7 +39,7 @@ export class EditService {
       (location) => {
         console.log('Location is deleted:', location);
         this.mapDataService.deleteAttraction(attraction);
-        this.navCtrl.back();
+        this.router.navigate(['home']);
       }
     );
   }
