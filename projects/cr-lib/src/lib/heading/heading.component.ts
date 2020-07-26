@@ -1,11 +1,14 @@
 import {
   Component,
+  Input,
   OnDestroy,
   OnInit
 } from '@angular/core';
-import * as L from 'leaflet';
 import {Platform} from '@ionic/angular';
-import {Subscription} from 'rxjs';
+import {
+  Observable,
+  Subscription
+} from 'rxjs';
 // TODO: CI-33 Replace with `navigator.compass`
 // import {
 //   DeviceOrientation,
@@ -13,6 +16,7 @@ import {Subscription} from 'rxjs';
 //   DeviceOrientationCompassOptions
 // } from '@ionic-native/device-orientation';
 import {PlatformStateService} from '../state/platform/platform-state.service';
+import {Geoposition} from '@ionic-native/geolocation';
 
 /**
  * Generated class for the HeadingComponent component.
@@ -20,10 +24,6 @@ import {PlatformStateService} from '../state/platform/platform-state.service';
  * See https://angular.io/docs/ts/latest/api/core/index/ComponentMetadata-class.html
  * for more info on Angular Components.
  */
-
-/** Marker size and anchor are common across all images. */
-const commonIconSize: L.PointExpression = [20, 50];
-const commonIconAnchor: L.PointExpression = [10, 25];
 
 // TODO: CI-33 Replace with `navigator.compass`
 // const headingOptions: DeviceOrientationCompassOptions = {
@@ -36,61 +36,38 @@ const commonIconAnchor: L.PointExpression = [10, 25];
 })
 export class HeadingComponent implements OnInit, OnDestroy {
 
+  @Input() positionObservable: Observable<Geoposition>;
+
+  subscription: Subscription;
+  deviceHasCompass: boolean;
+
+  private lastHeading: number;
+
   constructor(
     // TODO: CI-33 Replace with `navigator.compass`
     // private deviceOrientation: DeviceOrientation,
     private platform: Platform,
     private platformStateService: PlatformStateService,
   ) {
-
-    /**
-     * This particular icon is used to show direction the device is facing.
-     * See README.md for more details.
-     */
-    this.hereIAmIcon = HeadingComponent.iconFromImage(
-      'https://www.clueride.com/wp-content/uploads/2017/07/hereIAm.png',
-    );
-
-    this.hereIAmHeadingIcon = HeadingComponent.iconFromImage(
-      'https://www.clueride.com/wp-content/uploads/2017/07/hereIAm-heading.png',
-    );
-
-    this.hereIAmTetheredIcon = HeadingComponent.iconFromImage(
-      'https://www.clueride.com/wp-content/uploads/2017/07/hereIAm-tethered.png',
-    );
-
-    this.hereIAmHeadingTetheredIcon = HeadingComponent.iconFromImage(
-      'https://www.clueride.com/wp-content/uploads/2017/07/hereIAm-heading-tethered.png',
-    );
-  }
-  subscription: Subscription;
-  deviceHasCompass: boolean;
-
-  readonly hereIAmIcon: L.Icon;
-  readonly hereIAmHeadingIcon: L.Icon;
-  private hereIAmTetheredIcon: L.Icon;
-  private hereIAmHeadingTetheredIcon: L.Icon;
-  private headingMarker: any;
-  private lastHeading: number;
-
-  static iconFromImage(iconUrl: string): L.Icon {
-    return L.icon({
-      iconUrl,
-      iconSize: commonIconSize,
-      iconAnchor: commonIconAnchor
-    });
   }
 
+  /** This prepares the use of the compass, but waits to find out which position to follow from the client of this component. */
   ngOnInit() {
     console.log('HeadingComponent: ngOnInit()');
     /* One of three Platform Ready calls. */
     this.platform.ready().then(
       () => {
         console.log('HeadingComponent: Platform Ready');
+
+        /* Validate input parameters. */
+        if (!this.positionObservable) {
+          console.error('HeadingComponent: Position Observable not given');
+          return;
+        }
+
         this.checkCompassAvailability();
       }
     );
-
   }
 
   /**
@@ -118,45 +95,7 @@ export class HeadingComponent implements OnInit, OnDestroy {
     }
   }
 
-  public getHeadingMarker(): L.Marker {
-    const position = [0.0, 0.0];
-    if (!this.headingMarker) {
-      this.setupHeadingMarker(position);
-    }
-    this.addHeadingSubscription();
-    return this.headingMarker;
-  }
 
-  private setupHeadingMarker(
-    position,
-  ) {
-    this.reportCompass();
-    if (this.deviceHasCompass) {
-      this.headingMarker = L.marker(
-        position,
-        {
-          icon: this.hereIAmHeadingIcon,
-          rotationAngle: 0.0,
-          rotationOrigin: 'center center'
-        } as any
-      );
-    } else {
-      this.headingMarker = L.marker(
-        position,
-        {
-          icon: this.hereIAmIcon
-        }
-      );
-    }
-  }
-
-  private reportCompass() {
-    if (this.deviceHasCompass) {
-      console.log('Device has a compass');
-    } else {
-      console.log('Device has no compass');
-    }
-  }
 
   private addHeadingSubscription() {
     if (this.deviceHasCompass) {
@@ -181,51 +120,22 @@ export class HeadingComponent implements OnInit, OnDestroy {
 //     }
 //   }
 
-  /**
-   * Given a set of coordinates, update the location of the Marker.
-   * Since we're changing the CSS on the marker, it's a good time to
-   * reflect the orientation of the marker as well.
-   * @param coordinates -- see TODO below.
-   */
-  // TODO: Not clear we need each of these type definitions. We do need to accept something with marker heading or not.
-  public updateLocation(coordinates: string | L.Point | Coordinates) {
-    /* While updating the location of the marker ... */
-    this.updateHeadingMarkerLocation(coordinates);
-    if (this.deviceHasCompass) {
-      this.renderMarkerHeading();
-    }
-  }
 
-  /**
-   * This implementation uses CSS on the marker's icon instance to add the rotateZ() transform.
-   */
-  private renderMarkerHeading() {
-    if (this.headingMarker._icon) {
-      this.headingMarker._icon.style.transformOrigin = 'center center';
-      this.headingMarker._icon.style.transform += ' rotateZ(' + this.lastHeading + 'deg)';
-    }
-  }
 
-  private updateHeadingMarkerLocation(p) {
-    if (p) {
-      this.headingMarker.setLatLng([
-        p.latitude,
-        p.longitude
-      ]);
-    }
-  }
+
 
   ngOnDestroy() {
-    this.releaseHeadingMarker();
+    // this.releaseHeadingMarker();
+    this.subscription.unsubscribe();
   }
 
   /**
    * When closing the map, the marker should be shutdown -- including
    * its subscription to the compass.
    */
-  public releaseHeadingMarker() {
-    if (this.deviceHasCompass && this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
+  // public releaseHeadingMarker() {
+  //   if (this.deviceHasCompass && this.subscription) {
+  //     this.subscription.unsubscribe();
+  //   }
+  // }
 }

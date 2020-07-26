@@ -36,7 +36,7 @@ export class HomePage {
     this.mapPositionService.findOurPosition();
 
     /* Once a position is determined, we can use it to open the map. */
-    this.mapPositionService.getCurrentPositionSubject().pipe(
+    this.mapPositionService.getCurrentPositionObservable().pipe(
       take(1)
     ).subscribe(
       (geoPosition: Geoposition) => this.map.openMapAtPosition(geoPosition)

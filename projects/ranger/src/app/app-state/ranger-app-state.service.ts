@@ -9,6 +9,7 @@ import {
   AttractionService,
   CategoryAttractionService,
   GeoLocService,
+  LoaderService,
   PlatformStateService,
   ProfileService,
   ServerEventsService
@@ -42,6 +43,7 @@ export class RangerAppStateService {
     private attractionLayerService: AttractionLayerService,
     private categoryAttractionService: CategoryAttractionService,
     private geoLoc: GeoLocService,
+    private loaderService: LoaderService,
     private mapDataService: MapDataService,
     private mapPositionService: MapPositionService,
     public platformStateService: PlatformStateService,
@@ -107,6 +109,7 @@ export class RangerAppStateService {
       }
     );
 
+    this.loaderService.showLoader('Opening my goodies drawer ...');
     console.log('RangerAppStateService: Awaiting Initial Position');
     this.geoLoc.notifyWhenReady().subscribe(
       (initialPosition) => {
@@ -119,7 +122,9 @@ export class RangerAppStateService {
             this.appState.readyToOpen = true;
             this.appState.cacheState = 'filled';
             this.nav.navigateRoot('home').then(
-              () => {}
+              () => {
+                this.loaderService.hideLoader();
+              }
             );
           }
         );

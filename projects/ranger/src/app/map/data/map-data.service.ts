@@ -56,11 +56,11 @@ export class MapDataService {
 
   constructor(
     private attractionLayerService: AttractionLayerService,
+    private attractionService: AttractionService,
     private boundsService: BoundsService,
     private categoryAttractionService: CategoryAttractionService,
     private categoryService: CategoryService,
     private courseAttractionService: CourseAttractionService,
-    private attractionService: AttractionService,
     private filterService: FilterService,
     public locationTypeService: LocTypeService,
   ) {
