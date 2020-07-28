@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Geoposition} from '@ionic-native/geolocation';
 import {
   BehaviorSubject,
+  Observable,
   ReplaySubject,
   Subject
 } from 'rxjs';
@@ -26,7 +27,7 @@ import {MapDragService} from '../drag/map-drag.service';
 export class MapPositionService {
   /* Where we are regardless of how we display it. */
   private currentPosition: Geoposition;
-  private currentPositionSubject: Subject<Geoposition> = new ReplaySubject<Geoposition>(1);
+  private currentPositionSubject: Subject<Geoposition>;
 
   /* Our current Center of the map; can be different from GPS or Tether reported position when we drag the map. */
   private mapCenterSubject: BehaviorSubject<Geoposition>;
@@ -45,6 +46,7 @@ export class MapPositionService {
   ) {
     this.positionSourceKnownFlag = false;
     this.moveMapSubject = new Subject<Geoposition>();
+    this.currentPositionSubject = new ReplaySubject<Geoposition>(1);
   }
 
   /**
@@ -104,8 +106,8 @@ export class MapPositionService {
     return this.currentPosition;
   }
 
-  public getCurrentPositionSubject(): Subject<Geoposition> {
-    return this.currentPositionSubject;
+  public getCurrentPositionObservable(): Observable<Geoposition> {
+    return this.currentPositionSubject.asObservable();
   }
 
   /**

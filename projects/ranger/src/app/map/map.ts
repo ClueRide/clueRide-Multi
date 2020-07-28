@@ -5,7 +5,7 @@ import {
 import {Geoposition} from '@ionic-native/geolocation';
 import {
   AttractionLayerService,
-  HeadingComponent,
+  HeadingService,
   LatLonService,
   MapCenterDisplayComponent
 } from 'cr-lib';
@@ -14,6 +14,7 @@ import {MapDataService} from './data/map-data.service';
 import {MapDragService} from './drag/map-drag.service';
 import {MapPositionService} from './position/map-position.service';
 import {
+  Observable,
   Subject,
   Subscription
 } from 'rxjs';
@@ -30,6 +31,7 @@ const DEFAULT_ZOOM_LEVEL = 14;
   styleUrls: ['map.scss']
 })
 export class MapComponent implements OnDestroy {
+  public currentPositionObservable: Observable<Geoposition>;
 
   /** Displays the coordinates of the current center of the map. */
   private static mapCenterDisplay: MapCenterDisplayComponent;
@@ -37,7 +39,7 @@ export class MapComponent implements OnDestroy {
   public map: L.Map;
   /** Holds Leaflet LayerGroup for all Categories of Markers. */
   private attractionLayerGroup: L.LayerGroup;
-  /** Holdes Leaflet LayerGroup for all Course Markers. */
+  /** Holds Leaflet LayerGroup for all Course Markers. */
   private courseLayerGroup: L.LayerGroup;
 
   private positionSubscription: Subscription;
@@ -45,13 +47,14 @@ export class MapComponent implements OnDestroy {
 
   constructor(
     private attractionLayerService: AttractionLayerService,
-    private heading: HeadingComponent,
+    private headingService: HeadingService,
     private latLonService: LatLonService,
     private mapDragService: MapDragService,
     private mapDataService: MapDataService,
     private mapPositionService: MapPositionService,
   ) {
     console.log('Map Component: constructor()');
+    this.currentPositionObservable = mapPositionService.getCurrentPositionObservable();
   }
 
   /**
@@ -103,7 +106,10 @@ export class MapComponent implements OnDestroy {
     }).addTo(this.map);
 
     /* Add a "here I am" marker. */
-    this.heading.getHeadingMarker().addTo(this.map);
+    this.headingService.initializeHeadingMarker(
+      position,
+      this.mapPositionService.getCurrentPositionObservable()
+    ).addTo(this.map);
 
     /* Register to be updated with the Category Layers. */
     this.attractionLayerGroup = L.layerGroup().addTo(this.map);
@@ -125,7 +131,7 @@ export class MapComponent implements OnDestroy {
     console.log('Close Map');
     this.positionSubscription.unsubscribe();
     this.boundsSubscription.unsubscribe();
-    this.heading.releaseHeadingMarker();
+    this.headingService.releaseHeadingMarker();
   }
 
   /**

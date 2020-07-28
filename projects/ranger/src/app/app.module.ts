@@ -14,7 +14,6 @@ import {
   AuthModule,
   FilterPopoverComponent,
   FilterPopoverModule,
-  HeadingModule
 } from 'cr-lib';
 import {AppRoutingModule} from './app-routing.module';
 
@@ -33,7 +32,6 @@ import {FlagDetailsPageModule} from './flag/details/flag-details.module';
     AuthModule,
     FilterPopoverModule,
     FlagDetailsPageModule,
-    HeadingModule,
     HttpClientModule
   ],
   entryComponents: [

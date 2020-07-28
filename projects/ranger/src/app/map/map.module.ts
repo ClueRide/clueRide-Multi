@@ -5,7 +5,6 @@ import {
   DoubleClickModule,
   FilterPopoverComponent,
   FilterPopoverModule,
-  HeadingModule,
   MapCenterModule
 } from 'cr-lib';
 import {MapActionComponent} from './action/map-action.component';
@@ -25,7 +24,6 @@ import {FilterActionComponent} from './filter-action/filter-action.component';
     DoubleClickModule,
     FilterPopoverModule,
     IonicModule,
-    HeadingModule,
     MapCenterModule,
   ],
   exports: [
