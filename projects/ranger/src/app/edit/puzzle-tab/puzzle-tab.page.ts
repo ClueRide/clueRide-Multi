@@ -3,18 +3,14 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import {
-  ActivatedRoute,
-  Router
-} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {
   Attraction,
-  CategoryAttractionService,
-  LocationService
+  CategoryAttractionService
 } from 'cr-lib';
 import {Subscription} from 'rxjs';
-import {MapDataService} from '../../map/data/map-data.service';
 import {ActiveAttractionService} from '../active-attraction.service';
+import {EditService} from '../edit.service';
 
 @Component({
   selector: 'app-puzzle-tab',
@@ -32,9 +28,7 @@ export class PuzzleTabPageComponent implements OnInit, OnDestroy {
     private activeAttractionService: ActiveAttractionService,
     private activatedRoute: ActivatedRoute,
     private categoryAttractionService: CategoryAttractionService,
-    private locationService: LocationService,
-    private mapDataService: MapDataService,
-    private router: Router,
+    private editService: EditService,
   ) {
   }
 
@@ -62,13 +56,7 @@ export class PuzzleTabPageComponent implements OnInit, OnDestroy {
    * Invoked when the user is ready to persist changes.
    */
   save() {
-    console.log('Saving');
-    this.locationService.update(this.attraction).subscribe(
-      (updatedAttraction: Attraction) => {
-        this.mapDataService.updateAttraction(updatedAttraction);
-      }
-    );
-    this.router.navigate(['home']);
+    this.editService.save(this.attraction);
   }
 
 }
