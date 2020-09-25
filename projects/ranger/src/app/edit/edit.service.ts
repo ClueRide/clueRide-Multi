@@ -28,9 +28,9 @@ export class EditService {
     this.locationService.update(attraction).subscribe(
       (updatedAttraction: Attraction) => {
         this.mapDataService.updateAttraction(updatedAttraction);
-        this.router.navigate(['home']);
       }
     );
+    this.router.navigate(['home']);
   }
 
   delete(attraction: Attraction) {

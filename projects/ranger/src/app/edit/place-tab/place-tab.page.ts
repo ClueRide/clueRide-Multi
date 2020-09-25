@@ -17,6 +17,7 @@ import {
 import {Subscription} from 'rxjs';
 import {MapDataService} from '../../map/data/map-data.service';
 import {ActiveAttractionService} from '../active-attraction.service';
+import {EditService} from '../edit.service';
 
 @Component({
   selector: 'app-place-tab',
@@ -37,6 +38,7 @@ export class PlaceTabPageComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private alertController: AlertController,
     private categoryAttractionService: CategoryAttractionService,
+    private editService: EditService,
     private imageService: ImageService,
     private locationService: LocationService,
     private mapDataService: MapDataService,
@@ -104,13 +106,7 @@ export class PlaceTabPageComponent implements OnInit, OnDestroy {
    * Invoked when the user is ready to persist changes.
    */
   save() {
-    console.log('Saving');
-    this.locationService.update(this.attraction).subscribe(
-      (updatedAttraction: Attraction) => {
-        this.mapDataService.updateAttraction(updatedAttraction);
-      }
-    );
-    this.router.navigate(['home']);
+    this.editService.save(this.attraction);
   }
 
   /** Opens the Page that performs Camera operations passing the the attraction and the "Camera" flag. */
