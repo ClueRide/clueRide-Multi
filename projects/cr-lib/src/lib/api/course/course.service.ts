@@ -2,7 +2,8 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {
   Observable,
-  of
+  of,
+  ReplaySubject
 } from 'rxjs';
 import {
   map,
@@ -15,8 +16,13 @@ import {
 import {Course} from './course';
 
 /**
- * Caching service for the Course associated with the current session.
- * This data is static for the duration of the session.
+ * Service for maintaining Courses.
+ * <ul>
+ * <li> Caching service for the Course associated with the current session;
+ *     this data is static for the duration of the session.
+ * <li> Saving a New Course.
+ * <li> Providing list of all Courses.
+ * </ul>
  */
 @Injectable({
   providedIn: 'root'
@@ -27,14 +33,23 @@ export class CourseService {
   private cachedCourse: Course;
   /* Defined only during the async window after request and before response. */
   private observable: Observable<any>;
+  /* Full list of Courses for selecting out of the list. */
+  private allCoursesSubject: ReplaySubject<Course[]>;
 
   constructor(
     public http: HttpClient,
     private httpService: AuthHeaderService,
   ) {
     console.log('Hello CourseService');
+    this.allCoursesSubject = new ReplaySubject(1);
+    this.loadAllCourses();
   }
 
+  /**
+   * Obtains the active Course for the given Session's Outing.
+   *
+   * TODO CI-236: Consider moving this to the ReplaySubject pattern.
+   */
   public getSessionCourse(): Observable<Course> {
     if (this.cachedCourse) {
       return of(this.cachedCourse);
@@ -64,15 +79,32 @@ export class CourseService {
     }
   }
 
+  /**
+   * Hits the Cached copy to retrieve list of Courses.
+   */
   public getAllCourses(): Observable<Course[]> {
-    return this.http.get<Course[]>(
+    return this.allCoursesSubject.asObservable();
+  }
+
+  /**
+   * Loads the cache of all Courses.
+   */
+  public loadAllCourses(): void {
+    this.http.get<Course[]>(
       BASE_URL + 'course',
       {
         headers: this.httpService.getAuthHeaders()
       }
+    ).subscribe(
+      (allCourses: Course[]) => this.allCoursesSubject.next(allCourses)
     );
   }
 
+  /**
+   * Posts a new course to the back-end.
+   *
+   * @param newCourse
+   */
   public saveNewCourse(newCourse: Course): Observable<Course> {
     return this.http.post<Course>(
       BASE_URL + 'course',
