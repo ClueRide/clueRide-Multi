@@ -45,17 +45,19 @@ export class FilterPopoverComponent implements OnInit {
     private categoryService: CategoryService,
     private courseService: CourseService,
   ) {
+    console.log('Filter Popover constructed');
     this.filter = filterService.getCurrentFilter();
     this.categories = this.categoryService.getAllCategories();
-  }
-
-  ngOnInit() {
     this.courseService.getAllCourses().subscribe(
       (courses) => {
         this.courses = courses;
         this.courses.push(this.noCourseSelected);
       }
     );
+  }
+
+  ngOnInit() {
+    console.log('Filter Popover initialized');
   }
 
   /**

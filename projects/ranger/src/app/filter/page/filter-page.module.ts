@@ -7,7 +7,10 @@ import {
 } from '@angular/router';
 
 import {IonicModule} from '@ionic/angular';
-import {ConnectionStateModule} from 'cr-lib';
+import {
+  ConnectionStateModule,
+  FilterPopoverModule
+} from 'cr-lib';
 
 import {FilterPageComponent} from './filter.page';
 
@@ -19,13 +22,14 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    ConnectionStateModule,
-    FormsModule,
-    IonicModule,
-    RouterModule.forChild(routes)
-  ],
+    imports: [
+        CommonModule,
+        ConnectionStateModule,
+        FormsModule,
+        IonicModule,
+        RouterModule.forChild(routes),
+        FilterPopoverModule
+    ],
   declarations: [
     FilterPageComponent,
   ]

@@ -14,43 +14,8 @@
 </ion-header>
 
 <ion-content>
-  <ion-card class="cr-card">
-    <ion-card-title class="ion-padding">
-      by Course
-    </ion-card-title>
-    <ion-card-content>
-      <ion-select placeholder="No Courses included"
-                  interface="alert"
-                  multiple="true"
-                  okText="Okay"
-                  cancelText="Nah">
-        <ion-select-option *ngFor="let course of courses">
-          {{course.name}}
-        </ion-select-option>
-      </ion-select>
-    </ion-card-content>
-  </ion-card>
+  <!-- The shared filter component -->
+  <app-filter-popover>
 
-  <ion-card class="cr-card">
-    <ion-card-title class="ion-padding">
-      by Category
-    </ion-card-title>
-    <ion-card-content>
-      <ion-select [(ngModel)]="filter.categoriesToIncludeById"
-                  (ionChange)="categoryHasChanged($event)"
-                  placeholder="No Categories included"
-                  interface="alert"
-                  [interfaceOptions]="categoryAlertOptions"
-                  multiple="true"
-                  okText="Okay"
-                  cancelText="Nah">
-        <ion-select-option *ngFor="let category of categories"
-                           [value]="category.id">
-          {{category.name}}
-        </ion-select-option>
-      </ion-select>
-
-    </ion-card-content>
-  </ion-card>
-
+  </app-filter-popover>
 </ion-content>
