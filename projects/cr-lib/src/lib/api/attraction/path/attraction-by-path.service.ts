@@ -74,4 +74,14 @@ export class AttractionByPathService {
     }
   }
 
+  removeAttractionFromCourse(attractionIndex: number, course: Course) {
+    if (this.course && this.course.id === course.id) {
+      let attractionToRemove = this.attractionList[attractionIndex];
+      console.log('Removing', attractionToRemove.name, 'from', course.name);
+      this.attractionList.splice(attractionIndex, 1);
+      this.course.locationIds.splice(attractionIndex, 1);
+      this.updateLinkPaths();
+    }
+  }
+
 }
