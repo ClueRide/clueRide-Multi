@@ -1,6 +1,7 @@
 <ion-tabs>
 
-  <ion-tab-bar slot="bottom">
+  <!-- Guard placed on the existence of a course object. -->
+  <ion-tab-bar slot="bottom" *ngIf="course">
 
     <ion-tab-button tab="{{course.id}}/details">
       <ion-icon name="list"></ion-icon>
