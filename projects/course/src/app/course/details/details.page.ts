@@ -63,6 +63,7 @@ export class DetailsPage implements OnInit, OnDestroy {
       (params) => {
         this.courseId = parseInt(this.activatedRoute.snapshot.paramMap.get('id'), 10);
         this.course = this.editedCourseService.getCourseToEdit(this.courseId);
+        console.log('Found course ID', this.course.id);
       },
       (error) => console.log('DetailsPage: Unable to pick up query params', error)
     );
@@ -81,7 +82,7 @@ export class DetailsPage implements OnInit, OnDestroy {
 
   save() {
     this.loaderService.showLoader('Saving Course');
-    this.editedCourseService.saveNewCourse(this.course).subscribe(
+    this.editedCourseService.updateCourse(this.course).subscribe(
       (updatedCourse: Course) => {
         this.loaderService.hideLoader();
       },

@@ -56,7 +56,7 @@ export class AttractionsSequencePage implements OnInit {
 
   save() {
     this.loaderService.showLoader('Saving Course');
-    this.editedCourseService.saveNewCourse(this.course).subscribe(
+    this.editedCourseService.updateCourse(this.course).subscribe(
       (updatedCourse: Course) => {
         this.loaderService.hideLoader();
       },
