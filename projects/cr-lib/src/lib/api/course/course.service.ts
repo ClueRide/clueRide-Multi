@@ -101,12 +101,27 @@ export class CourseService {
   }
 
   /**
-   * Posts a new course to the back-end.
+   * Updates an existing course to the back-end.
    *
-   * @param newCourse
+   * @param course with an ID assigned by the API.
    */
-  public saveNewCourse(newCourse: Course): Observable<Course> {
+  public updateCourse(course: Course): Observable<Course> {
     return this.http.post<Course>(
+      BASE_URL + 'course',
+      course,
+      {
+        headers: this.httpService.getAuthHeaders()
+      }
+    )
+  }
+
+  /**
+   * Puts a new course to the back-end.
+   *
+   * @param newCourse - instance without an ID yet.
+   */
+  public createCourse(newCourse: Course): Observable<Course> {
+    return this.http.put<Course>(
       BASE_URL + 'course',
       newCourse,
       {
@@ -114,5 +129,6 @@ export class CourseService {
       }
     )
   }
+
 
 }

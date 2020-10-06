@@ -36,11 +36,22 @@ export class EditedCourseService {
     return this.editedCourseSubject.asObservable();
   }
 
-  public saveNewCourse(newCourse: Course): Observable<Course> {
-    return this.courseService.saveNewCourse(newCourse)
+  public createCourse(newCourse: Course): Observable<Course> {
+    return this.courseService.createCourse(newCourse)
+      .pipe(
+        tap((updatedCourse: Course) => {
+          this.editedCourseSubject.next(updatedCourse);
+          this.courseMap[updatedCourse.id] = updatedCourse;
+        })
+      );
+  }
+
+  public updateCourse(course: Course): Observable<Course> {
+    return this.courseService.updateCourse(course)
       .pipe(
         tap((updatedCourse: Course) => this.editedCourseSubject.next(updatedCourse))
       );
+
   }
 
   public getCourseToEdit(courseId: number) {

@@ -1,11 +1,11 @@
 import {
-  Component,
-  OnInit
+    Component,
+    OnInit
 } from '@angular/core';
 import {
-  Course,
-  CourseService,
-  LoaderService
+    Course,
+    CourseService,
+    LoaderService
 } from 'cr-lib';
 import {Router} from '@angular/router';
 import {EditedCourseService} from '../course/edited-course.service';
@@ -34,11 +34,15 @@ export class CourseListPage implements OnInit {
     console.log("Adding new Course");
     let newCourse = new Course();
 
-    this.editedCourseService.setEditedCourse(newCourse);
-    this.router.navigate(
-      ['course/' + newCourse.id + '/details']
-    ).then(() => console.log('Successful launch of Course Page')
-    ).catch( (error) => console.log('Failed to launch Course Page. How come?', error)
+    this.editedCourseService.createCourse(newCourse).subscribe(
+        (newCourse: Course) => {
+          this.editedCourseService.setEditedCourse(newCourse);
+          this.router.navigate(
+              ['course/' + newCourse.id + '/details']
+          ).then(() => console.log('Successful launch of Course Page')
+          ).catch( (error) => console.log('Failed to launch Course Page. How come?', error)
+          );
+        }
     );
   }
 
