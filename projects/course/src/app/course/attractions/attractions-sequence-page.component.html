@@ -12,7 +12,7 @@
 
   <ion-list>
     <!-- Existing Attractions -->
-    <ion-item *ngFor="let attraction of attractions; let i = index" [attr.data-index]="i">
+    <ion-item *ngFor="let attraction of attractions; let i = index; first as isFirst; last as isLast" [attr.data-index]="i">
 
       <span slot="start">
         <ion-icon [name]="attraction.locationTypeIconName">
@@ -32,6 +32,20 @@
                    *ngIf="linkPaths[i-1] && !linkPaths[i-1].hasEdges"
                    color="danger">
          </ion-icon>
+      </span>
+
+      <span slot="end">
+        <ion-icon *ngIf="!isFirst"
+                  name="arrow-up"
+                  (click)="moveUp(i)"
+        ></ion-icon>
+      </span>
+
+      <span slot="end">
+        <ion-icon *ngIf="!isLast"
+                  name="arrow-down"
+                  (click)="moveDown(i)"
+        ></ion-icon>
       </span>
 
       <span slot="end" class="close-icon">
