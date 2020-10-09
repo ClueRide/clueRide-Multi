@@ -84,4 +84,19 @@ export class AttractionByPathService {
     }
   }
 
+  /**
+   * Takes the given attraction index and swaps the order with the next Attraction in the list.
+   * @param attractionIndex for the first of the two adjacent Attractions.
+   * @param course whose attraction is being swapped.
+   */
+  swapAdjacentAttractionPair(attractionIndex: number, course: Course) {
+    if (this.course && this.course.id === course.id) {
+      let temp: Attraction = this.attractionList[attractionIndex];
+      this.attractionList[attractionIndex] = this.attractionList[attractionIndex+1];
+      this.attractionList[attractionIndex+1] = temp;
+      this.course.locationIds[attractionIndex] = this.course.locationIds[attractionIndex+1];
+      this.course.locationIds[attractionIndex+1] = temp.id;
+      this.updateLinkPaths();
+    }
+  }
 }

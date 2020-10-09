@@ -77,14 +77,20 @@ export class AttractionsSequencePage implements OnInit {
 
   deleteRow(index: number) {
     console.log('Deleting', this.attractions[index].name, 'from course');
-    // this.attractions.splice(index, 1);
-    // this.linkPaths.splice(index, 1);
     this.attractionByPathService.removeAttractionFromCourse(
       index,
       this.course
     );
     this.linkPaths = this.attractionByPathService.linkPaths;
     this.attractions = this.attractionByPathService.getAttractions();
+  }
+
+  moveDown(index: number) {
+    this.attractionByPathService.swapAdjacentAttractionPair(index, this.course);
+  }
+
+  moveUp(index: number) {
+    this.attractionByPathService.swapAdjacentAttractionPair(index-1, this.course);
   }
 
 }
