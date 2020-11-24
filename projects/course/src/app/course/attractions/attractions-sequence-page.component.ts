@@ -1,6 +1,7 @@
 import {
   Component,
-  OnInit
+  OnInit,
+  ViewChild
 } from '@angular/core';
 import {EditedCourseService} from '../edited-course.service';
 import {Subscription} from 'rxjs';
@@ -8,11 +9,13 @@ import {
   Attraction,
   AttractionByPathService,
   Course,
-  LinkPath,
-  LoaderService
+  EdgeService,
+  LoaderService,
+  PathMeta
 } from 'cr-lib';
 import {ActivatedRoute} from '@angular/router';
 import {NavController} from '@ionic/angular';
+import {EdgeComponent} from '../../edge/edge.component';
 
 @Component({
   selector: 'app-attractions',
@@ -24,16 +27,19 @@ export class AttractionsSequencePage implements OnInit {
   /* The instance being edited. */
   public course: Course | any = {};
 
-  public linkPaths: LinkPath[] = [];
+  public pathMetaList: PathMeta[] = [];
   public attractions: Attraction[] = [];
 
   private courseId: number;
 
   private subscription: Subscription;
 
+  @ViewChild(EdgeComponent, {static: false}) edgeComponent: EdgeComponent;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private attractionByPathService: AttractionByPathService,
+    private edgeService: EdgeService,
     private editedCourseService: EditedCourseService,
     private loaderService: LoaderService,
     private navController: NavController,
@@ -47,7 +53,7 @@ export class AttractionsSequencePage implements OnInit {
       (params) => {
         this.courseId = parseInt(this.activatedRoute.snapshot.paramMap.get('id'), 10);
         this.course = this.editedCourseService.getCourseToEdit(this.courseId);
-        this.linkPaths = this.attractionByPathService.linkPaths;
+        this.pathMetaList = this.attractionByPathService.linkPaths;
         this.attractions = this.attractionByPathService.getAttractions();
       },
       (error) => console.log('DetailsPage: Unable to pick up query parans', error)
@@ -81,7 +87,7 @@ export class AttractionsSequencePage implements OnInit {
       index,
       this.course
     );
-    this.linkPaths = this.attractionByPathService.linkPaths;
+    this.pathMetaList = this.attractionByPathService.linkPaths;
     this.attractions = this.attractionByPathService.getAttractions();
   }
 
@@ -91,6 +97,20 @@ export class AttractionsSequencePage implements OnInit {
 
   moveUp(index: number) {
     this.attractionByPathService.swapAdjacentAttractionPair(index-1, this.course);
+  }
+
+  viewEdge(event: any): void {
+    console.log("Viewing Link Path for", event);
+  }
+
+  addEdge(pathMeta: PathMeta): void {
+    this.edgeService.setLinkPath(pathMeta);
+    this.edgeComponent.presentPopover(pathMeta).then(
+      () => {
+        console.log("Dialog is now closed after async wait");
+        this.attractionByPathService.updateLinkPaths();
+      }
+    );
   }
 
 }

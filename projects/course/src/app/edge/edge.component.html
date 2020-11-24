@@ -1,0 +1,30 @@
+<ion-card>
+  <ion-card-content>
+
+    <ion-card-header>
+      <ion-card-title>
+        Select GPX file for new Edge
+      </ion-card-title>
+    </ion-card-header>
+
+    <div class="form-group">
+      <label for="file">GPX file containing Edge</label>
+      <input type="file"
+             id="file"
+             (change)="handleFileInput($event.target.files)">
+    </div>
+
+    <ion-item>
+      <ion-button (click)="cancel()">
+        Cancel
+      </ion-button>
+
+    <ion-button slot="end"
+                [disabled]="!isFileSelected()"
+                (click)="upload()">
+      Upload
+    </ion-button>
+
+    </ion-item>
+  </ion-card-content>
+</ion-card>

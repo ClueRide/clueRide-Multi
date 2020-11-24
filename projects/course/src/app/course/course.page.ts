@@ -11,7 +11,7 @@ import {
   Attraction,
   AttractionByPathService,
   Course,
-  LinkPathService,
+  PathMetaService,
 } from 'cr-lib';
 import {map} from 'rxjs/operators';
 
@@ -31,7 +31,7 @@ export class CoursePage implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private attractionByPathService: AttractionByPathService,
-    private linkPathService: LinkPathService,
+    private pathMetaService: PathMetaService,
     private router: Router,
   ) {
     this.subscription = new Subscription();

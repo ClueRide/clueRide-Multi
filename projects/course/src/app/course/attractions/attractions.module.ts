@@ -10,6 +10,7 @@ import {IonicModule} from '@ionic/angular';
 
 import {AttractionsSequencePage} from './attractions-sequence-page.component';
 import {AttractionSuggestComponent} from '../attraction-suggest/attraction-suggest.component';
+import {EdgeModule} from '../../edge/edge.module';
 
 const routes: Routes = [
   {
@@ -21,9 +22,10 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
+    EdgeModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
   ],
   declarations: [
     AttractionsSequencePage,

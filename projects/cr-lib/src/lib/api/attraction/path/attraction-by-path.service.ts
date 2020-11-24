@@ -4,8 +4,8 @@ import {Attraction} from '../attraction';
 import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {Course} from '../../course/course';
-import {LinkPathService} from './link-path.service';
-import {LinkPath} from './link-path';
+import {PathMetaService} from './path-meta.service';
+import {PathMeta} from './path-meta';
 
 @Injectable({
   providedIn: 'root'
@@ -14,13 +14,13 @@ export class AttractionByPathService {
 
   public attractionList: Attraction[];
 
-  public linkPaths: LinkPath[] = [];
+  public linkPaths: PathMeta[] = [];
 
   private course: Course;
 
   constructor(
     private attractionService: AttractionService,
-    private linkPathService: LinkPathService,
+    private linkPathService: PathMetaService,
   ) { }
 
   /**
@@ -34,7 +34,7 @@ export class AttractionByPathService {
     this.course.locationIds = [];
     this.attractionList = [];
 
-    attractionStream = this.attractionService.getAllAttractionsForCourse(course.id);
+    attractionStream = this.attractionService.getOrderedAttractionsForCourse(course.id);
 
     /* Waits for all attractions to have been streamed. */
     attractionStream.toPromise()
@@ -59,7 +59,7 @@ export class AttractionByPathService {
    */
   public updateLinkPaths(): void {
     this.linkPathService.linkAttractions(this.course).subscribe(
-      (linkPaths: LinkPath[]) => {
+      (linkPaths: PathMeta[]) => {
         this.linkPaths = linkPaths;
       }
     );
