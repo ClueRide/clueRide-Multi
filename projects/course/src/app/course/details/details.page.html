@@ -3,8 +3,12 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title *ngIf="course && course.name">{{course.name}} - Details</ion-title>
-    <ion-title *ngIf="!course || !course.name">Edit Course</ion-title>
+    <ion-title slot="start"
+               *ngIf="course && course.name">{{course.name}}</ion-title>
+    <ion-title slot="start"
+               *ngIf="!course || !course.name">Edit Course</ion-title>
+    <ion-title slot="end"
+               *ngIf="course && course.name">Details</ion-title>
   </ion-toolbar>
 </ion-header>
 

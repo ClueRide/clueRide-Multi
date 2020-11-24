@@ -129,6 +129,26 @@ export class AttractionService {
   }
 
   /**
+   * For the given Course ID, retrieve an ordered list of the attractions for the course.
+   *
+   * Attractions returned by this service will have the Location Type populated.
+   *
+   * @param courseId
+   */
+  public getOrderedAttractionsForCourse(courseId: number): Observable<Attraction> {
+    return this.http.get<Attraction[]>(
+      BASE_URL + 'attraction/' + courseId + '/course',
+      {headers: this.httpService.getAuthHeaders()}
+    ).pipe(
+      mergeAll(),   /* Generates event for each element of the array. */
+      map((attraction) => {
+        attraction.locationType = this.locTypeService.getById(attraction.locationTypeId);
+        return attraction;
+      })
+    );
+  }
+
+  /**
    * Shared function that turns an array of Attractions into an indexed map.
    *
    * @param attractionsToMap the list of Attractions we want to map.

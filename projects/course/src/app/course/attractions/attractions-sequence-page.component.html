@@ -3,16 +3,21 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title *ngIf="course.name">{{course.name}} - Details</ion-title>
-    <ion-title *ngIf="!course.name">Edit Course</ion-title>
+    <ion-title slot="start"
+               *ngIf="course.name">{{course.name}}</ion-title>
+    <ion-title slot="start"
+               *ngIf="!course.name">Edit Course</ion-title>
+    <ion-title slot="end"
+               *ngIf="course.name">Attractions</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <app-edge [hidden]="true"></app-edge>
   <ion-list>
     <!-- Existing Attractions -->
-    <ion-item *ngFor="let attraction of attractions; let i = index; first as isFirst; last as isLast" [attr.data-index]="i">
+    <ion-item *ngFor="let attraction of attractions; let i = index; first as isFirst; last as isLast"
+              [attr.data-index]="i">
 
       <span slot="start">
         <ion-icon [name]="attraction.locationTypeIconName">
@@ -25,11 +30,13 @@
 
       <span *ngIf="i > 0" class="link-path">
          <ion-icon name="return-left"
-                   *ngIf="linkPaths[i-1] && linkPaths[i-1].hasEdges"
+                   *ngIf="pathMetaList[i-1] && pathMetaList[i-1].hasEdges"
+                   (click)="viewEdge(pathMetaList[i-1])"
                    color="success">
          </ion-icon>
          <ion-icon name="return-left"
-                   *ngIf="linkPaths[i-1] && !linkPaths[i-1].hasEdges"
+                   *ngIf="pathMetaList[i-1] && !pathMetaList[i-1].hasEdges"
+                   (click)="addEdge(pathMetaList[i-1])"
                    color="danger">
          </ion-icon>
       </span>
