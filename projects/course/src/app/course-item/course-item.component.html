@@ -1,5 +1,17 @@
-<ion-item (click)="show()">
-  <ion-title>
+<ion-item>
+  <ion-title (click)="show()"
+             [ngClass]="{selected: isSelected(course)}">
     {{course.name}}
   </ion-title>
+
+  <ion-button *ngIf="!isSelected(course)"
+              (click)="makeDefault(course)">
+    Make Default
+  </ion-button>
+
+  <ion-button *ngIf="isSelected(course)"
+              (click)="reset(course)">
+    Reset Game State
+  </ion-button>
+
 </ion-item>

@@ -1,14 +1,15 @@
 import {
-    Component,
-    OnInit
+  Component,
+  OnInit
 } from '@angular/core';
 import {
-    Course,
-    CourseService,
-    LoaderService
+  Course,
+  CourseService,
+  LoaderService
 } from 'cr-lib';
 import {Router} from '@angular/router';
 import {EditedCourseService} from '../course/edited-course.service';
+import {Title} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-course-list',
@@ -24,10 +25,15 @@ export class CourseListPage implements OnInit {
     private editedCourseService: EditedCourseService,
     private loaderService: LoaderService,
     private router: Router,
+    private titleService: Title,
   ) { }
 
   ngOnInit() {
     this.refreshCourseList();
+  }
+
+  ngAfterContentInit(): void {
+    this.titleService.setTitle('Courses');
   }
 
   public addNew(): void {

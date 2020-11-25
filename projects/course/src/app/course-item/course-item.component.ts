@@ -8,6 +8,7 @@ import {
   NavigationExtras,
   Router
 } from '@angular/router';
+import {SelectService} from '../course/select/select.service';
 
 @Component({
   selector: 'app-course-item',
@@ -19,10 +20,13 @@ export class CourseItemComponent implements OnInit {
   @Input() course: Course;
 
   constructor(
+    private selectService: SelectService,
     private router: Router,
-  ) { }
+  ) {
+  }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   public show(): void {
     console.log("Navigating to Course Page for", this.course.name);
@@ -37,6 +41,18 @@ export class CourseItemComponent implements OnInit {
     ).then(() => console.log('Successful launch of Course Page')
     ).catch( (error) => console.log('Failed to launch Course Page', error)
     );
+  }
+
+  public makeDefault(course: Course) {
+    this.selectService.select(course);
+  }
+
+  public reset(course: Course) {
+    this.selectService.reset(course);
+  }
+
+  public isSelected(course: Course):boolean {
+    return this.selectService.isSelected(course);
   }
 
 }
