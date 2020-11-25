@@ -1,0 +1,23 @@
+@import '../../../shared-style';
+
+.type-icon {
+  font-size: x-large;
+  color: white;
+  padding: 10px;
+}
+
+.draft {
+  background-color: $draft;
+}
+
+.place {
+  background-color: $place;
+}
+
+.attraction {
+  background-color: $attraction;
+}
+
+.feature {
+  background-color: $feature;
+}

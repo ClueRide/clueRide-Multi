@@ -5,5 +5,12 @@ $adept: #068E07;
 $advocate: #0410FF;
 $angel: #8A07FF;
 
+// The Same colors show the Readiness Level of an Attraction:
+
+$draft: $aware;
+$place: $adept;
+$attraction: $advocate;
+$feature: $angel;
+
 // ... and the Banner's color
 $banner: #07007E;

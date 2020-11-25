@@ -11,6 +11,7 @@ import {IonicModule} from '@ionic/angular';
 import {AttractionsSequencePage} from './attractions-sequence-page.component';
 import {AttractionSuggestComponent} from '../attraction-suggest/attraction-suggest.component';
 import {EdgeModule} from '../../edge/edge.module';
+import {AttractionIconModule} from 'cr-lib';
 
 const routes: Routes = [
   {
@@ -21,6 +22,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    AttractionIconModule,
     CommonModule,
     EdgeModule,
     FormsModule,

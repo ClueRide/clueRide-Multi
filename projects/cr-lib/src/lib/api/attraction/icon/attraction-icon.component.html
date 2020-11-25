@@ -1,0 +1,8 @@
+<ion-icon class="type-icon fas fa-{{attraction.locationTypeIconName}}"
+          [ngClass]="{
+                    draft: attraction.readinessLevel.startsWith('DRAFT'),
+                    place: attraction.readinessLevel.startsWith('PLACE'),
+                    attraction: attraction.readinessLevel.startsWith('ATTRACTION'),
+                    feature: attraction.readinessLevel.startsWith('FEATURE')
+                  }">
+</ion-icon>
