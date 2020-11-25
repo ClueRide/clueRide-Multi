@@ -11,6 +11,7 @@ export * from './lib/api/attraction/attraction.service';
 export * from './lib/api/attraction/bounds/bounds-service';
 export * from './lib/api/attraction/course/course-attraction.service';
 export * from './lib/api/attraction/category/category-attraction.service';
+export * from './lib/api/attraction/icon/attraction-icon.module';
 export * from './lib/api/attraction/layer/attraction-layer.service';
 export * from './lib/api/attraction/path/attraction-by-path.service';
 export * from './lib/api/attraction/path/path-meta';
