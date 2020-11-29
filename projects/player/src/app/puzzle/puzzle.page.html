@@ -16,12 +16,13 @@
 
     <!-- Answer Section -->
     <ion-item *ngFor="let answer of puzzle.answers">
-        <div class="answer">
-          <ion-button class="ion-text-wrap" style="height: 75px"
-                      (click)="selectAsAnswer(answer.key)">
-            {{answer.key}}: {{answer.answer}}
-          </ion-button>
-        </div>
+      <div class="answer">
+        <ion-button class="ion-text-wrap"
+                    expand="block"
+                    (click)="selectAsAnswer(answer.key)">
+          {{answer.key}}: {{answer.answer}}
+        </ion-button>
+      </div>
     </ion-item>
 
   </ion-grid>
