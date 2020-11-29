@@ -44,7 +44,7 @@ export class CourseListPage implements OnInit {
         (newCourse: Course) => {
           this.editedCourseService.setEditedCourse(newCourse);
           this.router.navigate(
-              ['course/' + newCourse.id + '/details']
+              ['course/' + newCourse.id + '/attractions']
           ).then(() => console.log('Successful launch of Course Page')
           ).catch( (error) => console.log('Failed to launch Course Page. How come?', error)
           );
