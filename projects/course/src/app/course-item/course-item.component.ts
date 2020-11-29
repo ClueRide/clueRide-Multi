@@ -36,7 +36,7 @@ export class CourseItemComponent implements OnInit {
       }
     };
     this.router.navigate(
-      ['course/' + this.course.id + '/details'],
+      ['course/' + this.course.id + '/attractions'],
       navigationExtras
     ).then(() => console.log('Successful launch of Course Page')
     ).catch( (error) => console.log('Failed to launch Course Page', error)
