@@ -1,5 +1,6 @@
 import {
   Component,
+  OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
@@ -22,17 +23,18 @@ import {EdgeComponent} from '../../edge/edge.component';
   templateUrl: './attractions-sequence-page.component.html',
   styleUrls: ['./attractions-sequence-page.component.scss'],
 })
-export class AttractionsSequencePage implements OnInit {
+export class AttractionsSequencePage implements OnInit, OnDestroy {
 
   /* The instance being edited. */
   public course: Course | any = {};
 
-  public pathMetaList: PathMeta[] = [];
+  public pathMetaList: PathMeta[];
   public attractions: Attraction[] = [];
 
   private courseId: number;
 
-  private subscription: Subscription;
+  private routeSubscription: Subscription;
+  private linkPathsSubscription: Subscription;
 
   @ViewChild(EdgeComponent, {static: false}) edgeComponent: EdgeComponent;
 
@@ -49,21 +51,31 @@ export class AttractionsSequencePage implements OnInit {
 
   ngOnInit() {
     console.log("Attractions Seq Page initialized");
-    this.subscription = this.activatedRoute.queryParams.subscribe(
-      (params) => {
+    this.routeSubscription = this.activatedRoute.queryParams.subscribe(
+      () => {
         this.courseId = parseInt(this.activatedRoute.snapshot.paramMap.get('id'), 10);
         this.course = this.editedCourseService.getCourseToEdit(this.courseId);
-        this.pathMetaList = this.attractionByPathService.linkPaths;
         this.attractions = this.attractionByPathService.getAttractions();
+        this.linkPathsSubscription = this.attractionByPathService.getLinkPaths().subscribe(
+          (linkPaths) => {
+            this.pathMetaList = linkPaths;
+          }
+        );
       },
-      (error) => console.log('DetailsPage: Unable to pick up query parans', error)
+      (error) => console.log('DetailsPage: Unable to pick up query params', error)
     );
+  }
+
+  ngOnDestroy() {
+    console.log("Attractions Seq Page closed");
+    this.linkPathsSubscription.unsubscribe();
+    this.routeSubscription.unsubscribe();
   }
 
   save() {
     this.loaderService.showLoader('Saving Course');
     this.editedCourseService.updateCourse(this.course).subscribe(
-      (updatedCourse: Course) => {
+      () => {
         this.loaderService.hideLoader();
       },
       (error) => {
@@ -72,13 +84,15 @@ export class AttractionsSequencePage implements OnInit {
       },
       () =>
       {
-        this.navController.navigateRoot('/list');
+        this.navController.navigateRoot('/list')
+          .then();
       }
     );
   }
 
   cancel() {
-    this.navController.navigateRoot('/list');
+    this.navController.navigateRoot('/list')
+      .then();
   }
 
   deleteRow(index: number) {

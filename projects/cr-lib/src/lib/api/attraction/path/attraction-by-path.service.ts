@@ -2,7 +2,10 @@ import {Injectable} from '@angular/core';
 import {AttractionService} from '../attraction.service';
 import {Attraction} from '../attraction';
 import {map} from 'rxjs/operators';
-import {Observable} from 'rxjs';
+import {
+  Observable,
+  Subject
+} from 'rxjs';
 import {Course} from '../../course/course';
 import {PathMetaService} from './path-meta.service';
 import {PathMeta} from './path-meta';
@@ -15,13 +18,16 @@ export class AttractionByPathService {
   public attractionList: Attraction[];
 
   public linkPaths: PathMeta[] = [];
+  private linkPathsSubject: Subject<PathMeta[]>;
 
   private course: Course;
 
   constructor(
     private attractionService: AttractionService,
     private linkPathService: PathMetaService,
-  ) { }
+  ) {
+    this.linkPathsSubject = new Subject<PathMeta[]>();
+  }
 
   /**
    * Invoked when the Course Edit page is instantiated; this is when
@@ -61,8 +67,13 @@ export class AttractionByPathService {
     this.linkPathService.linkAttractions(this.course).subscribe(
       (linkPaths: PathMeta[]) => {
         this.linkPaths = linkPaths;
+        this.linkPathsSubject.next(linkPaths);
       }
     );
+  }
+
+  public getLinkPaths(): Observable<PathMeta[]> {
+    return this.linkPathsSubject.asObservable();
   }
 
   addAttractionToCourse(attraction: Attraction, course: Course) {
