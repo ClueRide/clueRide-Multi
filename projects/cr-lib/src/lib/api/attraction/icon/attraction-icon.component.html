@@ -3,6 +3,7 @@
                     draft: attraction.readinessLevel.startsWith('DRAFT'),
                     place: attraction.readinessLevel.startsWith('PLACE'),
                     attraction: attraction.readinessLevel.startsWith('ATTRACTION'),
-                    feature: attraction.readinessLevel.startsWith('FEATURE')
+                    feature: attraction.readinessLevel.startsWith('FEATURE'),
+                    flagged: attraction.flags && attraction.flags.length > 0
                   }">
 </ion-icon>
