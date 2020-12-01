@@ -28,7 +28,7 @@ export class AttractionsSequencePage implements OnInit, OnDestroy {
   /* The instance being edited. */
   public course: Course | any = {};
 
-  public pathMetaList: PathMeta[];
+  public pathMetaList: PathMeta[] = [];
   public attractions: Attraction[] = [];
 
   private courseId: number;
