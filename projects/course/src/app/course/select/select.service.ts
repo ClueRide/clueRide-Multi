@@ -42,7 +42,7 @@ export class SelectService {
 
   public setDefaultCourse(course: Course) {
     return this.http.post<Course>(
-      BASE_URL + 'course/default',
+      BASE_URL + 'game-state/default-course',
       course,
       {
         headers: this.httpService.getAuthHeaders()
