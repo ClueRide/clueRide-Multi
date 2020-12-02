@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {take} from 'rxjs/operators';
 import {GameStateService} from '../state/game/game-state.service';
+import {GameState} from '../state/game/game-state';
 
 @Injectable({
   providedIn: 'root'
@@ -34,11 +35,11 @@ export class ShowGameService {
    *
    * @param gameState tells us whether we're rolling or not.
    */
-  routeBasedOnGameState(gameState): void {
+  routeBasedOnGameState(gameState: GameState): void {
     let promise;
 
     if (
-      gameState.rolling || !gameState.teamAssembled
+      gameState.rolling || !gameState.teamAssembled || gameState.outingComplete
     ) {
       promise = this.router.navigate(['rolling']);
     } else {
