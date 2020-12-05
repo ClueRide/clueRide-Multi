@@ -6,6 +6,7 @@ import {ConnectionStateModule} from 'cr-lib';
 import {PinnedMapModule} from '../pinned-map/pinned-map.module';
 import {ShowGameModule} from '../show-game/show-game.module';
 import {OutingPage} from './outing.page';
+import {OutingPageGuard} from './outing-page.guard';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import {OutingPage} from './outing.page';
     RouterModule.forChild([
       {
         path: 'outing',
-        component: OutingPage
+        component: OutingPage,
+        canActivate: [OutingPageGuard]
       }
     ]),
   ],

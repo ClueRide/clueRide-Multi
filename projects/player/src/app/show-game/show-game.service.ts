@@ -38,9 +38,9 @@ export class ShowGameService {
   routeBasedOnGameState(gameState: GameState): void {
     let promise;
 
-    if (
-      gameState.rolling || !gameState.teamAssembled || gameState.outingComplete
-    ) {
+    if (!gameState.teamAssembled) {
+      promise = this.router.navigate(['outing']);
+    } else if (gameState.rolling || gameState.outingComplete) {
       promise = this.router.navigate(['rolling']);
     } else {
       promise = this.router.navigate(['puzzle', gameState.puzzleId]);
