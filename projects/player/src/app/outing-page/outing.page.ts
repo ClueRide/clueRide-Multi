@@ -37,23 +37,22 @@ export class OutingPage implements OnDestroy {
     private courseAttractionService: CourseAttractionService,
     private router: Router,
   ) {
+    console.log("Outing Page Constructor");
     this.startingAttractionSubject = new ReplaySubject<Attraction>(1);
   }
 
   ionViewDidEnter() {
     this.outingService.getSessionOuting().subscribe(
       /* Generally, the Outing has been cached. */
-      (response) => {
+      (outing) => {
         console.log('Receiving Outing from Service');
-        this.outing = response;
+        this.outing = outing;
 
         /* With the outing, we can load the starting location. */
-        this.startingAttractionSubject.next(
-          this.courseAttractionService.getAttraction(
-            this.outing.startingLocationId
-          )
+        let startingLocation: Attraction = this.courseAttractionService.getAttraction(
+          this.outing.startingLocationId
         );
-
+        this.startingAttractionSubject.next(startingLocation);
       }
     );
   }

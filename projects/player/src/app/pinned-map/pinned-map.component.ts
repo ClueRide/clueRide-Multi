@@ -7,7 +7,6 @@ import {
 import {
   Attraction,
   GameMarkerService,
-  LatLon,
   LatLonService
 } from 'cr-lib';
 import * as L from 'leaflet';
@@ -30,7 +29,7 @@ export class PinnedMapComponent implements OnInit, OnDestroy {
   static map: any;
 
   @Input() startingLocationObservable: Observable<Attraction>;
-  @Input() pin: LatLon;
+
   zoomLevel = 14;
   subscription: Subscription;
   loading: boolean;
