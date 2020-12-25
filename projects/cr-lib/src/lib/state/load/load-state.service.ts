@@ -1,21 +1,19 @@
 import {Injectable} from '@angular/core';
 import {
-  CourseAttractionService,
-  CourseService,
-  Outing,
-  OutingService,
-  PathService,
-  PuzzleService,
-  ServerEventsService,
-  TeamService
-} from 'cr-lib';
-import {
   Observable,
   ReplaySubject,
   Subject
 } from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {GameStateService} from '../game/game-state.service';
+import {CourseAttractionService} from '../../api/attraction/course/course-attraction.service';
+import {CourseService} from '../../api/course/course.service';
+import {OutingService} from '../../api/outing/outing.service';
+import {Outing} from '../../api/outing/outing';
+import {PathService} from '../../api/path/path.service';
+import {PuzzleService} from '../../api/puzzle/puzzle.service';
+import {ServerEventsService} from '../../sse-event/sse-event.service';
+import {TeamService} from '../../api/team/team.service';
 
 @Injectable({
   providedIn: 'root'

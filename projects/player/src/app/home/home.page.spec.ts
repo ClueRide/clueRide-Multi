@@ -7,11 +7,11 @@ import {
 import {IonicModule} from '@ionic/angular';
 import {
   ConnectionStateModule,
+  LoadStateService,
   MemberChipComponentModule,
   ProfileService
 } from 'cr-lib';
 import {of} from 'rxjs';
-import {LoadStateService} from '../state/load/load-state.service';
 
 import {HomePage} from './home.page';
 

@@ -1,9 +1,9 @@
 import {Component} from '@angular/core';
 import {
+  LoadStateService,
   Member,
   ProfileService
 } from 'cr-lib';
-import {LoadStateService} from '../state/load/load-state.service';
 
 @Component({
   selector: 'app-home',

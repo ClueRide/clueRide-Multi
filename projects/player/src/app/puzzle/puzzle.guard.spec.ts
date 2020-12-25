@@ -2,7 +2,7 @@ import {
   inject,
   TestBed
 } from '@angular/core/testing';
-import {LoadStateService} from '../state/load/load-state.service';
+import {LoadStateService} from 'cr-lib';
 
 import {PuzzleGuard} from './puzzle.guard';
 

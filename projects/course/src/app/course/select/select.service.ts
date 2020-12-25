@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {Course} from 'cr-lib';
 import {
   AuthHeaderService,
-  BASE_URL
-} from '../../../../../cr-lib/src/lib/auth/header/auth-header.service';
+  BASE_URL,
+  Course
+} from 'cr-lib';
 import {HttpClient} from '@angular/common/http';
 
 /**

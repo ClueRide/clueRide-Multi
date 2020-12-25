@@ -1,18 +1,16 @@
 import {HttpClient} from '@angular/common/http';
 import {TestBed} from '@angular/core/testing';
-import {
-  CourseAttractionService,
-  CourseService,
-  OutingService,
-  PathService,
-  PuzzleService,
-  ServerEventsService,
-  TeamService
-} from 'cr-lib';
 import {of} from 'rxjs';
 import {GameStateService} from '../game/game-state.service';
 
 import {LoadStateService} from './load-state.service';
+import {CourseAttractionService} from '../../api/attraction/course/course-attraction.service';
+import {CourseService} from '../../api/course/course.service';
+import {OutingService} from '../../api/outing/outing.service';
+import {PathService} from '../../api/path/path.service';
+import {PuzzleService} from '../../api/puzzle/puzzle.service';
+import {ServerEventsService} from '../../sse-event/sse-event.service';
+import {TeamService} from '../../api/team/team.service';
 
 describe('LoadStateService', () => {
   beforeEach(

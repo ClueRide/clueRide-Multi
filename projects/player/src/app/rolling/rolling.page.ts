@@ -6,6 +6,8 @@ import {
   Attraction,
   CourseAttractionService,
   GameMarkerService,
+  GameState,
+  GameStateService,
   LatLonService,
   Path,
   PathService
@@ -21,8 +23,6 @@ import {
   map,
   tap
 } from 'rxjs/operators';
-import {GameState} from '../state/game/game-state';
-import {GameStateService} from '../state/game/game-state.service';
 import {GuideEventService} from '../state/guide-event.service';
 
 /** Defines reasonable Zoom Level for initially opening the map. */

@@ -14,6 +14,8 @@ import {
 import {
   AwaitRegistrationService,
   BadgeAwardService,
+  GameStateService,
+  LoadStateService,
   PlatformStateService,
   ProfileService
 } from 'cr-lib';
@@ -23,8 +25,6 @@ import {AppComponent} from './app.component';
 import {ShowGameService} from './show-game/show-game.service';
 import {AppStateService} from './state/app/app-state.service';
 import {GameRoutingService} from './state/game-routing.service';
-import {GameStateService} from './state/game/game-state.service';
-import {LoadStateService} from './state/load/load-state.service';
 
 class MockBackButton {
   subscribeWithPriority: jasmine.Spy<any>;

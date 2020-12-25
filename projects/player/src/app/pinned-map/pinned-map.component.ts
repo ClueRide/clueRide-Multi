@@ -1,8 +1,7 @@
 import {
   Component,
   Input,
-  OnDestroy,
-  OnInit
+  OnDestroy
 } from '@angular/core';
 import {
   Attraction,
@@ -24,7 +23,7 @@ import {
   templateUrl: './pinned-map.component.html',
   styleUrls: ['./pinned-map.component.scss'],
 })
-export class PinnedMapComponent implements OnInit, OnDestroy {
+export class PinnedMapComponent implements OnDestroy {
 
   static map: any;
 
@@ -50,10 +49,14 @@ export class PinnedMapComponent implements OnInit, OnDestroy {
       this.startingLocationObservable
         .subscribe(
           (attraction: Attraction) => {
-            this.prepareMap(attraction);
-            this.markerService.generateAttractionMarker(
-              attraction
-            ).addTo(PinnedMapComponent.map);
+            if (attraction) {
+              this.prepareMap(attraction);
+              this.markerService.generateAttractionMarker(
+                attraction
+              ).addTo(PinnedMapComponent.map);
+            } else {
+              console.log('Pinned Map: empty Attraction');
+            }
           }
         )
     );

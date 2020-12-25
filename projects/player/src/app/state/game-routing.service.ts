@@ -3,8 +3,8 @@ import {
   OnDestroy
 } from '@angular/core';
 import {Subscription} from 'rxjs';
-import {GameStateService} from './game/game-state.service';
-import {NavController} from "@ionic/angular";
+import {GameStateService} from 'cr-lib';
+import {NavController} from '@ionic/angular';
 
 /**
  * Responds to GameState changes to navigate from Rolling to Puzzle and back.

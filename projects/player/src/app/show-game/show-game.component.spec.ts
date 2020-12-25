@@ -5,8 +5,10 @@ import {
   TestBed
 } from '@angular/core/testing';
 import {Router} from '@angular/router';
-import {GameState} from '../state/game/game-state';
-import {GameStateService} from '../state/game/game-state.service';
+import {
+  GameState,
+  GameStateService
+} from 'cr-lib';
 
 import {ShowGameComponent} from './show-game.component';
 

@@ -1,17 +1,17 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {
-  AuthHeaderService,
-  BASE_URL,
-  ServerEventsService
-} from 'cr-lib';
-import {
   Observable,
   ReplaySubject,
   Subject,
   Subscription
 } from 'rxjs';
 import {GameState} from './game-state';
+import {
+  AuthHeaderService,
+  BASE_URL
+} from '../../auth/header/auth-header.service';
+import {ServerEventsService} from '../../sse-event/sse-event.service';
 
 @Injectable({
   providedIn: 'root'

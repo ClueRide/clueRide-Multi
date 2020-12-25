@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {GameStateService} from '../state/game/game-state.service';
+import {GameStateService} from 'cr-lib';
 import {ShowGameService} from './show-game.service';
 
 @Component({

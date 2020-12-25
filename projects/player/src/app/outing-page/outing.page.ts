@@ -41,17 +41,18 @@ export class OutingPage implements OnDestroy {
     this.startingAttractionSubject = new ReplaySubject<Attraction>(1);
   }
 
-  ionViewDidEnter() {
+  ngAfterViewInit() {
     this.outingService.getSessionOuting().subscribe(
       /* Generally, the Outing has been cached. */
       (outing) => {
-        console.log('Receiving Outing from Service');
+        console.log('Receiving Outing from Service', outing.startingLocationId);
         this.outing = outing;
 
         /* With the outing, we can load the starting location. */
         let startingLocation: Attraction = this.courseAttractionService.getAttraction(
           this.outing.startingLocationId
         );
+        console.log('Outing\'s starting location:', startingLocation);
         this.startingAttractionSubject.next(startingLocation);
       }
     );

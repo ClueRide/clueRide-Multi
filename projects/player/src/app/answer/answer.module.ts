@@ -7,9 +7,11 @@ import {
 } from '@angular/router';
 
 import {IonicModule} from '@ionic/angular';
-import {ConnectionStateModule} from 'cr-lib';
+import {
+  ConnectionStateModule,
+  LoadStateGuard
+} from 'cr-lib';
 import {DepartModule} from '../depart/depart.module';
-import {AnswerGuard} from './answer.guard';
 
 import {AnswerPage} from './answer.page';
 
@@ -17,7 +19,7 @@ const routes: Routes = [
   {
     path: ':id',
     component: AnswerPage,
-    canActivate: [AnswerGuard]
+    canActivate: [LoadStateGuard]
   }
 ];
 

@@ -44,6 +44,7 @@ export class CourseAttractionService {
     private latLonService: LatLonService,
     private poolMarkerService: PoolMarkerService,
   ) {
+    console.log('Hello CourseAttractionService');
     this.attractionLoadingCompleteSubject = new Subject<boolean>();
     this.currentFilter = new Filter();    // Default is empty filter.
   }
@@ -57,6 +58,8 @@ export class CourseAttractionService {
    * @returns Observable which provides 'true' once the attractions are fully loaded.
    */
   public loadCourseAttractions(): Observable<boolean> {
+    console.log('CourseAttractionService.loadCourseAttractions()');
+
     this.http.get(
       BASE_URL + 'location/active',
       {headers: this.httpService.getAuthHeaders()}
