@@ -1,8 +1,8 @@
 import {TestBed} from '@angular/core/testing';
 
 import {GameRoutingService} from './game-routing.service';
-import {GameStateService} from './game/game-state.service';
-import {NavController} from "@ionic/angular";
+import {GameStateService} from 'cr-lib';
+import {NavController} from '@ionic/angular';
 
 describe('GameRoutingService', () => {
 

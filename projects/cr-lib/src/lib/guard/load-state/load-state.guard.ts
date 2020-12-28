@@ -6,19 +6,22 @@ import {
   UrlTree
 } from '@angular/router';
 import {Observable} from 'rxjs';
+import {LoadStateService} from '../../state/load/load-state.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FlagsGuard implements CanActivate {
+export class LoadStateGuard implements CanActivate {
 
-  constructor() {}
+  constructor(
+    private loadStateService: LoadStateService
+  ) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return route.paramMap.has('id');
+    return this.loadStateService.getLoadStateObservable();
   }
 
 }

@@ -1,8 +1,10 @@
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {take} from 'rxjs/operators';
-import {GameStateService} from '../state/game/game-state.service';
-import {GameState} from '../state/game/game-state';
+import {
+  GameState,
+  GameStateService
+} from 'cr-lib';
 
 @Injectable({
   providedIn: 'root'

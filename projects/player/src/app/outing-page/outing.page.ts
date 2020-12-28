@@ -45,7 +45,7 @@ export class OutingPage implements OnDestroy {
     this.outingService.getSessionOuting().subscribe(
       /* Generally, the Outing has been cached. */
       (outing) => {
-        console.log('Receiving Outing from Service');
+        console.log('Receiving Outing from Service', outing.startingLocationId);
         this.outing = outing;
 
         /* With the outing, we can load the starting location. */

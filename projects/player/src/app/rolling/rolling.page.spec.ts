@@ -9,12 +9,12 @@ import {Router} from '@angular/router';
 import {
   CourseAttractionService,
   GameMarkerService,
+  GameState,
+  GameStateService,
   OutingService,
   PathService
 } from 'cr-lib';
 import {of} from 'rxjs';
-import {GameState} from '../state/game/game-state';
-import {GameStateService} from '../state/game/game-state.service';
 import {GuideEventService} from '../state/guide-event.service';
 
 import {RollingPage} from './rolling.page';

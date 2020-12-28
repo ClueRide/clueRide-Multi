@@ -6,22 +6,22 @@ import {
   UrlTree
 } from '@angular/router';
 import {Observable} from 'rxjs';
-import {LoadStateService} from '../state/load/load-state.service';
+import {AwaitRegistrationService} from '../../auth/client-api/await-registration.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class RollingGuard implements CanActivate {
+export class RangerSessionGuard implements CanActivate {
 
   constructor(
-    private loadStateService: LoadStateService
+    private awaitRegistrationService: AwaitRegistrationService,
   ) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.loadStateService.getLoadStateObservable();
+    return this.awaitRegistrationService.getRegistrationActiveObservable('com.clueride.ranger');
   }
 
 }
