@@ -9,9 +9,9 @@ import {
 import {IonicModule} from '@ionic/angular';
 import {
   ConnectionStateModule,
-  DoubleClickModule
+  DoubleClickModule,
+  LoadStateGuard
 } from 'cr-lib';
-import {RollingGuard} from './rolling.guard';
 
 import {RollingPage} from './rolling.page';
 
@@ -19,7 +19,7 @@ const routes: Routes = [
   {
     path: '',
     component: RollingPage,
-    canActivate: [RollingGuard]
+    canActivate: [LoadStateGuard]
   }
 ];
 

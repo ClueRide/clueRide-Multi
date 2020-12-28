@@ -2,11 +2,13 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {IonicModule} from '@ionic/angular';
-import {ConnectionStateModule} from 'cr-lib';
+import {
+  ConnectionStateModule,
+  LoadStateGuard
+} from 'cr-lib';
 import {PinnedMapModule} from '../pinned-map/pinned-map.module';
 import {ShowGameModule} from '../show-game/show-game.module';
 import {OutingPage} from './outing.page';
-import {OutingPageGuard} from './outing-page.guard';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,9 @@ import {OutingPageGuard} from './outing-page.guard';
       {
         path: 'outing',
         component: OutingPage,
-        canActivate: [OutingPageGuard]
+        // canActivate: [LoadStateGuard, SeekerSessionGuard]
+        canActivate: [LoadStateGuard]
+        // canActivate: [SeekerSessionGuard]
       }
     ]),
   ],

@@ -6,15 +6,15 @@ import {
   UrlTree
 } from '@angular/router';
 import {Observable} from 'rxjs';
-import {LoadStateService} from 'cr-lib';
+import {LoadStateService} from '../../state/load/load-state.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class OutingPageGuard implements CanActivate {
+export class LoadStateGuard implements CanActivate {
 
   constructor(
-    private loadStateService: LoadStateService,
+    private loadStateService: LoadStateService
   ) {}
 
   canActivate(

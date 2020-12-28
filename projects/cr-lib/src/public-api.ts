@@ -86,6 +86,8 @@ export * from './lib/flag-count/flag-count-chip.component';
 export * from './lib/flag-row/flag-row.module';
 export * from './lib/flag-row/flag-row.component';
 export * from './lib/guard/load-state/load-state.guard';
+export * from './lib/guard/session/ranger-session.guard';
+export * from './lib/guard/session/seeker-session.guard';
 export * from './lib/geo/device-geo-loc/device-geo-loc.service';
 export * from './lib/geo/geo-loc/geo-loc';
 export * from './lib/heading/heading.service';
