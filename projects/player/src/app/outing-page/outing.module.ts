@@ -4,7 +4,8 @@ import {RouterModule} from '@angular/router';
 import {IonicModule} from '@ionic/angular';
 import {
   ConnectionStateModule,
-  LoadStateGuard
+  LoadStateGuard,
+  SeekerSessionGuard
 } from 'cr-lib';
 import {PinnedMapModule} from '../pinned-map/pinned-map.module';
 import {ShowGameModule} from '../show-game/show-game.module';
@@ -24,9 +25,7 @@ import {OutingPage} from './outing.page';
       {
         path: 'outing',
         component: OutingPage,
-        // canActivate: [LoadStateGuard, SeekerSessionGuard]
-        canActivate: [LoadStateGuard]
-        // canActivate: [SeekerSessionGuard]
+        canActivate: [LoadStateGuard, SeekerSessionGuard]
       }
     ]),
   ],
