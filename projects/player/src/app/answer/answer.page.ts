@@ -40,7 +40,7 @@ export class AnswerPage implements OnInit, OnDestroy {
 
     this.subscription.add(this.answerSummaryService.getAnswerSummaryChannel().subscribe(
       (answerSummary) => {
-        this.answerSummary = answerSummary;
+        this.answerSummary = Object.assign({}, answerSummary);
         console.log('AnswerPage: Received Answer Summary for ', answerSummary.puzzleId);
       }
     ));
