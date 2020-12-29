@@ -18,6 +18,7 @@ import {RenewalService} from '../renewal/renewal.service';
 import {TokenService} from '../token/token.service';
 import {RegState} from './reg-state';
 import {RegStateKey} from './reg-state-key';
+import {AccessTokenService} from '../../api/access-token/access-token.service';
 
 /**
  * Implements much of the State Diagram shown on the
@@ -36,6 +37,7 @@ export class RegStateService {
 
   constructor(
     public http: HttpClient,
+    private accessTokenService: AccessTokenService,
     private auth0ConfigService: Auth0ConfigService,
     private httpService: AuthHeaderService,
     private platformState: PlatformStateService,
@@ -59,6 +61,9 @@ export class RegStateService {
    *
    * This is an entry point for making sure the device is registered
    * and has the access token required to interact with the backend servers.
+   *
+   * Refer to Wiki page http://bikehighways.wikidot.com/registration-design
+   * for further details.
    *
    * @param urlScheme identifies this application both for the
    * Auth0 client ID and the callback URL.
@@ -92,9 +97,24 @@ export class RegStateService {
           }
         );
       } else {
-        /* We have valid access token. */
-        this.regStateSubject.next(
-          new RegState(RegStateKey.ACTIVE, 'Access remains valid')
+        /* Check against backend. */
+        this.accessTokenService.isTokenValid().subscribe(
+          (accessIsValid: boolean) => {
+            if (accessIsValid) {
+              console.log("Back-end likes our token");
+              this.regStateSubject.next(
+                new RegState(RegStateKey.ACTIVE, 'Access remains valid')
+              );
+            } else {
+              /* Attempt a renewal. */
+              console.log("Back-end has problem with our token; attempting renewal");
+              this.renewalService.renew().subscribe(
+                (regState: RegState) => {
+                  this.regStateSubject.next(regState);
+                }
+              );
+            }
+          }
         );
       }
     } else {
