@@ -17,6 +17,7 @@ import {
 import {TokenService} from '../../auth/token/token.service';
 import {Member} from '../member/member';
 import {MemberService} from '../member/member.service';
+import {AccessTokenService} from '../access-token/access-token.service';
 
 /**
  * Responsible for the Member's Profile.
@@ -39,8 +40,9 @@ export class ProfileService {
   private memberSubject: Subject<Member>;
 
   constructor(
-    public http: HttpClient,
+    private accessTokenService: AccessTokenService,
     private authHeaderService: AuthHeaderService,
+    private http: HttpClient,
     private memberService: MemberService,
     private tokenService: TokenService,
   ) {
@@ -168,19 +170,9 @@ export class ProfileService {
     return this.cachedMember.id;
   }
 
-  /**
-   * Persists new profile once user has confirmed the email address they wish to use.
-   *
-   * This sends the profile obtained from parsing the JWT token so it can be compared
-   * to what the AuthHeaders would provide when presented to the 3rd-party Auth service.
-   */
   public createNewProfile(): Observable<Member> {
-    console.log('Talking to the backend to create new User Profile');
-
-    return this.http.post<Member>(
-      BASE_URL + 'access/state/init',
-      this.getMemberFromToken(),
-      {headers: this.authHeaderService.getAuthHeaders()}
+    return this.accessTokenService.createNewProfile(
+      this.getMemberFromToken()
     ).pipe(
       /* Tapping this here allows us to capture the newly created IDs from the backend. */
       tap(
