@@ -3,11 +3,8 @@ import {
   OnInit
 } from '@angular/core';
 import {AppVersion} from '@ionic-native/app-version/ngx';
-import {
-  PlatformStateService,
-  ProfileService
-} from 'cr-lib';
-import {environment} from "../../environments/environment";
+import {PlatformStateService} from 'cr-lib';
+import {environment} from '../../environments/environment';
 
 @Component({
   selector: 'app-about',
@@ -24,7 +21,6 @@ export class AboutPage implements OnInit {
   constructor(
     private readonly appVersion: AppVersion,
     public readonly platform: PlatformStateService,
-    public readonly memberService: ProfileService,
   ) {
     this.gitSha = environment.build.gitSha;
     this.buildDate = environment.build.date;
@@ -36,7 +32,7 @@ export class AboutPage implements OnInit {
       this.appVersion.getVersionNumber()
         .then(
           (version) => {
-            console.log('Able to retrieve Version info.');
+            console.log('Able to retrieve Version info.', version);
             this.about.version = version;
           },
           (error) => {
