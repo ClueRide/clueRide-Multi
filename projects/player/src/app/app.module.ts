@@ -13,7 +13,8 @@ import {
   AlertToastModule,
   AuthModule,
   BadgeAwardComponent,
-  BadgeAwardModule
+  BadgeAwardModule,
+  ConnectionExplainPageModule
 } from 'cr-lib';
 import {AppRoutingModule} from './app-routing.module';
 
@@ -33,6 +34,7 @@ import {OutingSummaryModule} from './outing-summary/outing-summary.module';
     AppRoutingModule,
     AuthModule,
     BadgeAwardModule,
+    ConnectionExplainPageModule,
     HttpClientModule,
     OutingPageModule,
     OutingSummaryModule,

@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Connection Status</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card class="cr-card">
+    <ion-card-header>
+      Shows the quality of your network connection at your current location.
+    </ion-card-header>
+  </ion-card>
+
+  <ion-card-content>
+
+    <ion-list>
+
+      <ion-item>
+        <ion-icon class="open" slot="start" name="checkmark-circle"></ion-icon>
+        <ion-label class="ion-text-wrap">
+          <b>Alive and Well</b><br>
+          Game actions should be taking place normally.
+        </ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-icon class="connecting" slot="start" name="refresh-circle"></ion-icon>
+        <ion-label class="ion-text-wrap">
+          <b>Reconnecting</b><br>
+          Wait until status turns green before attempting game actions.
+        </ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-icon class="closed" slot="start" name="close-circle"></ion-icon>
+        <ion-label class="ion-text-wrap">
+          <b>Connection Lost</b><br>
+          It may not be possible to find sufficient signal to play at this location.
+        </ion-label>
+      </ion-item>
+
+    </ion-list>
+  </ion-card-content>
+
+</ion-content>

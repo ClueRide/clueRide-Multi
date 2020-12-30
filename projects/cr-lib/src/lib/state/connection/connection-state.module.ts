@@ -9,7 +9,7 @@ import {ConnectionStateComponent} from './connection-state';
   ],
   imports: [
     IonicModule,
-    CommonModule
+    CommonModule,
   ],
   exports: [
     ConnectionStateComponent
