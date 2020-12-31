@@ -104,6 +104,8 @@ export * from './lib/sse-event/answer-summary/answer-summary';
 export * from './lib/sse-event/answer-summary/answer-summary.service';
 export * from './lib/sse-event/sse-event.service';
 export * from './lib/state/connection/connection-state.module';
+export * from './lib/state/connection/explain/connection-explain.module';
+export * from './lib/state/connection/explain/connection-explain.page';
 export * from './lib/state/game/game-state';
 export * from './lib/state/game/game-state.service';
 export * from './lib/state/load/load-state.service';
